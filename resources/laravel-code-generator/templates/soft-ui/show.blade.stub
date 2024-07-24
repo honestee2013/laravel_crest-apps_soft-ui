@@ -1,0 +1,47 @@
+@extends('[% layout_name %]')
+
+@section('auth-soft-ui')
+
+<div class="card text-bg-theme pb-0 p-3">
+
+    <div class="card-header pb-0 p-3">
+        <div class="row">
+            <div class="col-md-8 d-flex align-items-center">
+              <h5 class="m-0">{{ isset([% model_header %]) ? [% model_header %] : '[% model_name_title %]' }}</h5>
+            </div>
+
+            <div class="col-md-4 text-end">
+                <form id="delete-form-{{ $[% model_name_singular_variable %]->[% primary_key %] }}" method="POST" action="{!! route('[% destroy_route_name %]', $[% model_name_singular_variable %]->[% primary_key %]) !!}" accept-charset="UTF-8">
+                    <input name="_method" value="DELETE" type="hidden">
+                    {{ csrf_field() }}
+
+                    <a href="{{ route('[% edit_route_name %]', $[% model_name_singular_variable %]->[% primary_key %] ) }}" class="btn  bg-gradient-primary btn-sm text-white" title="[% edit_model %]">
+                        <i class="fas fa-edit text-sm text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="[% edit_model %]"></i>
+                    </a>
+
+                    <button type="button" class="btn bg-gradient-warning btn-sm text-white delete-button" data-form-id="delete-form-{{ $[% model_name_singular_variable %]->[% primary_key %] }}"  title="[% delete_model %]" >
+                        <i class="fas fa-trash  text-sm text-white" data-bs-toggle="tooltip" data-bs-placement="top" title=[% delete_model %]"></i>
+                    </button>
+
+                    <a href="{{ route('[% index_route_name %]') }}" class="btn bg-gradient-info btn-sm text-white" title="[% show_all_models %]">
+                        <i class="fas fa-list  text-sm text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="[% show_all_models %]"></i>
+                    </a>
+
+                    <a href="{{ route('[% create_route_name %]') }}" class="btn bg-gradient-secondary btn-sm text-white" title="[% create_model %]">
+                        <i class="fa fa-plus text-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="[% create_model %]"></i>
+                    </a>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <dl class="row">
+[% table_rows %]
+        </dl>
+
+    </div>
+</div>
+
+@endsection

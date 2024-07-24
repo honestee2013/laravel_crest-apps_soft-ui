@@ -47,6 +47,81 @@ return [
     | https://laravel.com/docs/5.5/filesystem
     |
      */
+
+    'common_definitions' =>
+    [
+        [
+            'match' => '*_at',
+            'set' => [
+                'css-class' => 'datetime-picker',
+                'date-format' => 'j/n/Y G:i A',
+            ],
+        ],
+
+        [
+            'match' => ['*_date', 'date_*'],
+            'set' => [
+                'css-class' => 'datetime-picker',
+                'data-type' => 'datetime',
+                'date-format' => 'j/n/Y G:i A',
+            ],
+        ],
+
+        [
+            'match' => ['address', '*_address', '*address', 'address*', '*address*'],
+            'set' => [
+                'is-on-index' => false,
+                'html-type' => 'textarea',
+                'data-type' => 'text',
+                'data-type-params' => [1000],
+            ],
+        ],
+
+
+        [
+            'match' => ['color', '*_color', 'color_*', '*color', 'color*', '*color*'],
+            'set' => [
+                'is-on-index' => false,
+                'html-type' => 'color',
+                'data-type' => 'text',
+            ],
+        ],
+
+
+    ],
+
+
+    'datetime_out_format' => 'j/n/Y G:i A',
+
+
     'files_upload_path' => 'uploads',
+
+
+
+  /*
+    |--------------------------------------------------------------------------
+    | The default template to use.
+    |--------------------------------------------------------------------------
+    |
+    | Here you change the stub templates to use when generating code.
+    | You can duplicate the 'default' template folder and call it whatever
+    | template name you like 'ex. skyblue'. Now, you can change the stubs to
+    | have your own templates generated.
+    |
+    |
+    | IMPORTANT: It is not recommended to modify the default template, rather
+    | create a new template. If you modify the default template and then
+    | executed 'php artisan vendor:publish' command, will override your changes!
+    |
+     */
+    'template' => 'soft-ui',
+
+
+
+
+
+
+
+
 
 ];

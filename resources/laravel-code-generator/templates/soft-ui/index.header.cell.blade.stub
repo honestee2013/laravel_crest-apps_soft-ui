@@ -1,0 +1,11 @@
+
+
+<th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 text-start" style="cursor: pointer">
+    <div class="d-flex flex-row justify-content-between">
+        [% field_title %]
+        <i class="fas fa-sort  text-sm text-secondary" data-bs-placement="top" ></i>
+   </div>
+</th>
+
+
+

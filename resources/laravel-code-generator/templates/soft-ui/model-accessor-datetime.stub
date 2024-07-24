@@ -1,0 +1,3 @@
+    $date = \DateTime::createFromFormat($this->getDateFormat(), $value);
+    if ($date)
+        return $date->format('[% date_format %]');

@@ -1,0 +1,6 @@
+
+<div class="form-group">
+    [% field_label %]
+[% field_input %]
+[% field_validation_helper %]
+</div>

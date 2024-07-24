@@ -1,0 +1,59 @@
+@extends('[% layout_name %]')
+
+@section('auth-soft-ui')
+
+    <div class="card text-bg-theme">
+
+        <div class="card-header pb-0">
+            <div class="d-flex flex-row justify-content-between">
+                <div>
+                    <h5 class="mb-0">{{ __('[% create_model %]') }}</h5>
+                </div>
+
+                <a href="{{ route('[% index_route_name %]') }}" class="btn bg-gradient-info btn-sm text-white" title="[% show_all_models %]">
+                    <i class="fas fa-list  text-sm text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="[% show_all_models %]"></i>
+                </a>
+
+            </div>
+        </div>
+
+
+        <div class="card-body">
+
+            @if ($errors->any())
+                <div class="alert alert-danger alert-dismissible fade show text-white" role="alert">
+                    <span class="alert-icon"><i class="fas fa-exclamation-triangle" style="font-size:2em"></i></span>
+                    <span class="alert-text">&nbsp;<strong >Error!</strong>
+                        <ul class="list-unstyled mb-0 mt-2">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
+
+            <form method="POST" class="needs-validation" novalidate action="{{ route('[% store_route_name %]') }}" accept-charset="UTF-8" id="[% form_id %]" name="[% form_name %]" [% upload_files %]>
+            {{ csrf_field() }}
+            @include ('[% form_view_name %]', [
+                                        '[% model_name_singular_variable %]' => null,
+                                      ])
+
+
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-md  bg-primary mt-4 mb-4 text-white" value="[% add %]">{{ 'Add' }}</button>
+                </div>
+
+
+
+            </form>
+
+        </div>
+    </div>
+
+@endsection
+
+
