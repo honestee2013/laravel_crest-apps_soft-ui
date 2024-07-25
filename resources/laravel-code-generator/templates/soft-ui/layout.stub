@@ -136,17 +136,6 @@
     <!------------ Crest App code generator supporting code ------------>
     <script src="{{ asset('assets/js/crest-apps/code-generator-ui.js') }}"></script>
 
-
-
-    <!-- To pass the url to the js file -->
-    <script>
-        window.appUrls = {
-            bulkDelete: "{{ route('schools.bulkDelete') }}"
-        };
-    </script>
-
-
-
     </body>
 
 </html>
