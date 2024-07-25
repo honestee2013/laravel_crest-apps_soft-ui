@@ -1,13 +1,13 @@
 <?php
 
-use App\Http\Controllers\ChangePasswordController;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ResetController;
 use App\Http\Controllers\InfoUserController;
 use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\ResetController;
 use App\Http\Controllers\SessionsController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SchoolsController;
+use App\Http\Controllers\ChangePasswordController;
 
 
 /*
@@ -86,4 +86,23 @@ Route::group(['middleware' => 'guest'], function () {
 Route::get('/login', function () {
     return view('session/login-session');
 })->name('login');
+
+
+
+Route::match(['POST', 'DELETE'], '/bulk-delete/{record?}', function ($record = null) {
+    // Convert the record to plural (Crest Apps code generator creates plural controller name eg SchoolsController) and capitalize
+    $plural = Str::plural($record);
+    $className = ucfirst($plural) . 'Controller'; // Append 'Controller' to the class name
+
+    // Construct the full class name with namespace
+    $fullClassName = 'App\\Http\\Controllers\\' . $className;
+
+    // Check if the class exists and instantiate
+    if (class_exists($fullClassName)) {
+        return app($fullClassName)->bulkDelete(request());
+    }
+
+    // Handle invalid class name case
+    return redirect()->back()->with('error', 'Invalid record type specified');
+})->name('bulkDelete');
 

@@ -264,12 +264,12 @@
        //  <!---- BULK DELETE ---->
 
        document.addEventListener('DOMContentLoaded', function() {
-           var selectAllCheckbox = document.getElementById('select-all');
-           var rowCheckboxes = document.querySelectorAll('.row-checkbox');
-           var bulkDeleteBtn = document.getElementById('bulk-delete-btn');
-           var bulkDeleteForm = document.getElementById('bulk-delete-form');
+            var selectAllCheckbox = document.getElementById('select-all');
+            var rowCheckboxes = document.querySelectorAll('.row-checkbox');
+            var bulkDeleteBtn = document.getElementById('bulk-delete-btn');
+            var bulkDeleteForm = document.getElementById('bulk-delete-form');
 
-            if (selectAllCheckbox) { // Avoide attempt on empty record
+            if (selectAllCheckbox) {
                 selectAllCheckbox.addEventListener('change', function(event) {
                     event.stopPropagation(); // Prevent the sorting event from being triggered
                     rowCheckboxes.forEach(function(checkbox) {
@@ -279,67 +279,93 @@
                 });
             }
 
-           rowCheckboxes.forEach(function(checkbox) {
-               checkbox.addEventListener('change', function(event) {
-                   event.stopPropagation(); // Prevent the sorting event from being triggered
-                   if (!checkbox.checked) {
-                       selectAllCheckbox.checked = false;
-                   }
-                   toggleBulkDeleteBtn();
-               });
-           });
+            rowCheckboxes.forEach(function(checkbox) {
+                checkbox.addEventListener('change', function(event) {
+                    event.stopPropagation(); // Prevent the sorting event from being triggered
+                    if (!checkbox.checked) {
+                        selectAllCheckbox.checked = false;
+                    }
+                    toggleBulkDeleteBtn();
+                });
+            });
 
-           function toggleBulkDeleteBtn() {
-               var anyChecked = Array.from(rowCheckboxes).some(function(checkbox) {
-                   return checkbox.checked;
-               });
-               bulkDeleteBtn.style.display = anyChecked ? 'block' : 'none';
-           }
+            function toggleBulkDeleteBtn() {
+                var anyChecked = Array.from(rowCheckboxes).some(function(checkbox) {
+                    return checkbox.checked;
+                });
+                bulkDeleteBtn.style.display = anyChecked ? 'block' : 'none';
+            }
 
-           function getSelectedIds() {
-               return Array.from(rowCheckboxes)
-                   .filter(function(checkbox) {
-                       return checkbox.checked;
-                   })
-                   .map(function(checkbox) {
-                       return checkbox.getAttribute('data-id');
-                   });
-           }
+            function getSelectedIds() {
+                return Array.from(rowCheckboxes)
+                    .filter(function(checkbox) {
+                        return checkbox.checked;
+                    })
+                    .map(function(checkbox) {
+                        return checkbox.getAttribute('data-id');
+                    });
+            }
 
-           window.bulkDelete = function() {
-               var ids = getSelectedIds();
-               if (ids.length === 0) {
-                   alert('No records selected');
-                   return;
-               }
+            window.bulkDelete = function(record) {
+                var ids = getSelectedIds();
+                if (ids.length === 0) {
+                    alert('No records selected');
+                    return;
+                }
 
-               Swal.fire({
-                   title: 'Are you sure?',
-                   text: "You won't be able to revert this operation!",
-                   icon: 'warning',
-                   showCancelButton: true,
-                   confirmButtonText: 'Yes, delete them!',
-                   cancelButtonText: 'No, cancel!',
-                   customClass: {
-                       confirmButton: 'btn bg-gradient-success me-3',
-                       cancelButton: 'btn bg-gradient-danger'
-                   },
-                   buttonsStyling: false
-               }).then((result) => {
-                   if (result.isConfirmed) {
-                       ids.forEach(function(id) {
-                           var idInput = document.createElement('input');
-                           idInput.name = 'ids[]';
-                           idInput.value = id;
-                           idInput.type = 'hidden';
-                           bulkDeleteForm.appendChild(idInput);
-                       });
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this operation!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete them!',
+                    cancelButtonText: 'No, cancel!',
+                    customClass: {
+                        confirmButton: 'btn bg-gradient-success me-3',
+                        cancelButton: 'btn bg-gradient-danger'
+                    },
+                    buttonsStyling: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Clear previous hidden inputs
+                        while (bulkDeleteForm.firstChild) {
+                            bulkDeleteForm.removeChild(bulkDeleteForm.firstChild);
+                        }
 
-                       bulkDeleteForm.submit();
-                   }
-               });
-           };
-       });
+                        // Append CSRF token to the form
+                        var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                        var csrfInput = document.createElement('input');
+                        csrfInput.name = '_token';
+                        csrfInput.value = csrfToken;
+                        csrfInput.type = 'hidden';
+                        bulkDeleteForm.appendChild(csrfInput);
+
+                        // Append method field to the form
+                        var methodInput = document.createElement('input');
+                        methodInput.name = '_method';
+                        methodInput.value = 'DELETE';
+                        methodInput.type = 'hidden';
+                        bulkDeleteForm.appendChild(methodInput);
+
+                        // Append selected IDs to the form
+                        ids.forEach(function(id) {
+                            var idInput = document.createElement('input');
+                            idInput.name = 'ids[]';
+                            idInput.value = id;
+                            idInput.type = 'hidden';
+                            bulkDeleteForm.appendChild(idInput);
+                        });
+
+                        // Set the action URL dynamically
+                        var bulkDeleteUrl = window.appUrls.bulkDelete + '/' + record;
+                        bulkDeleteForm.action = bulkDeleteUrl;
+
+                        // Submit the form
+                        bulkDeleteForm.submit();
+                    }
+                });
+            };
+        });
 
 
 

@@ -91,6 +91,31 @@ return [
     ],
 
 
+
+  /*
+    |--------------------------------------------------------------------------
+    | Should the code generator organize the new migrations?
+    |--------------------------------------------------------------------------
+    |
+    | This option will allow the code generator to group the migration related
+    | to the same table is a separate folder. The folder name will be the name
+    | of the table.
+    |
+    | It is recommended to set this value to true, then use crest apps command
+    | to migrate instead of the build in command.
+    |
+    | php artisan migrate-all
+    | php artisan migrate:rollback-all
+    | php artisan migrate:reset-all
+    | php artisan migrate:refresh-all
+    | php artisan migrate:status-all
+    |
+     */
+    'organize_migrations' => true,
+
+
+
+
     'datetime_out_format' => 'j/n/Y G:i A',
 
 

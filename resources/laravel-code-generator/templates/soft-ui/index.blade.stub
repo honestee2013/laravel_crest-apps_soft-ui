@@ -52,15 +52,23 @@
 
 
                         <!-- Bulk Delete Form -->
-                        <form id="bulk-delete-form" action="{{ route('schools.bulkDelete') }}" method="POST" style="display: none;">
+                        <form id="bulk-delete-form" method="POST" style="display: none;">
                             @csrf
-                            @method('DELETE')
+                            @method('DELETE') <!-- Ensure this is present for DELETE requests -->
                         </form>
 
-                        <button id="bulk-delete-btn" data-url="{{ route('schools.bulkDelete') }}"  class="btn bg-gradient-danger bt-sm py-0 ms-2" type="button" style="display:none; border-radius: 3em; height: 2.6em" onclick="bulkDelete()">
+                        <button id="bulk-delete-btn" class="btn bg-gradient-danger bt-sm py-0 ms-2" type="button" style="display:none; border-radius: 3em; height: 2.6em" onclick="bulkDelete('[% model_name_plural_variable %]')">
                             <span class="btn-inner--icon"><i class="fas fa-trash text-sm me-1 text-white"></i></span>
                             <span class="btn-inner--text">Delete Selected</span>
                         </button>
+
+
+                        <script>
+                            window.appUrls = {
+                                bulkDelete: "{{ route('bulkDelete') }}"
+                            };
+                        </script>
+
                     </div>
 
 
@@ -111,7 +119,7 @@
                         <tr>
 
                             <td class="align-middle text-center">
-                                <input type="checkbox" class="row-checkbox" data-id="{{ $school->id }}">
+                                <input type="checkbox" class="row-checkbox" data-id="{{ $[% model_name_singular_variable %]->id }}">
                             </td>
 
                             [% body_cells %]

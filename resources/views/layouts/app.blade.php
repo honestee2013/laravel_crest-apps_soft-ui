@@ -138,12 +138,6 @@
 
 
 
-    <!-- To pass the url to the js file -->
-    <script>
-        window.appUrls = {
-            bulkDelete: "{{ route('schools.bulkDelete') }}"
-        };
-    </script>
 
 
 

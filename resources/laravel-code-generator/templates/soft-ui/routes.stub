@@ -13,7 +13,3 @@
     Route::delete('/[% model_name_snake %]/{[% model_name_singular_variable %]}','[% controller_name %]@destroy')
          ->name('[% destroy_route_name %]')[% route_id_clause %];
 
-    // Added by Aminu. this is not tested. may be faulty
-    Route::match('['post', 'delete'], '/bulk-delete', '[% controller_name %]@bulkDelete')
-        ->name('[% model_name_plural_variable %].bulkDelete');
-
