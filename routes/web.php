@@ -8,6 +8,9 @@ use App\Http\Controllers\InfoUserController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SessionsController;
 use App\Http\Controllers\ChangePasswordController;
+use App\Http\Controllers\RolesController;
+use App\Http\Controllers\PermissionsController;
+use App\Http\Controllers\TeamsController;
 
 
 /*
@@ -106,3 +109,63 @@ Route::match(['POST', 'DELETE'], '/bulk-delete/{record?}', function ($record = n
     return redirect()->back()->with('error', 'Invalid record type specified');
 })->name('bulkDelete');
 
+
+Route::group([
+    'prefix' => 'roles',
+], function () {
+    Route::get('/', [RolesController::class, 'index'])
+         ->name('roles.role.index');
+    Route::get('/create', [RolesController::class, 'create'])
+         ->name('roles.role.create');
+    Route::get('/show/{role}',[RolesController::class, 'show'])
+         ->name('roles.role.show');
+    Route::get('/{role}/edit',[RolesController::class, 'edit'])
+         ->name('roles.role.edit');
+    Route::post('/', [RolesController::class, 'store'])
+         ->name('roles.role.store');
+    Route::put('role/{role}', [RolesController::class, 'update'])
+         ->name('roles.role.update');
+    Route::delete('/role/{role}',[RolesController::class, 'destroy'])
+         ->name('roles.role.destroy');
+
+});
+
+Route::group([
+    'prefix' => 'permissions',
+], function () {
+    Route::get('/', [PermissionsController::class, 'index'])
+         ->name('permissions.permission.index');
+    Route::get('/create', [PermissionsController::class, 'create'])
+         ->name('permissions.permission.create');
+    Route::get('/show/{permission}',[PermissionsController::class, 'show'])
+         ->name('permissions.permission.show');
+    Route::get('/{permission}/edit',[PermissionsController::class, 'edit'])
+         ->name('permissions.permission.edit');
+    Route::post('/', [PermissionsController::class, 'store'])
+         ->name('permissions.permission.store');
+    Route::put('permission/{permission}', [PermissionsController::class, 'update'])
+         ->name('permissions.permission.update');
+    Route::delete('/permission/{permission}',[PermissionsController::class, 'destroy'])
+         ->name('permissions.permission.destroy');
+
+});
+
+Route::group([
+    'prefix' => 'teams',
+], function () {
+    Route::get('/', [TeamsController::class, 'index'])
+         ->name('teams.team.index');
+    Route::get('/create', [TeamsController::class, 'create'])
+         ->name('teams.team.create');
+    Route::get('/show/{team}',[TeamsController::class, 'show'])
+         ->name('teams.team.show')->where('id', '[0-9]+');
+    Route::get('/{team}/edit',[TeamsController::class, 'edit'])
+         ->name('teams.team.edit')->where('id', '[0-9]+');
+    Route::post('/', [TeamsController::class, 'store'])
+         ->name('teams.team.store');
+    Route::put('team/{team}', [TeamsController::class, 'update'])
+         ->name('teams.team.update')->where('id', '[0-9]+');
+    Route::delete('/team/{team}',[TeamsController::class, 'destroy'])
+         ->name('teams.team.destroy')->where('id', '[0-9]+');
+
+});

@@ -1,3 +1,16 @@
 [
-
+    {
+        "model-name": "Team",
+        "resource-file": "teams.json"
+    },
+    {
+        "model-name": "Permission",
+        "resource-file": "permissions.json",
+        "table-name": "permissions"
+    },
+    {
+        "model-name": "Role",
+        "resource-file": "roles.json",
+        "table-name": "roles"
+    }
 ]
