@@ -4,11 +4,11 @@
         {{-- Previous Page Link --}}
         @if ($paginator->onFirstPage())
             <li class="page-item disabled">
-            	<a href="#" class="page-link"><i class="fa-solid fa-angle-left"></i></a>
+                <a href="#" class="page-link"><i class="fa-solid fa-angle-left"></i></a>
             </li>
         @else
             <li class="page-item">
-            	<a  class="page-link" href="{{ $paginator->previousPageUrl() }}" rel="prev"><i class="fa-solid fa-angle-left"></i></a>
+                <a class="page-link" wire:click.prevent="previousPage" wire:loading.attr="disabled" href="#"><i class="fa-solid fa-angle-left"></i></a>
             </li>
         @endif
 
@@ -24,11 +24,11 @@
                 @foreach ($element as $page => $url)
                     @if ($page == $paginator->currentPage())
                         <li class="page-item active">
-							<a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                            <a class="page-link" href="#" wire:click.prevent="gotoPage({{ $page }})">{{ $page }}</a>
                         </li>
                     @else
                         <li class="page-item">
-                        	<a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                            <a class="page-link" href="#" wire:click.prevent="gotoPage({{ $page }})">{{ $page }}</a>
                         </li>
                     @endif
                 @endforeach
@@ -38,11 +38,11 @@
         {{-- Next Page Link --}}
         @if ($paginator->hasMorePages())
             <li class="page-item">
-            	<a class="page-link" href="{{ $paginator->nextPageUrl() }}" rel="next"><i class="fa-solid fa-angle-right"></i></a>
+                <a class="page-link" wire:click.prevent="nextPage" wire:loading.attr="disabled" href="#"><i class="fa-solid fa-angle-right"></i></a>
             </li>
         @else
             <li class="page-item disabled">
-            	<a href="#" class="page-link"><i class="fa-solid fa-angle-right"></i></a>
+                <a href="#" class="page-link"><i class="fa-solid fa-angle-right"></i></a>
             </li>
         @endif
     </ul>

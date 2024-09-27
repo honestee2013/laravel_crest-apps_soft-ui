@@ -3,15 +3,16 @@
 
     <thead>
         <tr>
-
-            <th
-                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 no-print">
-                <div class="form-check">
-                    <input class="form-check-input" style="width: 1.6em; height:1.6em"
-                        type="checkbox" wire:model.live.500ms="selectAll">
-                </div>
-            </th>
-
+            <!--- Bulk Action - Row Selection Checkbox ---->
+            @if(isset($controls['bulkActions']))
+                <th
+                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 no-print">
+                    <div class="form-check">
+                        <input class="form-check-input" style="width: 1.6em; height:1.6em"
+                            type="checkbox" wire:model.live.500ms="selectAll">
+                    </div>
+                </th>
+            @endif
 
             @foreach ($columns as $column)
                 @if (in_array($column, $visibleColumns))
@@ -21,7 +22,12 @@
                         <div
                             class="d-flex justify-content-between p-2 px-3
                         {{ $sortField === $column ? 'rounded-pill bg-gray-100' : '' }}">
-                            <span>{{ ucwords(str_replace('_', ' ', $column)) }}</span>
+
+                            @if(isset($fieldDefinitions[$column]['label']))
+                                <span>{{ ucwords($fieldDefinitions[$column]['label']) }}</span>
+                            @else
+                                <span>{{ ucwords(str_replace('_', ' ', $column)) }}</span>
+                            @endif
                             @if ($sortField === $column)
                                 @if ($sortDirection === 'asc')
                                     <span class="btn-inner--icon"><i
@@ -50,20 +56,53 @@
 
         @forelse($data as $row)
             <tr>
-                <td
-                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 no-print">
-                    <div class="form-check">
-                        <input class="form-check-input" style="width: 1.6em; height:1.6em"
-                            type="checkbox" wire:model="selectedRows" value="{{ $row->id }}"
-                            @if (in_array($row->id, $selectedRows)) selected @endif />
-                    </div>
-                </td>
+                <!--- Bulk Action - Row Selection Checkbox ---->
+                @if(isset($controls['bulkActions']))
+                    <td
+                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 no-print">
+                        <div class="form-check">
+                            <input class="form-check-input" style="width: 1.6em; height:1.6em"
+                                type="checkbox" wire:model="selectedRows" value="{{ $row->id }}"
+                                @if (in_array($row->id, $selectedRows)) selected @endif />
+                        </div>
+                    </td>
+                @endif
 
                 @foreach ($columns as $column)
                     @if (in_array($column, $visibleColumns))
                         <td style="min-width: 10em; white-space: normal; word-wrap: break-word; ">
                             <p class="text-xs font-weight-bold mb-0">
-                                @if (in_array($column, array_keys($multiSelectFormFields)))
+                                @if (isset($fieldDefinitions[$column]) && isset($fieldDefinitions[$column]['relationship']))
+                                    <!---- Has Many Relationship ---->
+                                    @if (isset($fieldDefinitions[$column]['relationship']['type']) && $fieldDefinitions[$column]['relationship']['type'] == 'hasMany')
+                                        {{
+                                            implode(', ',
+                                                $row->{$fieldDefinitions[$column]['relationship']['dynamic_property']}
+                                                ->pluck($fieldDefinitions[$column]['relationship']['display_field'])->toArray()
+                                            )
+                                        }}
+                                    <!---- Belongs To Many Relationship ---->
+                                    @elseif (isset($fieldDefinitions[$column]['relationship']['type']) && $fieldDefinitions[$column]['relationship']['type'] == 'belongsToMany')
+                                        {{
+                                            implode(', ',
+                                                $row->{$fieldDefinitions[$column]['relationship']['dynamic_property']}
+                                                ->pluck($fieldDefinitions[$column]['relationship']['display_field'])->toArray()
+                                            )
+                                        }}
+                                    @else <!---- Belongs Relationship ---->
+                                        @php
+                                            $dynamic_property = $fieldDefinitions[$column]['relationship']['dynamic_property'];
+                                            $displayField = $fieldDefinitions[$column]['relationship']['display_field'];
+                                        @endphp
+                                        {{
+                                            optional($row->{$dynamic_property})->$displayField;
+                                        }}
+
+
+
+
+                                    @endif
+                                @elseif ($column && $multiSelectFormFields && in_array($column, array_keys($multiSelectFormFields)))
                                     {{ str_replace(',', ', ', str_replace(['[', ']', '"'], '', $row->$column)) }}
                                 @elseif (in_array($column, ['image', 'photo', 'picture']))
                                     @if ($row->$column)

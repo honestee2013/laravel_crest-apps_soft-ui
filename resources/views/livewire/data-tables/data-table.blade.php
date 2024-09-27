@@ -8,12 +8,14 @@
         <div class="card-header pb-0">
             <div class="d-flex flex-row justify-content-between">
                 <div>
-                    <h5 class="mb-0">All {{ Str::plural(ucfirst($modelName)) }}</h5>
+                    <h5 class="mb-4">{{ Str::plural(ucfirst($modelName)) }} Record</h5>
                 </div>
-                <button wire:click="openAddModal()" class="btn bg-gradient-secondary btn-icon-only rounded-circle"
-                    type="button">
-                    <i class="fa-solid fa-plus   text-white"></i>
-                </button>
+                @if(is_array($controls) && in_array('addButton',$controls))
+                    <button wire:click="openAddModal()" class="btn bg-gradient-secondary btn-icon-only rounded-circle"
+                        type="button">
+                        <i class="fa-solid fa-plus   text-white"></i>
+                    </button>
+                @endif
             </div>
         </div>
 
@@ -32,7 +34,7 @@
         </div>
 
         <!----------- SHOW DETAIL MODAL ------------->
-        @include('livewire.data-tables.partials.show-deatial-modal')
+        @include('livewire.data-tables.partials.show-detail-modal')
 
         <!------------------- ADD EDIT MODAL ------------------------>
         @include('livewire.data-tables.partials.add-edit-modal')
