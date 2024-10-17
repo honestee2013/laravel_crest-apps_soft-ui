@@ -1,0 +1,9 @@
+<livewire:core.livewire.data-tables.data-table-form
+    :fieldDefinitions="$fieldDefinitions"
+    :model="$model"
+    :multiSelectFormFields="$multiSelectFormFields"
+    :hiddenFields="$hiddenFields"
+    :columns="$columns"
+    :modalId="$modalId"
+    :key="$modalId"
+/>
