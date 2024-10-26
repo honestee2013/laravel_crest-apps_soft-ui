@@ -2,76 +2,63 @@
     <script>
         document.addEventListener('livewire:initialized', function() {
 
+            ///************ MODALS FOR ADD-EDIT   *************///
 
-           ///************ MODALS FOR ADD-EDIT   *************///
-            let addEditModal = null;
-            window.addEventListener('open-add-edit-modal', function() {
-                    if (!addEditModal) {
-                        addEditModal = new bootstrap.Modal(document.getElementById('addEditModal'));
-                    }
-                    addEditModal.show();
+
+            Livewire.on('open-modal-event', function(event) {
+                let modalId = event[0].modalId;
+                let modalWrapper = null;
+                modalWrapper = document.getElementById(modalId);
+                modalWrapper.style.zIndex = 1040 + (parseInt(modalId)); // Adjust starting value if needed
+                modalWrapper.classList.add('is-open');
+                modalWrapper.style.visibility = "visible !important";
             });
 
-            window.addEventListener('close-add-edit-modal', function() {
-                    if (addEditModal) {
-                        addEditModal.hide();
-                    }
-                });
+            Livewire.on('close-modal-event', function(event) {
+                const modalWrapper = document.getElementById(event[0].modalId);
+                modalWrapper.classList.remove('is-open');
+                //modalWrapper.remove();
             });
 
 
 
-           ///************ CHILD MODAL HANDLING   *************///
+            ///************ CHILD MODAL HANDLING   *************///
+            // Function to set the child modal content dynamically
             function setChildModalContent(modalHtml) {
-
-                // Dynamically create a div container for the modal if it doesn't exist
+                // Check for an existing container for child modals
                 let container = document.getElementById('child-modal-container');
                 if (!container) {
                     container = document.createElement('div');
                     container.id = 'child-modal-container';
-                    document.body.appendChild(container);
+                    document.body.insertBefore(container, document.body.firstChild);
+
+                    //document.body.appendChild(container);
                 }
 
-                // Set the modal content inside the container
-                container.innerHTML = modalHtml;
+                // Clean the  container and Add the modal HTML to it
+                let temp = container.innerHTML;
+                container.innerHTML = " ";
+                container.innerHTML = modalHtml + temp;
             }
 
 
-
-           ///************ CHILD MODAL OPEN EVENT  *************///
-           Livewire.on('open-child-modal-event', (event) => {
-
+            ///************ CHILD MODAL OPEN EVENT  *************///
+            Livewire.on('open-child-modal-event', (event) => {
                 // Set the child modal content
                 const modalHtml = event[0].modalHtml; // Or event[0].modalHtml if it's an array
                 const modalId = event[0].modalId; // Or event[0].modalId if it's an array
+
                 setChildModalContent(modalHtml);
 
-                // Create and show the modal
-                var modal = new bootstrap.Modal(document.getElementById(modalId));
-                modal.show();
-
+                Livewire.dispatch('open-modal-event', [{
+                    "modalId": modalId
+                }]); // To show modal
             });
 
 
 
-           ///************ CLEAN UP THE CLOSED MODAL  *************///
-            document.addEventListener('hidden.bs.modal', function(event) {
-                const modalElement = event.target;
-                const modalInstance = bootstrap.Modal.getInstance(modalElement); // Get modal instance
-                if (modalInstance) {
-                    modalInstance.hide(); // Hide the modal using Bootstrap's hide method
-                    //modalElement.remove(); // Remove the modal from the DOM
-                }
-
-                if (modalElement.id == "addEditModal") { // Track the Main Modal closed event
-                    Livewire.dispatch('closeEditModalEvent');
-                }
-            });
-
-
-
-           ///************ SHOW IMAGE CROP MODAL EVENT  *************///
-           let cropper;
+            ///************ SHOW IMAGE CROP MODAL EVENT  *************///
+            let cropper;
             Livewire.on('show-crop-image-modal-event', (event) => {
 
                 // Data from the Backend
@@ -98,17 +85,18 @@
                 // Show the modal
                 myModal.show();
 
-
                 // Set up the Cropper.js instance once the modal is fully shown
                 modalElement.addEventListener('shown.bs.modal', function() {
-                    const cropperContainer = document.getElementById('cropper-image-container' + modalId);
+                    const cropperContainer = document.getElementById('cropper-image-container' +
+                        modalId);
 
                     // Ensure the container has 100% width and appropriate height
                     cropperContainer.style.width = '100%';
                     cropperContainer.style.height = '70vh'; // Adjust height as needed
 
                     // Get the image element (img with empty src must exist for the JCroper.js to work)
-                    const image = document.getElementById('image-to-crop' + modalId); // Ensure you have an image element with this ID
+                    const image = document.getElementById('image-to-crop' +
+                        modalId); // Ensure you have an image element with this ID
 
                     if (image) {
                         image.src = imgSrc;
@@ -130,12 +118,14 @@
                             'click',
                             function() {
                                 // Get the cropped image data URL
-                                const croppedImage = cropper.getCroppedCanvas().toDataURL('image/jpeg');
+                                const croppedImage = cropper.getCroppedCanvas().toDataURL(
+                                    'image/jpeg');
 
                                 // Emit the event to Livewire with the Base64 image data
                                 if (component) {
                                     // Call the method on the correct component instance
-                                    component.call('saveCroppedImage', field, croppedImage, component.id);
+                                    component.call('saveCroppedImage', field, croppedImage,
+                                        component.id);
                                 }
 
                                 // Close the modal
@@ -202,6 +192,7 @@
 
 
 
+
             ///************ SUCCESS DIALOG *************///
             window.addEventListener('swal:success', function(event) {
                 Swal.fire({
@@ -230,17 +221,7 @@
             });
 
 
-
-
-            ///************ SHOW ITEM DETAIL MODAL  *************///
-            let showDetailModal = null;
-            window.addEventListener('open-show-item-detail-modal', function() {
-                if (!showDetailModal) {
-                    showDetailModal = new bootstrap.Modal(document.getElementById('showDetailModal'));
-                }
-                showDetailModal.show();
-            });
-
+        });
     </script>
 @endscript
 
@@ -259,4 +240,6 @@
                 `
         });
     }
+
+
 </script>

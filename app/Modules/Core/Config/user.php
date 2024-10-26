@@ -3,7 +3,7 @@
 return [
 
 
-        "model" => "App\Modules\Inventory\Models\Item",
+        "model" => "App\\Modules\\Inventory\\Models\\Item",
 
         "fieldDefinitions" => [
             'name' => ['field_type' => 'name', 'validation' => 'required|string|min:10'],

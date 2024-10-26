@@ -4,6 +4,7 @@ namespace App\Modules\Core\Livewire\DataTables;
 
 
 use Livewire\Component;
+use Illuminate\Support\Facades\Log;
 use App\Modules\Core\Traits\DataTable\DataTableControlsTrait;
 use App\Modules\Core\Traits\DataTable\DataTableFieldsConfigTrait;
 
@@ -35,8 +36,9 @@ class DataTableManager extends Component
     public $perPage = 5;
 
     public $modalCount = 0;
-    public $refreshModalCount = 50;
+    public $refreshModalCount = 20;
 
+    public $modalStack = [];
     public $feedbackMessages = "";
 
 
@@ -45,8 +47,11 @@ class DataTableManager extends Component
         "changeFormModeEvent" => "changeFormMode",
         "changeSelectedItemEvent" => "changeSelectedItem",
         "openAddRelationshipItemModalEvent" => "openAddRelationshipItemModal",
+
         "openCropImageModalEvent" => "openCropImageModal",
         'checkPageRefreshTimeEvent' => 'checkPageRefreshTime',
+
+        'addModalFormComponentStackEvent' => 'addModalFormComponentStack',
 
     ];
 
@@ -54,6 +59,8 @@ class DataTableManager extends Component
 
 
     public function mount() {
+Log::info("DataTableManager->mount(): ".$this->getId());
+//array_push($this->modalStack, $this->getId());
 
         $this->feedbackMessages = "";
 
@@ -83,11 +90,25 @@ class DataTableManager extends Component
     }
 
 
+
+    public function addModalFormComponentStack($componentId) {
+        array_push($this->modalStack, $componentId);
+        $this->modalStack = array_unique($this->modalStack);
+    }
+
+
+
     public function changeFormMode($data) {
-        if ($data['mode'] == 'edit')
+
+        if ($data['mode'] == 'edit') {
             $this->isEditMode = true;
-        else
+        } else {
+            // New modal
             $this->isEditMode = false;
+              // Update the stack
+            //array_push($this->modalStack, $data['componentId']) ;
+
+        }
     }
 
 
@@ -99,6 +120,7 @@ class DataTableManager extends Component
 
 
     public function openAddRelationshipItemModal($model, $moduleName = "") {
+        Log::info("openAddRelationshipItemModal(). Model: ".$model. " Module: ".$moduleName);
 
         // Reset multiple opend modal component to release space
         $this->checkPageRefreshTime();
@@ -113,7 +135,7 @@ class DataTableManager extends Component
         // Set the ModuleName and the Model
         $modelName = class_basename($model);
         if(!$moduleName)
-            $moduleName = $this->extractModuleNameFromModel($this->model);
+            $moduleName = $this->extractModuleNameFromModel($model);
 
         // Config file name space access is in lower case
         $modelName=strtolower($modelName);
@@ -124,23 +146,31 @@ class DataTableManager extends Component
         $data["modalId"] = $modalId;
         $data["isEditMode"] = false;
         $data["model"] = $model;
-        $data["modalClass"] = "modal-md";
+        $data["modelName"] = $modelName;
+        $data["modalClass"] = "childModal";
 
         //try {
-            $modalHeader =  view('core::data-tables.modals.modal-header', $data)->render();
-            $modalBodyContent =  view('core::data-tables.partials.form-render', $data)->render();
-            $modalBody =  view('core::data-tables.modals.modal-body', ["content" => $modalBodyContent])->render();
-            $modalFooter =  view('core::data-tables.modals.modal-footer',$data)->render();
+        $modalHeader =  view('core::data-tables.modals.modal-header', $data)->render();
+        $modalBodyContent =   view('core::data-tables.partials.form-render', $data)->render();
+        $modalBody =  view('core::data-tables.modals.modal-body', ["content" => $modalBodyContent])->render();
+        $modalFooter =  view('core::data-tables.modals.modal-footer',$data)->render();
 
-            $modalHtml = $modalHeader.$modalBody.$modalFooter;
-            // Dispatch the modal event again
-            $this->dispatch("open-child-modal-event", ['modalHtml' => $modalHtml, "modalId" => $modalId]);
+        $modalHtml = $modalHeader.$modalBody.$modalFooter;
+
+
+
+        // Dispatch the modal event again
+        $this->dispatch("open-child-modal-event", ['modalHtml' => $modalHtml, "modalId" => $modalId]);
+
+        //array_push($this->modalStack, $this->getId());
 
         //} catch (\Exception $e) {
             //Log::error("DataTableManager::openAddRelationshipItemModal($modelName, $moduleName): Failed to load the configuration file for the child modal!");
         //}
 
     }
+
+
 
 
     public function openCropImageModal($field, $imgUrl, $id) {

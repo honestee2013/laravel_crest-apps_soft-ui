@@ -1,12 +1,22 @@
 
-        <div wire:ignore.self class="modal fade" id="{{$modalId?? 'addEditModal'}}" tabindex="-1"
-            role="dialog"aria-labelledby="addEditModalLabel" aria-hidden="true" wire:key='"{{$modalId}}'>
+<div wire:ignore.self id="{{$modalId}}" class="modal-wrapper" wire:key="{{$modalId}}">
+    <!-- Modal Backdrop -->
+    <div class="modal-backdrop" id="modalBackdrop"
+        onclick="Livewire.dispatch('close-modal-event', [{'modalId': '{{$modalId}}' }])"></div>
 
-            <div class="modal-dialog modal-dialog-centered {{ $modalClass?? 'modal-lg' }} " role="document">
-                <div class="modal-content">
-                    <div class="modal-body p-4">
-                        <div class="card card-plain">
-                            <div class="card-header pb-0 text-left">
-                                <h4 class="font-weight-bolder text-info text-gradient">
-                                    {{ $isEditMode ? 'Edit Record' : 'New Record' }}</h4>
-                            </div>
+    <!-- Modal Content -->
+    <div class="modal-content p-4  {{ $modalClass?? 'mainModal'}}" id="modalContent">
+        <h5 class="card-title text-info text-gradient font-weight-bolder pt-4 ps-4">
+            @if ($modalId !== "detail")
+            {{ $isEditMode ? 'Edit '.ucfirst($modelName).' Record' : 'New '.ucfirst($modelName).' Record' }}
+            @else
+                {{ ucfirst($modelName) }} Record Detail
+            @endif
+        </h5>
+        <div class="mb-4"><hr class="horizontal dark my-0" /></div>
+        <div class="modal-body">
+
+
+
+
+

@@ -1,6 +1,7 @@
 <div>
-    <form role="form text-left" wire:submit.prevent="$dispatch('submitDatatableFormEvent')">
-        @foreach (array_keys($fieldDefinitions) as $field)
+    {{--<form role="form text-left" wire:submit.prevent="$dispatch('submitDatatableFormEvent')">--}}
+        <form role="form text-left">
+            @foreach (array_keys($fieldDefinitions) as $field)
             <!----  CHECKING IF SHOULD BE DISPLAYED ON FORM    ---->
             @if (($isEditMode && !in_array($field, $hiddenFields['onEditForm'])) ||
                     (!$isEditMode && !in_array($field, $hiddenFields['onNewForm'])))
@@ -31,6 +32,7 @@
                         }
 
                     @endphp
+                <!----  FORM FIELDS    ---->
                 <div class="form-group">
                         @if (isset($fieldDefinitions[$field]['label']))
                             <label for="{{ $field }}">{{ ucwords($fieldDefinitions[$field]['label']) }}</label>
@@ -40,15 +42,17 @@
 
 
                         <!---- Add  item ---->
-                        @if (!$isEditMode && isset($fieldDefinitions[$field]['inlineAdd']) && $fieldDefinitions[$field]['inlineAdd'])
-                            <!-- Button to open the secondary modal to add new items -->
-                            <span role="button" class="badge rounded-pill bg-primary text-xxs"
-                                onclick="Livewire.dispatch('openAddRelationshipItemModalEvent',
-                                    [{{ json_encode($fieldDefinitions[$field]['model']) }},
-                                    '{{ $fieldDefinitions[$field]['module'] }}'
-                                    ] )">
-                                Add
-                            </span>
+                        @if (isset($fieldDefinitions[$field]['relationship'])
+                                && isset($fieldDefinitions[$field]['relationship']['inlineAdd'])
+                                && $fieldDefinitions[$field]['relationship']['inlineAdd']
+                            )
+                                <!-- Button to open the secondary modal to add new items -->
+                                <span role="button" class="badge rounded-pill bg-primary text-xxs"
+                                    onclick="Livewire.dispatch('openAddRelationshipItemModalEvent',
+                                        [{{ json_encode($fieldDefinitions[$field]['relationship']['model']) }}
+                                        ] )">
+                                    Add
+                                </span>
                         @endif
 
 
@@ -196,11 +200,5 @@
             @endif
         @endforeach
 
-        <!----  FORM BUTTONS    ---->
-        <div class="modal-footer mt-5 mb-0 pb-0">
-            <button type="button" class="btn bg-gradient-secondary rounded-pill" data-bs-dismiss="modal">Close</button>
-            <button type="submit"
-                class="btn bg-gradient-primary rounded-pill">{{ $isEditMode ? 'Save Changes' : 'Add Record' }}</button>
-        </div>
     </form>
 </div>

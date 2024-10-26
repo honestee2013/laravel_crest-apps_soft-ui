@@ -29,6 +29,8 @@ class DataTableForm extends Component
 
         'resetFormFieldsEvent' => 'resetFields',
         'submitDatatableFormEvent' => 'saveRecord',
+
+        'refreshFieldsEvent' => 'refreshFields'
     ];
 
 
@@ -39,6 +41,8 @@ class DataTableForm extends Component
     public $columns;
     public $fields;
     public $model;
+    public $modalId;
+
 
 
     ////// DEFINE BY THIS CLASS //////
@@ -47,12 +51,17 @@ class DataTableForm extends Component
     public $messages = [];
     public $selectedItemId;
     public $selectedRows = [];
-
+    //public $modalStack;
 
 
 
     public function mount()
     {
+
+        $this->dispatch("addModalFormComponentStackEvent", $this->getId()); // Close the model
+
+        Log::info("DataTableForm->mount(): ".$this->getId());
+
         // Initialize fields with keys from fieldDefinitions
         foreach ($this->fieldDefinitions as $field => $type) {
             $this->fields[$field] = null; // Default values (null or empty)
@@ -60,9 +69,26 @@ class DataTableForm extends Component
     }
 
 
+    public function refreshFields() {
+        Log::info("DataTableForm->refreshFields(): ".$this->getId());
+
+        $modelName = class_basename($this->model);
+        $moduleName = $this->extractModuleNameFromModel($this->model);
+
+        $moduleName = strtolower($moduleName);
+        $modelName = strtolower($modelName);
+        $data = $this->configTableFields($moduleName, $modelName);
+        $this->fieldDefinitions = $data["fieldDefinitions"];
+    }
+
+
     // Save Record Method (Add or Edit)
-    public function saveRecord()
+    public function saveRecord($modalId)
     {
+
+        Log::info("DataTableForm->saveRecord(): ".$this->getId());
+
+
         // Retrieve dynamic validation rules
         $validationData = $this->getDynamicValidationRules();
         $validationMsgs = []; // ///To be implemented later
@@ -173,11 +199,19 @@ class DataTableForm extends Component
             'icon' => 'success',
         ]);
 
+
+
         // Close the modal, reset fields and refresh the table after saving
         $this->resetFields(); // Next new form should be blank
         $this->dispatch("recordSavedEvent"); // Table refresh
-        $this->dispatch("close-add-edit-modal"); // Close the model
+        $this->dispatch('close-modal-event', ["modalId" => $modalId]);  // To show modal
+        $this->dispatch('close-modal-event', ["modalId" => $modalId]);  // To show modal
+        $this->dispatch('refreshFieldsEvent');  // To show modal
+
     }
+
+
+
 
 
     // Get Dynamic Validation Rules
@@ -225,15 +259,19 @@ class DataTableForm extends Component
 
 
     // Method to open the Edit Modal
-    public function openEditModal($id)
+    public function openEditModal($id, $model)
     {
+        Log::info("DataTableForm->openEditModal(): Id: ".$id." this->model: ".$this->model);
+        Log::info("DataTableForm->openEditModal(): Id: ".$id." model: ".$model);
+        Log::info("DataTableForm->openEditModal(): ".$this->getId());
+
         // Reset multiple opend modal component to release space
         $this->dispatch('checkPageRefreshTimeEvent');
 
         // Reset all the form fields and make new ones
         $this->resetFields();
 
-        $record = $this->model::find($id);
+        $record = $model::find($id);
         $this->selectedItemId = $record->id;
 
         foreach ($this->fieldDefinitions as $field => $type) {
@@ -270,7 +308,10 @@ class DataTableForm extends Component
 
 
         $this->isEditMode = true;
-        $this->dispatch('open-add-edit-modal');
+        //$this->dispatch('open-add-edit-modal' );
+        //$this->dispatch('show-modal-main' );
+        $this->dispatch('open-modal-event', ["modalId" => "addEditModal"]);  // To show modal
+
         $this->dispatch('changeFormModeEvent', ['mode' => 'edit']);
     }
 
@@ -344,7 +385,9 @@ class DataTableForm extends Component
 
         $this->resetFields();
         $this->isEditMode = false;
-        $this->dispatch('open-add-edit-modal');
+        //$this->dispatch('open-add-edit-modal');
+        $this->dispatch('open-modal-event', ["modalId" => "addEditModal"]);  // To show modal
+
         $this->dispatch('changeFormModeEvent', ['mode' => 'new']);
     }
 
@@ -392,19 +435,20 @@ class DataTableForm extends Component
 
 
     ///////////////////// SHOW DETAIL MODAL //////////////////
-    public function openDetailModal($id)
+    public function openDetailModal($id, $model)
     {
         // Load the selected item details from the database
-        $this->selectedItem = $this->model::findOrFail($id);
+        $this->selectedItem = $model::findOrFail($id);
         // Emit event to trigger the modal
         $this->dispatch('changeSelectedItemEvent', $id);
-        $this->dispatch('open-show-item-detail-modal');
+        //$this->dispatch('open-show-item-detail-modal');
+        $this->dispatch('open-modal-event', ["modalId" => "detail", "modalClass" => "childModal"]);
     }
 
 
     public function render()
     {
-        return view('core::data-tables.data-table-form', []);
+        return view('core::data-tables.data-table-form');
     }
 
 }

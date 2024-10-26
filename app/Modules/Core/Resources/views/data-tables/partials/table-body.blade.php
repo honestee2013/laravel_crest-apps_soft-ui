@@ -128,14 +128,15 @@
                     @if ($simpleActions)
                         @foreach ($simpleActions as $action)
                             @if (strtolower($action) == 'edit')
-                                <span wire:click="editRecord( {{ $row->id }} )"
+
+                                <span wire:click="editRecord( {{ $row->id }}, '{{ addslashes($model) }}' )"
                                     class="mx-2"
                                     style="cursor: pointer"
                                     data-bs-toggle="tooltip" data-bs-original-title="Edit">
                                     <i class="fas fa-edit text-primary"></i>
                                 </span>
                             @elseif(strtolower($action) == 'show')
-                                <span wire:click="$dispatch('openDetailModalEvent', [{{ $row->id }}] )"
+                                <span wire:click="$dispatch('openDetailModalEvent', [{{ $row->id }}, '{{ addslashes($model) }}'] )"
                                     style="cursor: pointer" class="mx-2"
                                     data-bs-toggle="tooltip"  data-bs-original-title="Detail"
                                     >

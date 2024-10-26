@@ -147,8 +147,8 @@ class DataTable extends Component
 
 
     ///////// Trigger Events /////////////
-    public function editRecord($id) {
-        $this->dispatch("openEditModalEvent", $id);
+    public function editRecord($id, $model) {
+        $this->dispatch("openEditModalEvent", $id, $model);
     }
 
 

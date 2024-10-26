@@ -4,8 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateItemsTable extends Migration
-{
+return new class extends Migration
+    {
     /**
      * Run the migrations.
      *
@@ -17,7 +17,7 @@ class CreateItemsTable extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->text('description')->nullable();
-            $table->foreignId('unit_id')->nullable()->constrained('units')->onDelete('cascade'); // Foreign key to the units table
+            $table->foreignId('unit_id')->nullable()->constrained('units')->onDelete('set null'); // Foreign key to the units table
             $table->string('sku')->nullable()->unique(); // Stock Keeping Unit
             $table->decimal('price', 10, 2)->default(00.00); // e.g., 9999.99
             $table->enum('item_type', ['resource', 'finished_good'])->default('finished_good'); // Type of item
@@ -41,5 +41,5 @@ class CreateItemsTable extends Migration
     {
         Schema::dropIfExists('items');
     }
-}
+};
 

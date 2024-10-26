@@ -4,8 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCategoriesTable extends Migration
-{
+return new class extends Migration
+    {
     /**
      * Run the migrations.
      *
@@ -15,11 +15,11 @@ class CreateCategoriesTable extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->text('description')->nullable();
             $table->string('image')->nullable(); // Optional image for the category
-            $table->foreignId('parent_id')->nullable()->constrained('categories')->onDelete('cascade'); // For subcategories
-            $table->enum('status', ['active', 'inactive'])->default('active'); // Category status
+            $table->foreignId('parent_id')->nullable()->constrained('categories')->onDelete('set null'); // For subcategories
+            $table->string('status')->nullable()->default('active'); // Category status ['active', 'inactive'])
             $table->string('slug')->nullable(); // Optional for URL-friendly names
             $table->string('meta_title')->nullable(); // Optional SEO meta title
             $table->text('meta_description')->nullable(); // Optional SEO meta description
@@ -36,4 +36,4 @@ class CreateCategoriesTable extends Migration
     {
         Schema::dropIfExists('categories');
     }
-}
+};

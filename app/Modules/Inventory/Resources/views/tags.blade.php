@@ -10,7 +10,7 @@
 
 
     <livewire:core.livewire.data-tables.data-table
-        model="App\Modules\Inventory\Models\Tag"
+        model="App\\Modules\\Inventory\\Models\\Tag"
         :fieldDefinitions="[
             'name' => 'text',
             'description' =>'textarea',
