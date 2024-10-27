@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name')->nullable(); // Tag name
             $table->text('description')->nullable();
             $table->string('slug')->nullable()->unique(); // URL-friendly tag (optional)
+            
             $table->timestamps();
         });
     }

@@ -31,7 +31,7 @@ class DataTable extends Component
     public $visibleColumns;
     public $selectedColumns;
     public $sortField; // Default sort field
-    public $sortDirection; // Default sort direction
+    public $sortDirection = 'asc'; // Default sort direction
     public $perPage;
     public $selectedRows = [];
     public $selectAll;
@@ -73,7 +73,7 @@ class DataTable extends Component
 
        if ($this->sortField === $field) {
            // If already sorting by this field, toggle the direction
-           $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+           $this->sortDirection = $this->sortDirection == 'asc' ? 'desc' : 'asc';
        } else {
            // Otherwise, set to sort by this field in ascending order
            $this->sortField = $field;

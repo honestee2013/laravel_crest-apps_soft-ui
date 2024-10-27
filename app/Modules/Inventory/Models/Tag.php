@@ -13,7 +13,8 @@ class Tag extends Model
     protected $fillable = [
         'name',
         'description',
-        'slug'
+        'slug',
+        'item_id'
     ];
 
     public function items()

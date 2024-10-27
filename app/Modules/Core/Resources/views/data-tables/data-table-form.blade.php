@@ -73,10 +73,10 @@
                             @endif
 
                             @if (isset($fieldDefinitions[$field]['label']))
-                                <option style="display:none" value="">Select {{ $fieldDefinitions[$field]['label'] }}
+                                <option style="display:none" value="">Select {{ $fieldDefinitions[$field]['label'] }}...
                                 </option>
                             @else
-                                <option style="display:none" value="">Select {{ $field }}</option>
+                                <option style="display:none" value="">Select {{ strtolower(str_replace('_', ' ', $field)) }}...</option>
                             @endif
 
                             @foreach ($options as $key => $value)
