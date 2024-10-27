@@ -7,12 +7,13 @@ use Livewire\Component;
 
 use Illuminate\Support\Str;
 use Livewire\WithPagination;
+use App\Modules\Core\Traits\DataTable\DataTableFieldsConfigTrait;
 
 
 
 class DataTable extends Component
 {
-    use WithPagination;
+    use WithPagination, DataTableFieldsConfigTrait;
 
 
     ///////////////// DEFINED BY THE PARENT CLASS ///////////////

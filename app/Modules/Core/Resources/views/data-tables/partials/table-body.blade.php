@@ -106,7 +106,8 @@
                                     @endif
                                 @elseif ($column && $multiSelectFormFields && in_array($column, array_keys($multiSelectFormFields)))
                                     {{ str_replace(',', ', ', str_replace(['[', ']', '"'], '', $row->$column)) }}
-                                @elseif (in_array($column, ['image', 'photo', 'picture']))
+
+                                @elseif (in_array($column, $this->getSupportedImageColumnNames()))
                                     @if ($row->$column)
                                         <img class="rounded-circle m-0"
                                             style="width: 4em; height: 4em;"

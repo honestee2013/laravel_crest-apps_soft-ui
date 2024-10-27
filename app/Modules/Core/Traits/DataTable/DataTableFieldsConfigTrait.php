@@ -120,6 +120,6 @@ trait DataTableFieldsConfigTrait
 
 
     public function getSupportedImageColumnNames() {
-        return ['image', 'photo', 'picture'];
+        return ['image', 'photo', 'picture', 'logo'];
     }
 }

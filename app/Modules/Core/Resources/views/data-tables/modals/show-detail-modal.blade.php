@@ -15,7 +15,7 @@
                     <strong class="pe-3">{{ ucwords(str_replace('_', ' ', $column)) }}</strong>
                 @endif
 
-                @if ($column == 'image' || $column == 'photo' || $column == 'picture')
+                @if (in_array($column, $this->getSupportedImageColumnNames()))
                     <div class="d-flex justify-content-center">
                         <img class="rounded rounded-3 mb-5" style="width: 10em"
                             src="{{ asset('storage/' . $selectedItem->$column) }}" alt="">
