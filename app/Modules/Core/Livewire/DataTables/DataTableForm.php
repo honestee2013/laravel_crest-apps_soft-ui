@@ -220,14 +220,14 @@ class DataTableForm extends Component
         $rules = [];
         foreach ($this->fieldDefinitions as $field => $type) {
 
-            // Check if we are in edit mode and the field is not hidden only then validate
+            // Check if  the field is not hidden only then validate
             if (
-                ($this->isEditMode && !in_array($field, $this->hiddenFields['onEditForm']))
+                (!in_array($field, $this->hiddenFields['onEditForm']))
                 || (!in_array($field, $this->hiddenFields['onNewForm']))
             ) {
 
                 // Handle multi-select form field validation and messages
-                if (isset($this->multiSelectFormFields)) {
+                if (!empty($this->multiSelectFormFields)) {
                     foreach (array_keys($this->multiSelectFormFields) as $fieldName) {
                         $validationFiedName = 'multiSelectFormFields.' . $fieldName;
                         if (isset($this->fieldDefinitions[$fieldName]) && isset($this->fieldDefinitions[$fieldName]['validation'])) {
@@ -235,8 +235,9 @@ class DataTableForm extends Component
                         }
                     }
 
-                } else
-                    // Check if validation exists in fieldDefinitions of not multiselect
+                } else {
+
+                    // Check if validation exists in fieldDefinitions  not on multiselect
                     if (isset($this->fieldDefinitions[$field]['validation'])) {
                         // Apply validation directly for non-image fields only
 
@@ -250,6 +251,7 @@ class DataTableForm extends Component
                             $rules["fields.$field"] = $this->fieldDefinitions[$field]['validation'];
                         }
                     }
+                }
             }
         }
 

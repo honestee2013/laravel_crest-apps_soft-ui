@@ -25,8 +25,6 @@
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.4s ease, visibility 0s 0.4s;
-            overflow-y: auto;
-            padding-top: 25% !important;
 
         }
 
@@ -49,7 +47,7 @@
             transform: translateY(0);
             background-color: white;
             width: 80%;
-
+            max-height: 90vh;
             /* Ensures modal fits within viewport height */
             min-height: 500px;
             /* Optional: Ensures modal has a minimum height */
@@ -57,9 +55,6 @@
             border-radius: 8px;
             transition: top 0.6s ease, transform 1s ease;
             z-index: 1040;
-            margin-top: 35% !important;
-            margin-bottom: 5% !important;
-
         }
 
 
@@ -83,7 +78,11 @@
         }
 
         /* Modal body for scrollable content */
-
+        .modal-body {
+            max-height: 95vh;
+            /* Optional: further limit content area within modal */
+            overflow-y: auto;
+        }
 
         .mainModal {
             max-width: 800px;
