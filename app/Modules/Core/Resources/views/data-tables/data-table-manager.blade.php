@@ -20,7 +20,7 @@
     {{-- ------------ CONTENT BEGINS ------------ --}}
     <div class="card mb-4 mx-4 p-4">
 
-        {{-- ------------ CARD HEADER ------------ --}}
+        {{-- ------------DATA TABLE MANAGER HEADER TEXT ------------ --}}
         <div class="card-header pb-0">
             <div class="d-flex flex-row justify-content-between">
                 <div>

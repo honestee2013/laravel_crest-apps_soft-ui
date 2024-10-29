@@ -16,19 +16,19 @@ class CreateCompaniesTable extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
             $table->string( 'logo')->nullable();
-            $table->string( 'name');
+            $table->string( 'name')->nullable();;
             $table->foreignId('location_id')->nullable()->constrained()->onDelete('cascade');
             //$table->foreignId('country')->constrained()->onDelete('cascade');
             //$table->foreignId('state')->constrained()->onDelete('cascade');
             //$table->foreignId('city')->constrained()->onDelete('cascade');
 
             $table->string( 'phone')->nullable();
-            $table->string( 'email');
+            $table->string( 'email')->nullable();;
             $table->string( 'website')->nullable();;
             $table->string( 'address')->nullable();;
             $table->string( 'postal_code')->nullable();;
 
-            $table->enum('status', ['active', 'inactive', 'dissolved'])->default('active');
+            $table->string('status')->nullable();// ['active', 'inactive', 'dissolved'])->default('active');
 
             $table->text( 'description')->nullable();;
             $table->date('date_established')->nullable();;
