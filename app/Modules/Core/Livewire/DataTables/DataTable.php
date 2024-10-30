@@ -181,16 +181,15 @@ class DataTable extends Component
     {
 
         // Get the hidden fields on query
-        $moduleName = strtolower($this->moduleName);
-        $modelName = strtolower($this->modelName);
-        $hiddenFields = config( "$moduleName.$modelName.hiddenFields.onQuery") ?? [];
+        $hiddenFields = $this->hiddenFields["onQuery"];//config( "$moduleName.$modelName.hiddenFields.onQuery") ?? [];
 
+       $modelClass = '\\' . ltrim($this->model, '\\'); // Ensure the model has a leading backslash
+       $query = (new $modelClass)->newQuery();
 
-        $query = app($this->model)->newQuery();
 
         // Apply search filters
         if (!empty($this->search)) {
-            $query->where(function ($q) use($hiddenFields) {
+            $query?->where(function ($q) use($hiddenFields) {
                 foreach ($this->fieldDefinitions as $fieldName => $fieldDefinition) {
                    // Skip the hidden fields
                    if (in_array($fieldName, $hiddenFields))
@@ -228,14 +227,13 @@ class DataTable extends Component
 
 
         // Apply sorting
-        $query->orderBy($this->sortField, $this->sortDirection);
+        if ($this->sortField)
+            $query?->orderBy($this->sortField, $this->sortDirection);
 
-        $data = $query->paginate($this->perPage);
+        $data = $query?->paginate($this->perPage);
 
         return view('core::data-tables.data-table', [
-            'data' => $data,
-            'columns' => $this->columns,
-            'visibleColumns' => $this->visibleColumns,
+            'data' => $data
         ]);
 
 
