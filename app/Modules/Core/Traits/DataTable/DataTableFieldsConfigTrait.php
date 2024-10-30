@@ -31,6 +31,7 @@ trait DataTableFieldsConfigTrait
         foreach (array_keys($config["fieldDefinitions"]) as $fieldName) {
             $config["columns"][] = $fieldName;
         }
+        $config["visibleColumns"] = $config["columns"];
         return $config;
     }
 
@@ -75,6 +76,8 @@ trait DataTableFieldsConfigTrait
             $hiddenFields['onNewForm'] = [];
         if (!isset($hiddenFields['onEditForm']))
             $hiddenFields['onEditForm'] = [];
+        if (!isset($hiddenFields['onQuery']))
+            $hiddenFields['onQuery'] = [];
 
         // Add the default hidden fields
         foreach ($this->defaultHiddenFields as $field) {
@@ -86,6 +89,8 @@ trait DataTableFieldsConfigTrait
                 $hiddenFields['onNewForm'][] = $field;
             if (!in_array($field, array_keys($hiddenFields['onEditForm'])))
                 $hiddenFields['onEditForm'][] = $field;
+            if (!in_array($field, array_keys($hiddenFields['onQuery'])))
+                $hiddenFields['onQuery'][] = $field;
         }
 
         return $hiddenFields;
