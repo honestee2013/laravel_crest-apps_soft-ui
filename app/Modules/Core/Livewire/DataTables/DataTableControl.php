@@ -33,7 +33,7 @@ class DataTableControl extends Component
     public $perPage;
 
     public $sortField;
-    public $sortDirection;
+    public $sortDirection = "asc";
 
     public $selectedRows = [];
 
@@ -132,7 +132,9 @@ class DataTableControl extends Component
         $data['fileName'] = $fileName;
         $data['fileType'] = $fileType;
 
-        return (new DataExport($data))->export();
+        $result = (new DataExport($data))->export();
+
+        return $result;
     }
 
 
@@ -167,51 +169,60 @@ class DataTableControl extends Component
     {
 
         // Get the hidden fields on query
-        $moduleName = strtolower($this->moduleName);
-        $modelName = strtolower($this->modelName);
-        $hiddenFields = config("$moduleName.$modelName.hiddenFields.onQuery") ?? [];
+        //$hiddenFields = $this->hiddenFields["onQuery"];//config( "$moduleName.$modelName.hiddenFields.onQuery") ?? [];
+        $visibleColumns = [];
+        foreach ($this->fieldDefinitions as $column => $definition) {
+            // Skip the hidden fields
+            if (!in_array($column, $this->hiddenFields["onQuery"]))
+                $visibleColumns[] = $column;
+        }
+
+
+       $modelClass = '\\' . ltrim($this->model, '\\'); // Ensure the model has a leading backslash
+       $query = (new $modelClass)->newQuery();
 
         return $this->model::query()
 
-            ->when($this->search, function ($query) use ($hiddenFields) {
+            ->when($this->search, function ($query) use($visibleColumns)  {
                 foreach ($this->fieldDefinitions as $column => $definition) {
-                    // Skip the hidden fields
-                    if (in_array($column, $hiddenFields))
-                        continue;
 
-                    // Check if the column is part of a relationship
-                    if (isset($definition['relationship'])) {
-                        $relationship = $definition['relationship'];
+                    //if (in_array($column, $visibleColumns)) {
 
-                        // Check the dependent fields
-                        if (
-                            !isset($relationship['type'])
-                            || !isset($relationship['display_field'])
-                            || !isset($relationship['dynamic_property'])
-                        )
-                            continue;
+                        // Check if the column is part of a relationship
+                        if (isset($definition['relationship'])) {
+                            $relationship = $definition['relationship'];
 
-                        $relationshipType = $relationship['type'];
-                        //$relatedModel = $relationship['model'];
-                        $displayField = $relationship['display_field'];
-                        //$foreignKey = $relationship['foreign_key'];
-                        $dynamicProperty = $relationship['dynamic_property'];
+                            // Check the dependent fields
+                            if (
+                                !isset($relationship['type'])
+                                || !isset($relationship['display_field'])
+                                || !isset($relationship['dynamic_property'])
+                            )
+                                continue;
 
-                        // Handle belongsTo, hasMany, belongsToMany relationships
-                        if (in_array($relationshipType, ['belongsTo', 'hasMany', 'belongsToMany'])) {
-                            $query->orWhereHas($dynamicProperty, function ($relatedQuery) use ($displayField) {
-                                $relatedQuery->where($displayField, 'like', '%' . $this->search . '%');
-                            });
+                            $relationshipType = $relationship['type'];
+                            //$relatedModel = $relationship['model'];
+                            $displayField = $relationship['display_field'];
+                            //$foreignKey = $relationship['foreign_key'];
+                            $dynamicProperty = $relationship['dynamic_property'];
+
+                            // Handle belongsTo, hasMany, belongsToMany relationships
+                            if (in_array($relationshipType, ['belongsTo', 'hasMany', 'belongsToMany'])) {
+                                $query->orWhereHas($dynamicProperty, function ($relatedQuery) use ($displayField) {
+                                    $relatedQuery->where($displayField, 'like', '%' . $this->search . '%');
+                                });
+                            }
+                        } else {
+                            // For non-relationship fields, do a regular where clause
+                            $query->orWhere($column, 'like', '%' . $this->search . '%');
                         }
-                    } else {
-                        // For non-relationship fields, do a regular where clause
-                        $query->orWhere($column, 'like', '%' . $this->search . '%');
-                    }
+                    //}
+
                 }
             })
             ->orderBy($this->sortField, $this->sortDirection)
             ->take($this->perPage)  // Limit the number of records to the per-page value
-            ->get($this->visibleColumns);
+            ->get($visibleColumns);
     }
 
 

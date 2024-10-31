@@ -26,6 +26,52 @@ class DataTableControlTest extends TestCase
     }
 
 
+    public function test_datatable_control_file_export_table_successfully() {
+        // Asuming that the data base seeder always seeds the user 'admin' with email "admin@softui.com"
+        $data = $this->getData();
+        $data["hiddenFields"]['onQuery'] = array_unique([...$data["hiddenFields"]['onQuery'], "password_confirmation"]);
+        $data["sortField"] = "name";
+        $dataTable =  Livewire::test(DataTableControl::class, $data);
+        $fileInfo = $dataTable->call("export", "xlsx");
+        $fileInfo->assertStatus(200); // Better approach should be used eg. $fileInfo->assertDownload("filename)
+    }
+
+
+    public function test_datatable_control_change_per_page_successfully() {
+        $dataTable =  Livewire::test(DataTable::class, $this->getData());
+        $dataTable->call("changePerPage", 5)
+            ->assertSee("Showing 1 to 5");
+    }
+
+
+    public function test_datatable_control_search_successfully() {
+        // Asuming that the data base seeder always seeds the user 'admin' with email "admin@softui.com"
+       $dataTable =  Livewire::test(DataTable::class, $this->getData());
+        $dataTable->call("changeSearch", "admin@softui.com")
+            ->assertSee("Showing 1 to 1");
+    }
+
+
+    public function test_datatable_control_show_hide_columns_successfully() {
+        $dataTable =  Livewire::test(DataTable::class, $this->getData());
+        $dataTable->call("showHideColumns", [$dataTable->columns[0]]);
+        $this->assertEquals($dataTable->visibleColumns[0], $dataTable->columns[0]);
+    }
+
+
+
+    public function test_datatable_control_toggle_sort_successfully() {
+        // Asuming that the data base seeder always seeds the user 'admin' with email "admin@softui.com"
+        $dataTable =  Livewire::test(DataTable::class, $this->getData());
+        $dataTable->call("sortColumn", 'email');
+        $dataTable->assertViewHas('data', function ($data)    {
+            // Asuming that the seeded record is more than one user
+            return $data[0]->email !== "admin@softui.com";
+         });
+    }
+
+
+
     private function getData() {
         $model = "App\\Models\\User";
         $modelName = "User";
@@ -40,6 +86,7 @@ class DataTableControlTest extends TestCase
         $data["controls"] = $this->getPreparedControls("all");//$data["controls"]
         return $data;
     }
+
 
 
    /*public function test_datatable_search_successfully(): void

@@ -95,6 +95,7 @@ class DataTable extends Component
 
    public function changeSearch($search)
    {
+
         $this->search = $search;
         $this->dispatch("changeSearchEvent", $search);
    }
