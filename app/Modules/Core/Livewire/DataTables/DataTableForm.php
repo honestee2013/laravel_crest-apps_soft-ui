@@ -41,6 +41,7 @@ class DataTableForm extends Component
     public $columns;
     public $fields;
     public $model;
+    public $moduleName;
     public $modalId;
 
 
@@ -75,9 +76,11 @@ class DataTableForm extends Component
         $modelName = class_basename($this->model);
         $moduleName = $this->extractModuleNameFromModel($this->model);
 
-        $moduleName = strtolower($moduleName);
+        $moduleName = strtolower($this->moduleName);
         $modelName = strtolower($modelName);
+
         $data = $this->configTableFields($moduleName, $modelName);
+
         $this->fieldDefinitions = $data["fieldDefinitions"];
     }
 
@@ -204,7 +207,6 @@ class DataTableForm extends Component
         // Close the modal, reset fields and refresh the table after saving
         $this->resetFields(); // Next new form should be blank
         $this->dispatch("recordSavedEvent"); // Table refresh
-        $this->dispatch('close-modal-event', ["modalId" => $modalId]);  // To show modal
         $this->dispatch('close-modal-event', ["modalId" => $modalId]);  // To show modal
         $this->dispatch('refreshFieldsEvent');  // To show modal
 

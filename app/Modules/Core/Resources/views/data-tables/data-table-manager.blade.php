@@ -8,7 +8,7 @@
     ])
     <div class="card-body">
         {{-- REACTIVE FORM COMPONENT --}}
-        <livewire:core.livewire.data-tables.data-table-form :fieldDefinitions="$fieldDefinitions" :model="$model" :multiSelectFormFields="$multiSelectFormFields"
+        <livewire:core.livewire.data-tables.data-table-form :fieldDefinitions="$fieldDefinitions" :model="$model" :moduleName="$moduleName" :multiSelectFormFields="$multiSelectFormFields"
             :hiddenFields="$hiddenFields" :columns="$columns" :isEditMode="$isEditMode" modalId="addEditModal" key="addEditModal" />
     </div>
     @include('core::data-tables.modals.modal-footer', [
