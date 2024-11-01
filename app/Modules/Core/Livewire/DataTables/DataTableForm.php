@@ -72,16 +72,24 @@ class DataTableForm extends Component
 
     public function refreshFields() {
         Log::info("DataTableForm->refreshFields(): ".$this->getId());
+        Log::info("DataTableForm->refreshFields: ".$this->model);
 
-        $modelName = class_basename($this->model);
-        $moduleName = $this->extractModuleNameFromModel($this->model);
 
-        $moduleName = strtolower($this->moduleName);
-        $modelName = strtolower($modelName);
+        foreach ($this->fieldDefinitions as $fieldName => $type) {
 
-        $data = $this->configTableFields($moduleName, $modelName);
+            if( // Options field
+                isset($this->fieldDefinitions[$fieldName]['options'])
+                && isset($this->fieldDefinitions[$fieldName]['relationship'])
+                && isset($this->fieldDefinitions[$fieldName]['relationship']["model"])
+            ) {
 
-        $this->fieldDefinitions = $data["fieldDefinitions"];
+                $model = $this->fieldDefinitions[$fieldName]['relationship']["model"];
+                $this->fieldDefinitions[$fieldName]['options'] = $model::pluck('name', 'id')->toArray();
+
+            }
+        }
+
+        $this->dispatch('$refresh');
     }
 
 
@@ -90,7 +98,6 @@ class DataTableForm extends Component
     {
 
         Log::info("DataTableForm->saveRecord(): ".$this->getId());
-
 
         // Retrieve dynamic validation rules
         $validationData = $this->getDynamicValidationRules();
@@ -205,7 +212,8 @@ class DataTableForm extends Component
 
 
         // Close the modal, reset fields and refresh the table after saving
-        $this->resetFields(); // Next new form should be blank
+        if (!$this->isEditMode)
+            $this->resetFields(); // Next new form should be blank
         $this->dispatch("recordSavedEvent"); // Table refresh
         $this->dispatch('close-modal-event', ["modalId" => $modalId]);  // To show modal
         $this->dispatch('refreshFieldsEvent');  // To show modal

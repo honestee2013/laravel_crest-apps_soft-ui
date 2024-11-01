@@ -120,6 +120,7 @@ Log::info("DataTableManager->mount(): ".$this->getId());
 
 
     public function openAddRelationshipItemModal($model, $moduleName = "") {
+
         Log::info("openAddRelationshipItemModal(). Model: ".$model. " Module: ".$moduleName);
 
         // Reset multiple opend modal component to release space
@@ -144,7 +145,7 @@ Log::info("DataTableManager->mount(): ".$this->getId());
         // Get the data table configuration data
         $data = $this->configTableFields($moduleName, $modelName);
         $data["modalId"] = $modalId;
-        $data["isEditMode"] = false;
+        $data["isEditMode"] = true;
         $data["model"] = $model;
         $data["modelName"] = $modelName;
         $data["modalClass"] = "childModal";

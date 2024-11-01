@@ -23,6 +23,8 @@ return [
                 'validation' => 'required|string'
             ],
 
+            
+
             'phone' => [ 'field_type' => 'tel', 'validation' => 'required|string'],
             'email' => 'email',
             'website' => 'website',

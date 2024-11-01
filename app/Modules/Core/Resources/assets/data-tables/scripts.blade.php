@@ -19,6 +19,7 @@
                 modalWrapper.classList.remove('is-open');
                 //modalWrapper.remove();
             });
+            
 
 
 
