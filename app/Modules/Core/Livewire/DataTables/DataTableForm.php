@@ -189,14 +189,16 @@ class DataTableForm extends Component
                     else if ($this->fieldDefinitions[$fieldName]['relationship']['type'] == 'belongsTo') {
                         $record->update([$foreign_key => $this->fields[$fieldName]]);
                     }
-                }
-                // many-to-many
-                else if ($this->fieldDefinitions[$fieldName]['relationship']['type'] == 'belongsToMany') {
-                    if (is_array($this->multiSelectFormFields[$fieldName])) {
-                        $record->{$this->fieldDefinitions[$fieldName]['relationship']['dynamic_property']}()
-                            ->sync($this->multiSelectFormFields[$fieldName]);
+                    // many-to-many
+                    else if ($this->fieldDefinitions[$fieldName]['relationship']['type'] == 'belongsToMany') {
+
+                        if (is_array($this->multiSelectFormFields[$fieldName])) {
+                            $record->{$this->fieldDefinitions[$fieldName]['relationship']['dynamic_property']}()
+                                ->sync($this->multiSelectFormFields[$fieldName]);
+                        }
                     }
                 }
+
 
             }
 
@@ -296,7 +298,7 @@ class DataTableForm extends Component
         }
 
         // handle multi-selection form field
-        if ($this->multiSelectFormFields) {
+        if ($record && $this->multiSelectFormFields) {
             foreach (array_keys($this->multiSelectFormFields) as $fieldName) {
                 // Handle hasMany relationship different
                 if (
@@ -307,10 +309,14 @@ class DataTableForm extends Component
                         $this->fieldDefinitions[$fieldName]['relationship']['type'] == 'hasMany'
                         || $this->fieldDefinitions[$fieldName]['relationship']['type'] == 'belongsToMany'
                     ) {
-                        if (isset($this->fieldDefinitions[$fieldName]['relationship']['dynamic_property']))
+                        if ($this->fieldDefinitions[$fieldName]['relationship']['dynamic_property']
+                            && $record->{$this->fieldDefinitions[$fieldName]['relationship']['dynamic_property']}
+                        ) {
+
                             $this->multiSelectFormFields[$fieldName]
                                 = $record->{$this->fieldDefinitions[$fieldName]['relationship']['dynamic_property']}
                                     ->pluck('id')->toArray();
+                        }
                     }
 
 
