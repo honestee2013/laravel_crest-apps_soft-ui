@@ -8,7 +8,7 @@ return [
             'name' => [ 'field_type' => 'text', 'validation' => 'required|string'],
             'description' =>'textarea',
 
-            'location' => [
+            'location_id' => [
                 'field_type' => 'select',
                 'options' => App\Modules\Enterprise\Models\Location::pluck('name', 'id')->toArray(),
                 'relationship' => [
@@ -19,11 +19,11 @@ return [
                     'foreign_key' => 'location_id',
                     'inlineAdd' => true,
                 ],
-
+                'label' => 'Location',
                 'validation' => 'required|string'
             ],
 
-            
+
 
             'phone' => [ 'field_type' => 'tel', 'validation' => 'required|string'],
             'email' => 'email',

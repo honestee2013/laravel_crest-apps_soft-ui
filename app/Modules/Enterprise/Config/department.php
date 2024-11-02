@@ -7,7 +7,7 @@ return [
             'name' => [ 'field_type' => 'text', 'validation' => 'required|string'],
             'description' =>'textarea',
 
-            'company' => [
+            'company_id' => [
                 'field_type' => 'select',
                 'options' => App\Modules\Enterprise\Models\Company::pluck('name', 'id')->toArray(),
                 'relationship' => [
@@ -18,6 +18,8 @@ return [
                     'foreign_key' => 'company_id',
                     'inlineAdd' => true,
                 ],
+
+                'label' => 'Company',
 
                 'validation' => 'required|string'
             ],
