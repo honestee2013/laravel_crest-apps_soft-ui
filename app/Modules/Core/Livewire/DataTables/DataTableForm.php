@@ -151,7 +151,7 @@ class DataTableForm extends Component
         $record = null;
         if ($this->isEditMode) {
             $record = $this->model::find($this->selectedItemId);
-            $record->update($sanitizedFields); // Update the record with sanitized fields
+            $record?->update($sanitizedFields); // Update the record with sanitized fields
         } else {
             $record = $this->model::create($sanitizedFields); // Create a new record with sanitized fields
         }
@@ -187,13 +187,13 @@ class DataTableForm extends Component
                     }
                     // many-to-one
                     else if ($this->fieldDefinitions[$fieldName]['relationship']['type'] == 'belongsTo') {
-                        $record->update([$foreign_key => $this->fields[$fieldName]]);
+                        $record?->update([$foreign_key => $this->fields[$fieldName]]);
                     }
                     // many-to-many
                     else if ($this->fieldDefinitions[$fieldName]['relationship']['type'] == 'belongsToMany') {
 
                         if (is_array($this->multiSelectFormFields[$fieldName])) {
-                            $record->{$this->fieldDefinitions[$fieldName]['relationship']['dynamic_property']}()
+                            $record?->{$this->fieldDefinitions[$fieldName]['relationship']['dynamic_property']}()
                                 ->sync($this->multiSelectFormFields[$fieldName]);
                         }
                     }
