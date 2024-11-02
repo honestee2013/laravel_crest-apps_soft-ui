@@ -182,7 +182,8 @@
                                         {{ $fieldDefinitions[$column]['relationship']['label'] }}
                                     </span>
                                 @else
-                                    <span class="ms-2">{{ ucfirst($column) }}</span>
+                                    <span>{{ ucwords(str_replace('_', ' ', $column)) }}</span>
+
                                 @endif
 
                                 </input>
