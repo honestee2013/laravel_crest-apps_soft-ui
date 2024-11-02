@@ -101,6 +101,7 @@ class DataTableForm extends Component
 
         // Retrieve dynamic validation rules
         $validationData = $this->getDynamicValidationRules();
+
         $validationMsgs = []; // ///To be implemented later
 
 
@@ -227,6 +228,7 @@ class DataTableForm extends Component
     // Get Dynamic Validation Rules
     public function getDynamicValidationRules()
     {
+
         $rules = [];
         foreach ($this->fieldDefinitions as $field => $type) {
 
@@ -237,7 +239,10 @@ class DataTableForm extends Component
             ) {
 
                 // Handle multi-select form field validation and messages
-                if (!empty($this->multiSelectFormFields)) {
+                if (isset($this->multiSelectFormFields[$field])
+                        && !empty($this->multiSelectFormFields[$field])
+                    ) {
+
                     foreach (array_keys($this->multiSelectFormFields) as $fieldName) {
                         $validationFiedName = 'multiSelectFormFields.' . $fieldName;
                         if (isset($this->fieldDefinitions[$fieldName]) && isset($this->fieldDefinitions[$fieldName]['validation'])) {
@@ -289,6 +294,7 @@ class DataTableForm extends Component
         foreach ($this->fieldDefinitions as $field => $type) {
             $this->fields[$field] = $record->$field;
         }
+
         // handle multi-selection form field
         if ($this->multiSelectFormFields) {
             foreach (array_keys($this->multiSelectFormFields) as $fieldName) {

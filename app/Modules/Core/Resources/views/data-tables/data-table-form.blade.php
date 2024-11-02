@@ -34,6 +34,7 @@
                     @endphp
                 <!----  FORM FIELDS    ---->
                 <div class="form-group">
+                        {{-------- LABEL --------}}
                         @if (isset($fieldDefinitions[$field]['label']))
                             <label for="{{ $field }}">{{ ucwords($fieldDefinitions[$field]['label']) }}</label>
                         @else
