@@ -3,18 +3,11 @@
 namespace app\Modules\Core\Tests\Feature;
 
 use Tests\TestCase;
-use Livewire\Livewire;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\Core\Livewire\DataTables\DataTable;
-use App\Modules\Core\Livewire\DataTables\DataTableControl;
-use App\Modules\Core\Livewire\DataTables\DataTableManager;
-use App\Modules\Core\Traits\DataTable\DataTableControlsTrait;
-use App\Modules\Core\Traits\DataTable\DataTableFieldsConfigTrait;
+
 
 class EnterpriseModuleTest extends TestCase
 {
 
-    //use DataTableFieldsConfigTrait, DataTableControlsTrait;
 
     /** @test */
     public function test_enterprise_locations_page_loaded_successfully()
@@ -37,10 +30,6 @@ class EnterpriseModuleTest extends TestCase
         $response->assertStatus(200);
 
     }
-
-
-
-
 
 
 }

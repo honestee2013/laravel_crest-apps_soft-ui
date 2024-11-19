@@ -14,13 +14,14 @@ class Item extends Model
         'description',
         'unit_id',
         'sku',
-        'price',
+        'unit_selling_price',
         'image',
         'status',
         'weight',
         'dimensions',
         'barcode',
-        'cost_price',
+        'unit_cost_price',
+        'item_type',
     ];
 
 
@@ -42,7 +43,15 @@ class Item extends Model
         return $this->belongsTo(Unit::class);
     }
 
-    
+    public function storages()
+    {
+        return $this->belongsToMany(Storage::class, 'storage_item_limits')
+                    ->withPivot('item_limit')
+                    ->withTimestamps();
+    }
+
+
+
 
 
 }

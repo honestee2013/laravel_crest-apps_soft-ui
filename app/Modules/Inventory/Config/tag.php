@@ -5,12 +5,11 @@ return [
 
     "model" => "App\\Modules\\Inventory\\Models\\Tag",
     "fieldDefinitions" => [
-        'name' => 'text',
+        'name' => [ 'field_type' => 'text', 'validation' => 'required|string'],
         'description' =>'textarea',
-        'slug' => 'text',
 
         'items' => [
-            'field_type' => 'checkbox',
+            'field_type' => 'select',
             'options' => App\Modules\Inventory\Models\Item::pluck('name', 'id')->toArray(),
             'relationship' => [
                 'model' => 'App\Modules\Inventory\Models\Item',
@@ -20,7 +19,7 @@ return [
                 'foreign_key' => 'item_id'
 
             ],
-            'label' => 'categories',
+            'label' => 'items assigned',
             'display' => 'inline',
             'multiSelect' => true,
 

@@ -1,6 +1,7 @@
-<div>
+<div >
+
     {{--<form role="form text-left" wire:submit.prevent="$dispatch('submitDatatableFormEvent')">--}}
-        <form role="form text-left">
+    <form role="form text-left" class="p-4 modal-form">
             @foreach (array_keys($fieldDefinitions) as $field)
             <!----  CHECKING IF SHOULD BE DISPLAYED ON FORM    ---->
             @if (($isEditMode && !in_array($field, $hiddenFields['onEditForm'])) ||
@@ -187,6 +188,8 @@
 
                         <!----------- Validation Error  ------------->
                         @error('fields.' . $field)
+                            @php $message = str_replace('characters.', '', $message) @endphp
+                            @php $message = str_replace('id', ' ', $message) @endphp
                             <span class="text-danger text-sm mb-0"> {{ str_replace('fields.', ' ', $message) }} </span>
                         @enderror
 
@@ -200,6 +203,21 @@
             <!----  END CHECKING IF SHOULD BE DISPLAYED ON FORM    ---->
             @endif
         @endforeach
-
     </form>
+
+    <div>
+        <hr class="horizontal dark my-0" />
+    </div>
+    <div class="d-flex justify-content-end m-4">
+        <button type="button" class="btn bg-gradient-secondary rounded-pill me-2"
+        {{--click="$dispatch('close-modal{{ $modalId }}')"--}}
+        onclick="Livewire.dispatch('close-modal-event', [{'modalId': '{{$modalId}}' }])">Close</button>
+        @if ($modalId !== "detail") {{--Only show on form--}}
+            <button type="button" class="btn bg-gradient-primary rounded-pill"
+                wire:click="saveRecord('{{$modalId}}')">
+                {{ $isEditMode ? 'Save Changes' : 'Add Record' }}
+            </button>
+        @endif
+    </div>
+
 </div>

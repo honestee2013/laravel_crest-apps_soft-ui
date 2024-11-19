@@ -68,9 +68,7 @@ Log::info("DataTableManager->mount(): ".$this->getId());
         if(!$this->moduleName)
             $this->moduleName = $this->extractModuleNameFromModel($this->model);
 
-        $moduleName = strtolower($this->moduleName);
-        $modelName = strtolower($this->modelName);
-        $data = $this->configTableFields($moduleName, $modelName);
+        $data = $this->configTableFields($this->moduleName, $this->modelName);
         $this->fieldDefinitions = $data["fieldDefinitions"];
         $this->simpleActions = $data["simpleActions"];
         $this->moreActions = $data["moreActions"];
@@ -137,15 +135,16 @@ Log::info("DataTableManager->mount(): ".$this->getId());
         $modelName = class_basename($model);
         if(!$moduleName)
             $moduleName = $this->extractModuleNameFromModel($model);
-
+            //dd($model, $modelName, $moduleName);
         // Config file name space access is in lower case
-        $modelName=strtolower($modelName);
-        $moduleName=strtolower($moduleName);
+        //$modelName=strtolower($modelName);
+        //$moduleName=strtolower($moduleName);
 
         // Get the data table configuration data
         $data = $this->configTableFields($moduleName, $modelName);
+
         $data["modalId"] = $modalId;
-        $data["isEditMode"] = true;
+        $data["isEditMode"] = false;
         $data["model"] = $model;
         $data["modelName"] = $modelName;
         $data["modalClass"] = "childModal";

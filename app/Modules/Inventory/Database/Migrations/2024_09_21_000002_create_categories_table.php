@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->text('description')->nullable();
             $table->string('image')->nullable(); // Optional image for the category
-            $table->foreignId('parent_id')->nullable()->constrained('categories')->onDelete('set null'); // For subcategories
+            $table->foreignId('parent_id')->nullable()->constrained('categories')->onDelete('cascade'); // For subcategories
             $table->string('status')->nullable()->default('active'); // Category status ['active', 'inactive'])
             $table->string('slug')->nullable(); // Optional for URL-friendly names
             $table->string('meta_title')->nullable(); // Optional SEO meta title

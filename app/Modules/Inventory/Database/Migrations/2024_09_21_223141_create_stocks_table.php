@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->timestamp('date');
             $table->foreignId('item_id')->constrained()->onDelete('cascade');
-            $table->foreignId('store_id')->constrained()->onDelete('cascade');
+            $table->foreignId('storage_id')->constrained()->onDelete('cascade');
             $table->foreignId('released_by')->constrained('users')->onDelete('cascade'); // Assuming 'released_by' and 'collected_by' refer to the 'users' table
             $table->foreignId(column: 'collected_by')->constrained('users')->onDelete('cascade'); // Make sure to specify the table name if it's not 'collected_by'
 

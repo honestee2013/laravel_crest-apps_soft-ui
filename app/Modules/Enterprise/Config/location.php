@@ -8,6 +8,7 @@ return [
                 'field_type' => 'text',
                 'validation' => 'required|string'
             ],
+            'address' =>'textarea',
             'description' =>'textarea',
         ],
         "simpleActions"=>['show', 'edit', 'delete'],

@@ -2,6 +2,7 @@
 
 namespace App\Modules\Core\Traits\DataTable;
 
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
 
@@ -11,13 +12,16 @@ trait DataTableFieldsConfigTrait
     private $defaultHiddenFields = ["created_at", "updated_at", "id", "remember_token"];
 
     public function configTableFields($moduleName, $modelName) {
+        $fileName = Str::snake($modelName);
+        $moduleName = strtolower($moduleName);
+
 
         $config = [
-            "fieldDefinitions" => $this->initialiseFieldDefinitions(config( "$moduleName.$modelName.fieldDefinitions")) ?? [],
-            "simpleActions" => config( "$moduleName.$modelName.simpleActions") ?? [],
-            "moreActions" =>config( "$moduleName.$modelName.moreActions") ?? [],
-            "hiddenFields" => $this->initialiseHiddenFields(config( "$moduleName.$modelName.hiddenFields")) ?? [],
-            "controls" => config( "$moduleName.$modelName.controls") ?? [],
+            "fieldDefinitions" => $this->initialiseFieldDefinitions(config( "$moduleName.$fileName.fieldDefinitions")) ?? [],
+            "simpleActions" => config( "$moduleName.$fileName.simpleActions") ?? [],
+            "moreActions" =>config( "$moduleName.$fileName.moreActions") ?? [],
+            "hiddenFields" => $this->initialiseHiddenFields(config( "$moduleName.$fileName.hiddenFields")) ?? [],
+            "controls" => config( "$moduleName.$fileName.controls") ?? [],
         ];
 
         $config = $this->setColumns($config);

@@ -97,7 +97,7 @@
                                             $displayField = $fieldDefinitions[$column]['relationship']['display_field'];
                                         @endphp
                                         {{
-                                            optional($row->{$dynamic_property})->$displayField;
+                                            optional($row->{$dynamic_property})->$displayField
                                         }}
 
 

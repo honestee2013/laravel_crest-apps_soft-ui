@@ -5,8 +5,8 @@
         onclick="Livewire.dispatch('close-modal-event', [{'modalId': '{{$modalId}}' }])"></div>
 
     <!-- Modal Content -->
-    <div class="modal-content p-4  {{ $modalClass?? 'mainModal'}}" id="modalContent">
-        <h5 class="card-title text-info text-gradient font-weight-bolder pt-4 ps-4">
+    <div class="modal-content  pb-0  {{ $modalClass?? 'mainModal'}}" id="modalContent">
+        <h5 class="card-title text-info text-gradient font-weight-bolder p-4 mx-4 mt-2 mb-2 pb-2">
             @if ($modalId !== "detail")
             {{ $isEditMode ? 'Edit '.ucfirst($modelName).' Record' : 'New '.ucfirst($modelName).' Record' }}
             @else

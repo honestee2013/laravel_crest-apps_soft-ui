@@ -7,8 +7,26 @@ return [
         "fieldDefinitions"=>[
 
             'image' => 'file',
-            'name' => 'text',
+            'name' => [ 'field_type' => 'text', 'validation' => 'required|string'],
             'description' =>'textarea',
+
+            'unit_id' => [
+                'field_type' => 'select',
+                'options' => App\Modules\Inventory\Models\Unit::pluck('name', 'id')->toArray(),
+                'relationship' => [
+                    'model' => 'App\Modules\Inventory\Models\Unit',
+                    'type' => 'belongsTo',
+                    'display_field' => 'name',
+                    'dynamic_property' => 'unit',
+                    'foreign_key' => 'unit_id',
+                    'inlineAdd' => true,
+                ],
+                'label' => 'units',
+                'validation' => 'required',
+                'display' => 'block',
+                'multiSelect' => false,
+            ],
+
 
             'categories' => [
                 'field_type' => 'checkbox',
@@ -28,23 +46,9 @@ return [
                 'multiSelect' => true,
             ],
 
-            'unit_id' => [
-                'field_type' => 'select',
-                'options' => App\Modules\Inventory\Models\Unit::pluck('name', 'id')->toArray(),
-                'relationship' => [
-                    'model' => 'App\Modules\Inventory\Models\Unit',
-                    'type' => 'belongsTo',
-                    'display_field' => 'name',
-                    'dynamic_property' => 'unit',
-                    'foreign_key' => 'unit_id',
-                    'inlineAdd' => true,
-                ],
-                'label' => 'units',
-                'display' => 'block',
-                'multiSelect' => false,
-            ],
 
-            'tag_id' => [
+
+            'tags' => [
                 'field_type' => 'checkbox',
                 'options' => App\Modules\Inventory\Models\Tag::pluck('name', 'id')->toArray(),
                 'relationship' => [
@@ -58,24 +62,43 @@ return [
                 ],
                 'label' => 'Tags',
                 'display' => 'block',
-                'multiSelect' => false,
+                'multiSelect' => true,
             ],
 
             'item_type' => [
                 'field_type' => 'select',
-                'options' => ['Resource', 'Finished Product', 'Raw Materials', 'Spare Parts']
+                'validation' => 'required|string',
+                'options' => [
+                    'Resource' => 'Resource',
+                    'Finished Product' => 'Finished Product',
+                    'Raw Materials' => 'Raw Materials',
+                    'Spare Parts' => 'Spare Parts',
+                ]
             ],
 
             'status' => [
                 'field_type' => 'select',
-                'options' => ['Available', 'Out Of Stock', 'Discontinued']
+                'validation' => 'required|string',
+                'options' => [
+                    'Available' => 'Available',
+                    'Out Of Stock' => 'Out Of Stock',
+                    'Discontinued' => 'Discontinued',
+                ]
             ],
 
-            'cost_price' =>'number',
-            'selling_price' =>'number',
+            'unit_cost_price' => [
+                'field_type' => 'number',
+                'validation' => 'required|string',
+            ],
+
+            'unit_selling_price' => [
+                'field_type' => 'number',
+                'validation' => 'required|string',
+            ],
+
+
             'weight' =>'number',
             'dimensions' =>'text',
-
             'sku' =>'text',
             'barcode' =>'text',
         ],
@@ -84,7 +107,17 @@ return [
 
 
         "hiddenFields"=>[
-            'onTable' => [],
+            'onTable' => [
+                'sku',
+                'barcode',
+                'dimensions',
+                'weight',
+                'description',
+                'item_type',
+                'status',
+                'tags',
+                'unit_id',
+            ],
         ],
 
         "controls"=>"all",

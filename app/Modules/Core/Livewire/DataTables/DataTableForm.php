@@ -230,7 +230,7 @@ class DataTableForm extends Component
     // Get Dynamic Validation Rules
     public function getDynamicValidationRules()
     {
-
+//dd($this->fieldDefinitions );
         $rules = [];
         foreach ($this->fieldDefinitions as $field => $type) {
 

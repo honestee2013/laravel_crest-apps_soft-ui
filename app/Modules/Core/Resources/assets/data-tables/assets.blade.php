@@ -78,9 +78,14 @@
         }
 
         /* Modal body for scrollable content */
-        .modal-body {
+        .modal-body, .modal-form {
             max-height: 95vh;
             /* Optional: further limit content area within modal */
+
+        }
+
+        .modal-form {
+            max-height: 60vh;
             overflow-y: auto;
         }
 
