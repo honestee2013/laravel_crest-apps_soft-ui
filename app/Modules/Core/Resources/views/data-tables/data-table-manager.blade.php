@@ -24,7 +24,11 @@
         <div class="card-header pb-0">
             <div class="d-flex flex-row justify-content-between">
                 <div>
-                    <h5 class="mb-4">{{ Str::plural(ucfirst($modelName)) }} Record</h5>
+                    @php
+                        $title = Str::snake($modelName); // Convert to snake case
+                        $title = ucwords(str_replace('_', ' ', $title)); // Convert to capitalised words
+                    @endphp
+                    <h5 class="mb-4">{{ Str::plural(ucfirst($title)) }} Record</h5>
                 </div>
                 @if (is_array($controls) && in_array('addButton', $controls))
                     <button wire:click="$dispatch('openAddModalEvent')"
