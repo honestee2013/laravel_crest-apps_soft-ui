@@ -11,7 +11,8 @@ class StorageLimit extends Model
     protected $fillable = [
         'storage_id',
         'item_id',
-        'item_limit',
+        'min_allowed',
+        'max_allowed',
     ];
 
     // Define relationship to Storage

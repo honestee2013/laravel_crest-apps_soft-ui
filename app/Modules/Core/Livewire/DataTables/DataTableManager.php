@@ -5,6 +5,7 @@ namespace App\Modules\Core\Livewire\DataTables;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use App\Modules\Core\Traits\DataTable\DataTableControlsTrait;
 use App\Modules\Core\Traits\DataTable\DataTableFieldsConfigTrait;
 
@@ -64,6 +65,11 @@ Log::info("DataTableManager->mount(): ".$this->getId());
 
         $this->feedbackMessages = "";
 
+$tableName = app($this->model)->getTable();
+
+//if(Schema::hasColumn($tableName, 'display_name')) // Try using display_name if it exist
+//dd(app($this->model)->getTable());
+
         $this->modelName = class_basename($this->model);
         if(!$this->moduleName)
             $this->moduleName = $this->extractModuleNameFromModel($this->model);
@@ -84,6 +90,7 @@ Log::info("DataTableManager->mount(): ".$this->getId());
         // Hidden on table index view
         if ($this->hiddenFields['onTable'])
             $this->visibleColumns = array_diff($this->visibleColumns, $this->hiddenFields['onTable']);
+
 
     }
 
@@ -203,7 +210,6 @@ Log::info("DataTableManager->mount(): ".$this->getId());
 
     //////////////// RENDERING METHODS /////////////////
     public function render() {
-
         return view('core::data-tables.data-table-manager', []);
     }
 

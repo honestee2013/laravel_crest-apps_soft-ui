@@ -5,6 +5,7 @@ return [
 
     "model" => "App\\Modules\\Inventory\\Models\\Tag",
     "fieldDefinitions" => [
+        'display_name' => [ 'field_type' => 'text', 'validation' => 'required|string'],
         'name' => [ 'field_type' => 'text', 'validation' => 'required|string'],
         'description' =>'textarea',
 
@@ -31,7 +32,9 @@ return [
 
 
     "hiddenFields" => [
-        'onTable' => [],
+        'onTable' => [
+            'name'
+        ],
     ],
 
     "controls"=>"all",

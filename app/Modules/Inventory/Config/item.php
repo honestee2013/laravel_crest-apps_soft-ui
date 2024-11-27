@@ -12,16 +12,16 @@ return [
 
             'unit_id' => [
                 'field_type' => 'select',
-                'options' => App\Modules\Inventory\Models\Unit::pluck('name', 'id')->toArray(),
+                'options' => app('App\Modules\Inventory\Models\Unit')->optionList('symbol'),
                 'relationship' => [
                     'model' => 'App\Modules\Inventory\Models\Unit',
                     'type' => 'belongsTo',
-                    'display_field' => 'name',
+                    'display_field' => 'display_name',
                     'dynamic_property' => 'unit',
                     'foreign_key' => 'unit_id',
                     'inlineAdd' => true,
                 ],
-                'label' => 'units',
+                'label' => 'Units',
                 'validation' => 'required',
                 'display' => 'block',
                 'multiSelect' => false,
@@ -30,18 +30,18 @@ return [
 
             'categories' => [
                 'field_type' => 'checkbox',
-                'options' => App\Modules\Inventory\Models\Category::pluck('name', 'id')->toArray(),
+                'options' => App\Modules\Inventory\Models\Category::pluck('display_name', 'id')->toArray(),
                 'relationship' => [
                     'model' => 'App\Modules\Inventory\Models\Category',
                     'type' => 'belongsToMany',
-                    'display_field' => 'name',
+                    'display_field' => 'display_name',
                     'multiSelect' => true,
                     'dynamic_property' => 'categories',
                     'foreign_key' => 'category_id',
                     'inlineAdd' => true,
 
                 ],
-                'label' => 'categories',
+                'label' => 'Categories',
                 'display' => 'inline',
                 'multiSelect' => true,
             ],
@@ -50,11 +50,11 @@ return [
 
             'tags' => [
                 'field_type' => 'checkbox',
-                'options' => App\Modules\Inventory\Models\Tag::pluck('name', 'id')->toArray(),
+                'options' => App\Modules\Inventory\Models\Tag::pluck('display_name', 'id')->toArray(),
                 'relationship' => [
                     'model' => 'App\Modules\Inventory\Models\Tag',
                     'type' => 'belongsToMany',
-                    'display_field' => 'name',
+                    'display_field' => 'display_name',
                     'dynamic_property' => 'tags',
                     'multiSelect' => true,
                     'foreign_key' => 'tag_id',
@@ -65,25 +65,38 @@ return [
                 'multiSelect' => true,
             ],
 
-            'item_type' => [
+            'item_type_id' => [
                 'field_type' => 'select',
-                'validation' => 'required|string',
-                'options' => [
-                    'Resource' => 'Resource',
-                    'Finished Product' => 'Finished Product',
-                    'Raw Materials' => 'Raw Materials',
-                    'Spare Parts' => 'Spare Parts',
-                ]
+                'options' => App\Modules\Inventory\Models\ItemType::pluck('display_name', 'id')->toArray(),
+                'relationship' => [
+                    'model' => 'App\Modules\Inventory\Models\ItemType',
+                    'type' => 'belongsTo',
+                    'display_field' => 'display_name',
+                    'dynamic_property' => 'itemType',
+                    'foreign_key' => 'item_type_id',
+                    'inlineAdd' => true,
+                ],
+                'label' => 'Item Type',
+                'validation' => 'required',
+                'display' => 'block',
+                'multiSelect' => false,
             ],
 
-            'status' => [
+            'status_id' => [
                 'field_type' => 'select',
-                'validation' => 'required|string',
-                'options' => [
-                    'Available' => 'Available',
-                    'Out Of Stock' => 'Out Of Stock',
-                    'Discontinued' => 'Discontinued',
-                ]
+                'options' => App\Modules\Core\Models\Status::pluck('display_name', 'id')->toArray(),
+                'relationship' => [
+                    'model' => 'App\Modules\Core\Models\Status',
+                    'type' => 'belongsTo',
+                    'display_field' => 'display_name',
+                    'dynamic_property' => 'status',
+                    'foreign_key' => 'status_id',
+                    'inlineAdd' => true,
+                ],
+                'label' => 'Status',
+                'validation' => 'required',
+                'display' => 'block',
+                'multiSelect' => false,
             ],
 
             'unit_cost_price' => [

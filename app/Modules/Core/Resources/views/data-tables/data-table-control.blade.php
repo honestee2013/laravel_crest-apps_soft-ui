@@ -177,12 +177,12 @@
                                     style="width: 1.2em; height:1.2em"
                                     @if (in_array($column, $visibleColumns)) checked @endif>
 
-                                @if (isset($fieldDefinitions[$column]['relationship']) && isset($fieldDefinitions[$column]['relationship']['label']))
-                                    <span class="ms-2">
-                                        {{ $fieldDefinitions[$column]['relationship']['label'] }}
+                                @if (isset($fieldDefinitions[$column]['label']))
+                                    <span class="ms-1">
+                                        {{ $fieldDefinitions[$column]['label'] }}
                                     </span>
                                 @else
-                                    <span>{{ ucwords(str_replace('_', ' ', $column)) }}</span>
+                                    <span class="ms-1">{{ ucwords(str_replace('_', ' ', str_replace('_id', '', $column))) }}</span>
 
                                 @endif
 

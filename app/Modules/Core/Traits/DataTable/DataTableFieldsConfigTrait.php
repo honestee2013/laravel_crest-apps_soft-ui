@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 trait DataTableFieldsConfigTrait
 {
 
-    private $defaultHiddenFields = ["created_at", "updated_at", "id", "remember_token"];
+    private $defaultHiddenFields = ["created_at", "updated_at", "remember_token"];
 
     public function configTableFields($moduleName, $modelName) {
         $fileName = Str::snake($modelName);
@@ -27,6 +27,13 @@ trait DataTableFieldsConfigTrait
         $config = $this->setColumns($config);
         $config = $this->setMultiSelectFormFields($config);
         return $config;
+    }
+
+
+    public function getConfigFileField($moduleName, $modelName, $fieldName) {
+        $fileName = Str::snake($modelName);
+        $moduleName = strtolower($moduleName);
+        return config( "$moduleName.$fileName.$fieldName") ?? null;
     }
 
 
@@ -129,6 +136,6 @@ trait DataTableFieldsConfigTrait
 
 
     public function getSupportedImageColumnNames() {
-        return ['image', 'photo', 'picture', 'logo'];
+        return ['image', 'photo', 'picture', 'logo', 'invoice'];
     }
 }

@@ -24,7 +24,9 @@ class Customer extends Model
      * @var array
      */
     protected $fillable = [
+        'image',
         'name',
+        'company_name',
         'email',
         'phone',
         'address',
@@ -33,48 +35,25 @@ class Customer extends Model
         'country',
         'zip_code',
         'contact_person',
-        'customer_type',
+        'website',
+        'customer_type_id',
         'notes',
         'date_of_birth',
         'registered_at',
-        'active',
-        'user_id',
+        'status_id',
     ];
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'date_of_birth' => 'datetime',
-        'registered_at' => 'datetime',
-    ];
+
 
     /**
      * Get the user associated with the customer.
      */
-    public function user()
+    public function customerType()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(CustomerType::class);
     }
 
-    /**
-     * Scope a query to only include active customers.
-     */
-    public function scopeActive($query)
-    {
-        return $query->where('status', 'active');
-    }
 
-    /**
-     * Get full address as a single string.
-     *
-     * @return string
-     */
-    public function getFullAddressAttribute()
-    {
-        return "{$this->address}, {$this->city}, {$this->state}, {$this->country}, {$this->zip_code}";
-    }
+
 }
 

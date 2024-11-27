@@ -24,10 +24,19 @@ return [
 
 
 
-            'storage_type' => [
+            'storage_type_id' => [
                 'field_type' => 'select',
-                'options' => ["Store" => "Store", "Warehouse" => "Warehouse"],
-                'validation' => 'required|string',
+                'options' => App\Modules\Inventory\Models\StorageType::pluck('display_name', 'id')->toArray(),
+                'relationship' => [
+                    'model' => 'App\Modules\Inventory\Models\StorageType',
+                    'type' => 'belongsTo',
+                    'display_field' => 'display_name',
+                    'dynamic_property' => 'storageType',
+                    'foreign_key' => 'storage_type_id',
+                    'inlineAdd' => true,
+                ],
+                'label' => 'Storage Type',
+                'validation' => 'required|int'
             ],
 
             'opening_hours' =>'time',

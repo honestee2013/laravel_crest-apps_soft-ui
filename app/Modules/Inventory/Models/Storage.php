@@ -17,6 +17,7 @@ class Storage extends Model
         'storage_type',
         'opening_hours',
         'closing_hours',
+        'storage_type_id',
     ];
 
 
@@ -26,6 +27,11 @@ class Storage extends Model
     public function location()
     {
         return $this->belongsTo(Location::class, 'location_id', 'id');
+    }
+
+    public function storageType()
+    {
+        return $this->belongsTo(Storage::class);
     }
 
 

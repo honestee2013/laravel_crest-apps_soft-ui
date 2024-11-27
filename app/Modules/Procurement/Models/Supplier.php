@@ -24,6 +24,8 @@ class Supplier extends Model
      * @var array
      */
     protected $fillable = [
+        'image',
+        'name',
         'company_name',
         'email',
         'phone',
@@ -34,45 +36,27 @@ class Supplier extends Model
         'zip_code',
         'contact_person',
         'website',
-        'supplier_type',
+        'supplier_type_id',
         'notes',
+        'date_of_birth',
         'registered_at',
-        'active',
-        'user_id',
+        'status_id',
     ];
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'registered_at' => 'datetime',
-    ];
 
-    /**
-     * Get the user associated with the supplier.
-     */
-    public function user()
+
+
+
+
+    public function supplierType()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(SupplierType::class);
     }
 
-    /**
-     * Scope a query to only include active suppliers.
-     */
-    public function scopeActive($query)
-    {
-        return $query->where('status', 'active');
-    }
 
-    /**
-     * Get full address as a single string.
-     *
-     * @return string
-     */
-    public function getFullAddressAttribute()
-    {
-        return "{$this->address}, {$this->city}, {$this->state}, {$this->country}, {$this->zip_code}";
-    }
+
+
+
+
+
 }

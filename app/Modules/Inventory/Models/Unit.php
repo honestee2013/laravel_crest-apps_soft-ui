@@ -4,16 +4,23 @@ namespace App\Modules\Inventory\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use  App\Modules\Core\Traits\Database\DatabaseQueryTrait;
 
 class Unit extends Model
 {
-    use HasFactory;
+    use HasFactory, DatabaseQueryTrait;
 
     protected $fillable = [
+        'display_name',
         'name',
         'description',
         'symbol'
     ];
+
+
+    public function getXxxAttribute() {
+        return $this->name." ".$this->symbol;
+    }
 
 
 

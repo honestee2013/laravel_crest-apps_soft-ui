@@ -6,11 +6,11 @@
         'modalId' => 'addEditModal',
         'isEditMode' => $isEditMode,
     ])
-    <div class="card-body">
-        {{-- REACTIVE FORM COMPONENT --}}
-        <livewire:core.livewire.data-tables.data-table-form :fieldDefinitions="$fieldDefinitions" :model="$model" :moduleName="$moduleName" :multiSelectFormFields="$multiSelectFormFields"
-            :hiddenFields="$hiddenFields" :columns="$columns" :isEditMode="$isEditMode" modalId="addEditModal" key="addEditModal" />
-    </div>
+        <div class="card-body">
+            {{-- REACTIVE FORM COMPONENT --}}
+            <livewire:core.livewire.data-tables.data-table-form :fieldDefinitions="$fieldDefinitions" :model="$model" :moduleName="$moduleName" :modelName="$modelName" :multiSelectFormFields="$multiSelectFormFields"
+                :hiddenFields="$hiddenFields" :columns="$columns" :isEditMode="$isEditMode" modalId="addEditModal" key="addEditModal" />
+        </div>
     @include('core::data-tables.modals.modal-footer', [
         'modalId' => 'addEditModal',
         'isEditMode' => $isEditMode,
@@ -25,10 +25,16 @@
             <div class="d-flex flex-row justify-content-between">
                 <div>
                     @php
-                        $title = Str::snake($modelName); // Convert to snake case
-                        $title = ucwords(str_replace('_', ' ', $title)); // Convert to capitalised words
+                        $pageTitle = $this->getConfigFileField($moduleName, $modelName, 'pageTitle');
+                        if (!$pageTitle) {
+                            $pageTitle = Str::snake($modelName); // Convert to snake case
+                            $pageTitle = ucwords(str_replace('_', ' ', $pageTitle)); // Convert to capitalised words
+                            $pageTitle = Str::plural(ucfirst($pageTitle))." Record";
+                        }
                     @endphp
-                    <h5 class="mb-4">{{ Str::plural(ucfirst($title)) }} Record</h5>
+
+                    <h5 class="mb-4">{{ $pageTitle }} </h5>
+
                 </div>
                 @if (is_array($controls) && in_array('addButton', $controls))
                     <button wire:click="$dispatch('openAddModalEvent')"

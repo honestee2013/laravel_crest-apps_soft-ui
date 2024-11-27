@@ -39,7 +39,8 @@ return [
             ],
 
 
-            'item_limit' => [ 'field_type' => 'number', 'validation' => 'required|integer'],
+            'min_allowed' => [ 'field_type' => 'number', 'validation' => 'required|integer'],
+            'max_allowed' => [ 'field_type' => 'number', 'validation' => 'required|integer'],
 
 
         ],

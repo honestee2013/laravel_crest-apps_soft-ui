@@ -16,9 +16,11 @@ return new class extends Migration
         Schema::create('tags', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable(); // Tag name
+            $table->string(column: 'display_name');    // human-readable name (Title Case)
+
             $table->text('description')->nullable();
             $table->string('slug')->nullable()->unique(); // URL-friendly tag (optional)
-            
+
             $table->timestamps();
         });
     }

@@ -14,10 +14,12 @@ return new class extends Migration
     {
         Schema::create('storage_limits', function (Blueprint $table) {
             $table->id(); // Primary key
-            $table->foreignId('storage_id')->constrained('storages')->onDelete('cascade');
-            $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
+            $table->foreignId('storage_id')->nullable()->constrained('storages')->onDelete('cascade');
+            $table->foreignId('item_id')->nullable()->constrained('items')->onDelete('cascade');
 
-            $table->integer('item_limit'); // Limit per item per storage location
+            //$table->integer('item_limit'); // Limit per item per storage location
+            $table->integer('min_allowed')->nullable()->default(0); // Limit per item per storage location
+            $table->integer('max_allowed')->nullable(); // Limit per item per storage location
             $table->timestamps();
 
             // Unique index to enforce unique storage-item pairs

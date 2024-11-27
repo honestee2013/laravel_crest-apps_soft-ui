@@ -2,8 +2,9 @@
 
 namespace App\Modules\Inventory\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Modules\Core\Models\Status;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Item extends Model
 {
@@ -16,12 +17,12 @@ class Item extends Model
         'sku',
         'unit_selling_price',
         'image',
-        'status',
+        'status_id',
         'weight',
         'dimensions',
         'barcode',
         'unit_cost_price',
-        'item_type',
+        'item_type_id',
     ];
 
 
@@ -41,6 +42,16 @@ class Item extends Model
     public function unit()
     {
         return $this->belongsTo(Unit::class);
+    }
+
+    public function itemType()
+    {
+        return $this->belongsTo(ItemType::class);
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(Status::class);
     }
 
     public function storages()

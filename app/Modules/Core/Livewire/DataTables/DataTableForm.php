@@ -5,8 +5,14 @@ namespace App\Modules\Core\Livewire\DataTables;
 use Livewire\Form;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Storage;
+use App\Modules\Core\Events\DataTableFormEvent;
+use App\Modules\Core\Events\DataTableFormAfterUpdateEvent;
+use App\Modules\Inventory\Livewire\Inventories\InventoryManager;
 use App\Modules\Core\Traits\DataTable\DataTableFieldsConfigTrait;
 
 
@@ -42,6 +48,8 @@ class DataTableForm extends Component
     public $fields;
     public $model;
     public $moduleName;
+    public $modelName;
+
     public $modalId;
 
 
@@ -84,8 +92,11 @@ class DataTableForm extends Component
             ) {
 
                 $model = $this->fieldDefinitions[$fieldName]['relationship']["model"];
-                $this->fieldDefinitions[$fieldName]['options'] = $model::pluck('name', 'id')->toArray();
-
+                $tableName = app($model)->getTable();
+                if(Schema::hasColumn($tableName, 'display_name')) // Try using display_name if it exist
+                    $this->fieldDefinitions[$fieldName]['options'] = $model::pluck('display_name', 'id')->toArray();
+                else // name is always expected to exist
+                    $this->fieldDefinitions[$fieldName]['options'] = $model::pluck('name', 'id')->toArray();
             }
         }
 
@@ -147,14 +158,43 @@ class DataTableForm extends Component
         );
 
 
+
         // Now create or update the model using the sanitized fields array
-        $record = null;
-        if ($this->isEditMode) {
-            $record = $this->model::find($this->selectedItemId);
-            $record?->update($sanitizedFields); // Update the record with sanitized fields
-        } else {
-            $record = $this->model::create($sanitizedFields); // Create a new record with sanitized fields
+
+        try {
+            if ($this->getConfigFileField($this->moduleName, $this->modelName, "isTransaction"))
+                DB::beginTransaction();
+
+            $record = null;
+            if ($this->isEditMode) {
+                $record = $this->model::find($this->selectedItemId);
+                $oldRecord = $record->toArray();
+                // Sending [After Update Event]
+                $this->dispatchAllEvents("BeforeUpdate", $oldRecord, $sanitizedFields);
+                // Update the record
+                $record?->update($sanitizedFields);
+                // Sending [After Update Event]
+                $this->dispatchAllEvents("AfterUpdate", $oldRecord, $record->toArray());
+
+            } else {
+                // Sending [Before Create Event]
+                $this->dispatchAllEvents("BeforeCreate", [], $sanitizedFields);
+                // Create a new record
+                $record = $this->model::create($sanitizedFields);
+                // Sending [After Create Event]
+                $this->dispatchAllEvents("AfterCreate", [], $sanitizedFields);
+            }
+
+            if ($this->getConfigFileField($this->moduleName, $this->modelName, "isTransaction"))
+                DB::commit(); // Commit the transaction
+
+        } catch (\Exception $e) {
+            if ($this->getConfigFileField($this->moduleName, $this->modelName, "isTransaction"))
+                DB::rollBack(); // Rollback the transaction
+            // Log the error or handle the exception as needed
+            throw $e;
         }
+
 
 
         // Handle complex (Relationship involved) multi-select form fields
@@ -224,6 +264,48 @@ class DataTableForm extends Component
     }
 
 
+    private function dispatchAllEvents($eventName, $oldRecord, $newRecord) {
+        if (!$this->getConfigFileField($this->moduleName, $this->modelName, "dispatchEvents"))
+            return;
+        
+        // AVAILABLE FOR IMPLEMENTATION EVENTS:
+        // DataTableFormEvent, DataTableFormBeforeCreateEvent,  DataTableFormAfterCreateEvent,
+        // DataTableFormBeforeUpdateEvent,  DataTableFormAfterUpdateEvent,
+        // {AnyModelName}Event, {AnyModelName}BeforeCreateEvent,  {AnyModelName}AfterCreateEvent,
+        // {AnyModelName}BeforeUpdateEvent,  {AnyModelName}AfterUpdateEvent,
+
+        // Sending DtatTableForm Generic event
+        DataTableFormEvent::dispatch($eventName, $oldRecord, $newRecord);
+
+        // Sending DtatTableForm Specific event eg. DataTableForm{BeforeUpdate}Event
+        $dataTableFormEvent = "DataTableForm{$eventName}Event";
+        if(class_exists($dataTableFormEvent))
+            $dataTableFormEvent::dispatch($eventName, $oldRecord, $newRecord);
+
+
+        // Specific Model releted eg. {User}BeforeUpdateEvent
+        $specificEvent = $this->getSpecificEventFullName($eventName);
+        $event = $this->getEventFullName();
+        if (class_exists($specificEvent))
+            $specificEvent::dispatch($oldRecord, $newRecord);
+
+        // Generic Model releted eg. {User}Event
+        if (class_exists($event))
+            $event::dispatch($eventName, $oldRecord, $newRecord);
+    }
+
+
+
+
+
+
+private function getSpecificEventFullName($eventName) {
+    return "\\App\\Modules\\{$this->moduleName}\\Events\\{$eventName}".$this->modelName."Event";
+}
+
+private function getEventFullName() {
+    return "\\App\\Modules\\{$this->moduleName}\\Events\\".$this->modelName."Event";
+}
 
 
 

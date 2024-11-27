@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
+            $table->string('display_name');    // human-readable name (Title Case)
             $table->text('description')->nullable();
             $table->string('image')->nullable(); // Optional image for the category
             $table->foreignId('parent_id')->nullable()->constrained('categories')->onDelete('cascade'); // For subcategories

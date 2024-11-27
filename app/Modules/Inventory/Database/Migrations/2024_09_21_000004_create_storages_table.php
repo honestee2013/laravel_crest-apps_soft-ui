@@ -11,11 +11,15 @@ return new class extends Migration
         Schema::create('storages', function (Blueprint $table) {
             $table->id();
 
-            $table->string('name')->nullable();
+
+            $table->string('name')->unique();  // programmatically referenced name (snake_case)
+            //$table->string('display_name')->nullable();    // human-readable name (Title Case)
+
+
             $table->text('description')->nullable();
             $table->foreignId( 'location_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId( 'storage_type_id')->nullable()->constrained()->onDelete('set null');
 
-            $table->string('storage_type')->nullable(); // ['store', 'warehouse']); // or you could use a string if more types are anticipated
 
             $table->string('opening_hours')->nullable();
             $table->string('closing_hours')->nullable();

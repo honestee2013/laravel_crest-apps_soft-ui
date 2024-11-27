@@ -15,9 +15,10 @@ return new class extends Migration
     {
         Schema::create('units', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable(); // E.g., Kilograms, Liters, Pieces
+            $table->string('name')->unique();  // programmatically referenced name (snake_case)
             $table->string('symbol')->nullable(); // E.g., kg, l, pcs
-            $table->text('description')->nullable(); // Description
+            $table->string('display_name')->nullable();    // human-readable name (Title Case)
+            $table->text('description')->nullable(); // Description of tag
             $table->timestamps();
         });
     }

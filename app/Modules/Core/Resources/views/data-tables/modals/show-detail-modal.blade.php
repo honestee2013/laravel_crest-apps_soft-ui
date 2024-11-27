@@ -3,7 +3,7 @@
     'isEditMode' => $isEditMode,
 ])
 
-<div class="card-body">
+<form role="form text-left" class="p-4 modal-form">
 
     <!-- Display more details of the selected item -->
     @if ($selectedItem)
@@ -64,10 +64,9 @@
         @endforeach
     @endif
 
+</form>
 
-</div>
-
-@include('core::data-tables.modals.modal-footer', [
+{{----- NOTE THE IFFERENCE WITH core::data-tables.modals.modal-header -----}}
+@include('core::data-tables.partials.form-footer', [
     'modalId' => 'detail',
-    'isEditMode' => $isEditMode,
 ])
