@@ -255,7 +255,7 @@ class DataTableControl extends Component
 
     public function render()
     {
-        return view('core::data-tables.data-table-control', []);
+        return view('core.views::data-tables.data-table-control', []);
     }
 
 

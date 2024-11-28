@@ -2,7 +2,7 @@
 
 
     {{-- ----------------- MAIN MODAL FOR ADD-EDIT ----------------- --}}
-    @include('core::data-tables.modals.modal-header', [
+    @include('core.views::data-tables.modals.modal-header', [
         'modalId' => 'addEditModal',
         'isEditMode' => $isEditMode,
     ])
@@ -11,7 +11,7 @@
             <livewire:core.livewire.data-tables.data-table-form :fieldDefinitions="$fieldDefinitions" :model="$model" :moduleName="$moduleName" :modelName="$modelName" :multiSelectFormFields="$multiSelectFormFields"
                 :hiddenFields="$hiddenFields" :columns="$columns" :isEditMode="$isEditMode" modalId="addEditModal" key="addEditModal" />
         </div>
-    @include('core::data-tables.modals.modal-footer', [
+    @include('core.views::data-tables.modals.modal-footer', [
         'modalId' => 'addEditModal',
         'isEditMode' => $isEditMode,
     ])
@@ -47,7 +47,7 @@
 
 
 
-        {{-- @include('core::data-tables.partials.feedback-messages')
+        {{-- @include('core.views::data-tables.partials.feedback-messages')
         {{-- <livewire:core.livewire.feedback.feedback-message />
         <livewire:core.livewire.feedback.alert-message /> --}}
 
@@ -70,7 +70,7 @@
 
 
         {{-- NONE REACTIVE BLADE FILE FOR SHOWING ITEM DETAIL --}}
-        @include('core::data-tables.modals.show-detail-modal', ['selectedItem' => $selectedItem])
+        @include('core.views::data-tables.modals.show-detail-modal', ['selectedItem' => $selectedItem])
 
 
     </div>
@@ -78,5 +78,5 @@
 
 </section>
 
-@include('modules.assets.core::data-tables.assets')
-@include('modules.assets.core::data-tables.scripts')
+@include('core.assets::data-tables.assets')
+@include('core.assets::data-tables.scripts')

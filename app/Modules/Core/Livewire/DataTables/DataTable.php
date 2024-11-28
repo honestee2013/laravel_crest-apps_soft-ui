@@ -233,7 +233,7 @@ class DataTable extends Component
 
         $data = $query?->paginate($this->perPage);
 
-        return view('core::data-tables.data-table', [
+        return view('core.views::data-tables.data-table', [
             'data' => $data
         ]);
 

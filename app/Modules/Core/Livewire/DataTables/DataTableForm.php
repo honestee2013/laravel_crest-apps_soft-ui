@@ -267,7 +267,7 @@ class DataTableForm extends Component
     private function dispatchAllEvents($eventName, $oldRecord, $newRecord) {
         if (!$this->getConfigFileField($this->moduleName, $this->modelName, "dispatchEvents"))
             return;
-        
+
         // AVAILABLE FOR IMPLEMENTATION EVENTS:
         // DataTableFormEvent, DataTableFormBeforeCreateEvent,  DataTableFormAfterCreateEvent,
         // DataTableFormBeforeUpdateEvent,  DataTableFormAfterUpdateEvent,
@@ -554,7 +554,7 @@ private function getEventFullName() {
 
     public function render()
     {
-        return view('core::data-tables.data-table-form');
+        return view('core.views::data-tables.data-table-form');
     }
 
 }

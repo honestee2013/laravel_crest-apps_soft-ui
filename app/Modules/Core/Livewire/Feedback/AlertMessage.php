@@ -17,7 +17,7 @@ class AlertMessage extends Component
 
     public function setFeedbackMessage($message)
     {
-        
+
         $this->message = "Some messages";
 
             /*$this->message = session('success_message');
@@ -27,7 +27,7 @@ class AlertMessage extends Component
 
     public function render()
     {
-        return view('core::feedback.alert-message');
+        return view('core.views::feedback.alert-message');
 
     }
 }

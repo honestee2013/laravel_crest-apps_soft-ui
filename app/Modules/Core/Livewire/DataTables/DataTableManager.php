@@ -157,10 +157,10 @@ $tableName = app($this->model)->getTable();
         $data["modalClass"] = "childModal";
 
         //try {
-        $modalHeader =  view('core::data-tables.modals.modal-header', $data)->render();
-        $modalBodyContent =   view('core::data-tables.partials.form-render', $data)->render();
-        $modalBody =  view('core::data-tables.modals.modal-body', ["content" => $modalBodyContent])->render();
-        $modalFooter =  view('core::data-tables.modals.modal-footer',$data)->render();
+        $modalHeader =  view('core.views::data-tables.modals.modal-header', $data)->render();
+        $modalBodyContent =   view('core.views::data-tables.partials.form-render', $data)->render();
+        $modalBody =  view('core.views::data-tables.modals.modal-body', ["content" => $modalBodyContent])->render();
+        $modalFooter =  view('core.views::data-tables.modals.modal-footer',$data)->render();
 
         $modalHtml = $modalHeader.$modalBody.$modalFooter;
 
@@ -190,8 +190,8 @@ $tableName = app($this->model)->getTable();
             "id" => $id,
         ];
 
-        //@include('core::data-tables.modals.crop-image-modal')
-        $modalHtml =  view('core::data-tables.modals.crop-image-modal', $data)->render();
+        //@include('core.views::data-tables.modals.crop-image-modal')
+        $modalHtml =  view('core.views::data-tables.modals.crop-image-modal', $data)->render();
         //$this->dispatch("open-add-relationship-modal", ['modalHtml' => $modalHtml, "modalId" => $modalId]);
         $data["modalHtml"] = $modalHtml;
 
@@ -210,7 +210,7 @@ $tableName = app($this->model)->getTable();
 
     //////////////// RENDERING METHODS /////////////////
     public function render() {
-        return view('core::data-tables.data-table-manager', []);
+        return view('core.views::data-tables.data-table-manager', []);
     }
 
 

@@ -205,7 +205,7 @@
         @endforeach
     </form>
 
-    @include('core::data-tables.partials.form-footer', [
+    @include('core.views::data-tables.partials.form-footer', [
         'modalId' => $modalId,
     ])
 

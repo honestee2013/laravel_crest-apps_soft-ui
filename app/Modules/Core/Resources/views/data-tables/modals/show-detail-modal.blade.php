@@ -1,4 +1,4 @@
-@include('core::data-tables.modals.modal-header', [
+@include('core.views::data-tables.modals.modal-header', [
     'modalId' => 'detail',
     'isEditMode' => $isEditMode,
 ])
@@ -66,7 +66,7 @@
 
 </form>
 
-{{----- NOTE THE IFFERENCE WITH core::data-tables.modals.modal-header -----}}
-@include('core::data-tables.partials.form-footer', [
+{{----- NOTE THE IFFERENCE WITH core.views::data-tables.modals.modal-header -----}}
+@include('core.views::data-tables.partials.form-footer', [
     'modalId' => 'detail',
 ])
