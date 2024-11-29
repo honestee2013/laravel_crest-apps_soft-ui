@@ -61,7 +61,8 @@ class DataTableForm extends Component
     public $selectedItemId;
     public $selectedRows = [];
     //public $modalStack;
-
+    public $pageTitle;
+    public $queryFilters = [];
 
 
     public function mount()

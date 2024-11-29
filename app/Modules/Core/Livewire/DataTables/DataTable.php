@@ -38,6 +38,7 @@ class DataTable extends Component
     public $selectAll;
     public $search = '';
 
+    public $queryFilters = [];
 
 
     protected $listeners = [
@@ -227,6 +228,48 @@ class DataTable extends Component
         }
 
 
+
+        // Apply filters globally to the query
+        if (is_array($this->queryFilters)) {
+            foreach ($this->queryFilters as $filter) {
+                $column = "";
+                // Ensure that the filter array has three elements eg ["age", ">", "10"]
+                if (is_array($filter) && count($filter) === 3 && is_string($filter[0]) && is_string($filter[1])) {
+                    [$field, $operator, $value] = $filter;
+
+                    // For relationship dot operator & colomn is expected eg. [item_id.name]
+                    if (str_contains($field, "."))
+                         [$field, $column] = explode(".",$field);
+
+                    // Check relationship and other required conditions
+                    if (isset($this->fieldDefinitions[$field]["relationship"])
+                        && isset($this->fieldDefinitions[$field]["relationship"]["type"])
+                        && isset($this->fieldDefinitions[$field]["relationship"]["dynamic_property"])
+                        && !empty($column)
+                    ) {
+
+                        // Filter on the relationship dynamic property defined inside the [model class]
+                        $dynamic_property = $this->fieldDefinitions[$field]["relationship"]["dynamic_property"];
+                        $query->whereHas($dynamic_property, function ($query) use($column, $operator, $value) {
+                            $query->where($column, $operator, $value);
+                        });//->with($dynamic_property)->get(); // Earger loading optional
+
+                    } else { // Column without a relationship
+
+                        if ($operator === 'in') {
+                            $query->whereIn($field, $value);
+                        } else {
+                            $query->where($field, $operator, $value);
+                        }
+                    }
+
+                }
+            }
+        }
+
+
+
+
         // Apply sorting
         if ($this->sortField)
             $query?->orderBy($this->sortField, $this->sortDirection);
@@ -239,4 +282,9 @@ class DataTable extends Component
 
 
     }
+
+
+
+
+
 }

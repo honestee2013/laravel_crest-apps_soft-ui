@@ -42,6 +42,8 @@ class DataTableManager extends Component
     public $modalStack = [];
     public $feedbackMessages = "";
 
+    public $pageTitle;
+    public $queryFilters = [];
 
     protected $listeners = [
         "setFeedbackMessageEvent" => "setFeedbackMessage",
@@ -60,15 +62,13 @@ class DataTableManager extends Component
 
 
     public function mount() {
+
+
 Log::info("DataTableManager->mount(): ".$this->getId());
 //array_push($this->modalStack, $this->getId());
 
+
         $this->feedbackMessages = "";
-
-$tableName = app($this->model)->getTable();
-
-//if(Schema::hasColumn($tableName, 'display_name')) // Try using display_name if it exist
-//dd(app($this->model)->getTable());
 
         $this->modelName = class_basename($this->model);
         if(!$this->moduleName)
@@ -78,10 +78,19 @@ $tableName = app($this->model)->getTable();
         $this->fieldDefinitions = $data["fieldDefinitions"];
         $this->simpleActions = $data["simpleActions"];
         $this->moreActions = $data["moreActions"];
-        $this->hiddenFields = $data["hiddenFields"];
+
+        // Apply the hidden fields from the "DataTableManager"
+        foreach($data["hiddenFields"] as $key => $hiddenField) {
+            if (isset($this->hiddenFields[$key]))
+                $this->hiddenFields[$key] = array_unique(array_merge($this->hiddenFields[$key], $data["hiddenFields"][$key]));
+            else
+                $this->hiddenFields[$key] = $data["hiddenFields"][$key];
+        }
+
         $this->controls = $data["controls"];
         $this->columns = $data["columns"];
         $this->multiSelectFormFields = $data["multiSelectFormFields"];
+
 
         // If custom controls are passed, use them. Otherwise, fetch default controls from the trait.
         $this->controls = $this->getPreparedControls($this->controls);

@@ -8,8 +8,20 @@
     ])
         <div class="card-body">
             {{-- REACTIVE FORM COMPONENT --}}
-            <livewire:core.livewire.data-tables.data-table-form :fieldDefinitions="$fieldDefinitions" :model="$model" :moduleName="$moduleName" :modelName="$modelName" :multiSelectFormFields="$multiSelectFormFields"
-                :hiddenFields="$hiddenFields" :columns="$columns" :isEditMode="$isEditMode" modalId="addEditModal" key="addEditModal" />
+            <livewire:core.livewire.data-tables.data-table-form
+                :pageTitle="$pageTitle"
+                :queryFilters="$queryFilters"
+
+                :fieldDefinitions="$fieldDefinitions"
+                :model="$model"
+                :moduleName="$moduleName"
+                :modelName="$modelName"
+                :multiSelectFormFields="$multiSelectFormFields"
+                :hiddenFields="$hiddenFields"
+                :columns="$columns"
+                :isEditMode="$isEditMode"
+                modalId="addEditModal"
+                key="addEditModal" />
         </div>
     @include('core.views::data-tables.modals.modal-footer', [
         'modalId' => 'addEditModal',
@@ -25,8 +37,10 @@
             <div class="d-flex flex-row justify-content-between">
                 <div>
                     @php
-                        $pageTitle = $this->getConfigFileField($moduleName, $modelName, 'pageTitle');
-                        if (!$pageTitle) {
+                        if (!$pageTitle) // Check if 'pageTitle' is available in the DataTableManager
+                            $pageTitle = $this->getConfigFileField($moduleName, $modelName, 'pageTitle');
+                        if (!$pageTitle) { // Check if 'pageTitle' is available in the config file
+                            // Generate the 'pageTitle'from the moduleName
                             $pageTitle = Str::snake($modelName); // Convert to snake case
                             $pageTitle = ucwords(str_replace('_', ' ', $pageTitle)); // Convert to capitalised words
                             $pageTitle = Str::plural(ucfirst($pageTitle))." Record";
@@ -64,6 +78,7 @@
 
         {{-- ------------ DATA TABLE  ------------ --}}
         <livewire:core.livewire.data-tables.data-table :fieldDefinitions="$fieldDefinitions" :hiddenFields="$hiddenFields" :multiSelectFormFields="$multiSelectFormFields"
+            :queryFilters="$queryFilters"
             :columns="$columns" :model="$model" :simpleActions="$simpleActions" :controls="$controls" :visibleColumns="$visibleColumns"
             :sortField="$sortField" :sortDirection="$sortDirection" :perPage="$perPage" :moduleName="$moduleName" :modelName="$modelName"
             :moreActions="$moreActions" />
