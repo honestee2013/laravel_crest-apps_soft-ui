@@ -2,6 +2,7 @@
 
 namespace App\Modules\Inventory\Models;
 
+use App\Modules\Item\Models\Item;
 use Illuminate\Database\Eloquent\Model;
 use App\Modules\Enterprise\Models\Location;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

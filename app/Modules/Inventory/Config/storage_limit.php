@@ -25,9 +25,9 @@ return [
 
             'item_id' => [
                 'field_type' => 'select',
-                'options' => App\Modules\Inventory\Models\Item::pluck('name', 'id')->toArray(),
+                'options' => App\Modules\Item\Models\Item::pluck('name', 'id')->toArray(),
                 'relationship' => [
-                    'model' => 'App\Modules\Inventory\Models\Item',
+                    'model' => 'App\Modules\Item\Models\Item',
                     'type' => 'belongsTo',
                     'display_field' => 'name',
                     'dynamic_property' => 'item',

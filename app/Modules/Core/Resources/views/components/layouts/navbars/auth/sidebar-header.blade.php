@@ -9,7 +9,7 @@
 
 
 <x-core.views::layouts.navbars.sidebar-link-item
-    iconClasses="fas fa-th-large sidebar-icon"
+    iconClasses="fas fa-tachometer-alt sidebar-icon"
     url="{{strtolower($moduleName)}}/dashboard"
     title="Dashboard"
 />

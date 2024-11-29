@@ -3,13 +3,14 @@
 namespace App\Modules\Inventory\Models;
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use App\Modules\Item\Models\Item;
 use App\Modules\CRM\Models\Customer;
+
+use Illuminate\Database\Eloquent\Model;
 use App\Modules\Procurement\Models\Supplier;
 
 use App\Modules\Core\Services\ReadableIdGenerator;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
 class InventoryTransaction extends Model
@@ -66,7 +67,7 @@ class InventoryTransaction extends Model
             $transaction->readable_id = ReadableIdGenerator::generate(strtoupper($type), self::class);
         });
 
-        
+
     }
 
 
