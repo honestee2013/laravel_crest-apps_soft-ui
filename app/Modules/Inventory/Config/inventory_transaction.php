@@ -2,21 +2,22 @@
 
 return [
 
-        "model"=>"App\\Modules\\Inventory\\Models\\InventoryTransaction",
+        "model"=>"App\\Modules\\Inventry\\Models\\InventoryTransaction",
         "fieldDefinitions"=>[
 
-            'readable_id' =>[
+
+            'uuid' => '',
+
+            'transaction_id' =>[
                 'field_type' => 'id',
                 'label' => 'Transaction ID',
             ],
 
-            'uuid' => '',
 
-            'transaction_date' => [ 'field_type' => 'datetime-local', 'validation' => 'required|string'],
+            'transaction_date' => [ 'field_type' => 'datetimepicker', 'validation' => 'required|string'],
 
 
             'reference_number' => [ 'field_type' => 'text'],
-
 
 
             'transaction_type_id' => [
@@ -36,24 +37,6 @@ return [
             ],
 
 
-
-            'storage_id' => [
-                'field_type' => 'select',
-                'options' => App\Modules\Inventory\Models\Storage::pluck('name', 'id')->toArray(),
-                'relationship' => [
-                    'model' => 'App\Modules\Inventory\Models\Storage',
-                    'type' => 'belongsTo',
-                    'display_field' => 'name',
-                    'dynamic_property' => 'storage',
-                    'foreign_key' => 'storage_id',
-                    'inlineAdd' => true,
-                ],
-                'label' => 'Storage',
-                'validation' => 'required'
-            ],
-
-
-
             'item_id' => [
                 'field_type' => 'select',
                 'options' => App\Modules\Item\Models\Item::pluck('name', 'id')->toArray(),
@@ -71,6 +54,25 @@ return [
 
 
             'quantity' => [ 'field_type' => 'number', 'validation' => 'required|integer'],
+
+
+            'storage_id' => [
+                'field_type' => 'select',
+                'options' => App\Modules\Storage\Models\Storage::pluck('name', 'id')->toArray(),
+                'relationship' => [
+                    'model' => 'App\Modules\Storage\Models\Storage',
+                    'type' => 'belongsTo',
+                    'display_field' => 'name',
+                    'dynamic_property' => 'storage',
+                    'foreign_key' => 'storage_id',
+                    'inlineAdd' => true,
+                ],
+                'label' => 'Storage',
+                'validation' => 'required'
+            ],
+
+            'storage_location' => [ 'field_type' => 'text'],
+
 
             'truck_number' => [ 'field_type' => 'text', 'validation' => 'required|string'],
 
@@ -173,17 +175,22 @@ return [
             'onNewForm' => [
                 'id',
                 'uuid',
-                'readable_id',
+                'transaction_id',
+                'storage_location',
             ],
             'onEditForm' => [
                 'id',
                 'uuid',
-                'readable_id',
+                'transaction_id',
+                'storage_location',
             ],
+            'onQuery' => [
+                'storage_location'
+            ]
         ],
 
 
-        "simpleActions"=>['show', 'edit'],
+        "simpleActions"=>['show'],
 
 
         "isTransaction"=>true,
@@ -194,9 +201,10 @@ return [
 
             'files' => [
                 'export' => ['xls', 'csv', 'pdf'],
-                'import' => ['xls', 'csv'],
                 'print',
             ],
+            'perPage' => [5, 10, 25, 50, 100, 200, 500],
+
             'bulkActions' => [
                 'export' => ['xls', 'csv', 'pdf'],
             ],

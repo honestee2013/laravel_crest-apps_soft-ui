@@ -2,7 +2,7 @@
 
 return [
 
-        "model"=>"App\\Modules\\Inventory\\Models\\Unit",
+        "model"=>"App\\Modules\\Storage\\Models\\Unit",
         "fieldDefinitions"=>[
             'name' => [ 'field_type' => 'text', 'validation' => 'required|string'],
             'display_name' => [ 'field_type' => 'text', 'validation' => 'required|string'],

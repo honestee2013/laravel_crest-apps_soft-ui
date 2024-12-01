@@ -68,10 +68,10 @@
                             @if ($field && $multiSelectFormFields && in_array($field, array_keys($multiSelectFormFields)))
                                 <select multiple wire:model.defer="multiSelectFormFields.{{ $field }}"
                                     name = "{{ $field }}" value= "{{ $field }}" id="{{ $field }}"
-                                    class="form-control">
-                                @else
+                                    class="form-control" placeholder="xxxxxxx">
+                            @else
                                     <select wire:model.defer="fields.{{ $field }}" name = "{{ $field }}"
-                                        value= "{{ $field }}" id="{{ $field }}" class="form-control">
+                                        value= "{{ $field }}" id="{{ $field }}" class="form-control" placeholder="yyyyyy">
                             @endif
 
                             @if (isset($fieldDefinitions[$field]['label']))
@@ -112,7 +112,8 @@
                                     @endif
 
                                     <label class="custom-control-label" for="{{ $key }}"
-                                        @if (isset($display) && $display == 'inline') style="margin: 0.25em 2em 1em 0.5em" @endif>{{ $value }}
+                                        @if (isset($display) && $display == 'inline') style="margin: 0.25em 2em 1em 0.5em" @endif>
+                                        {{ $value }}
                                     </label>
                                 </div>
                             @endforeach
@@ -121,18 +122,20 @@
 
                         @elseif ($type === 'radio')
                             <!--------- Radio button on a horizontal line -------->
-                            @if ($display == 'inline')<div>@endif
+                            @if (isset($display) && $display == 'inline')<div>@endif
                             @foreach ($options as $key => $value)
-                                <div class="form-check" @if ($display == 'inline') style="display:inline-flex;" @endif>
+                                <div class="form-check"
+                                    @if (isset($display) && $display == 'inline') style="display:inline-flex;" @endif>
+
                                     <input class="form-check-input" type="{{ $type }}" id="{{ $key }}"
                                         wire:model.defer="fields.{{ $field }}" value="{{ $value }}">
                                     <label class="custom-control-label" for="{{ $key }}"
-                                        @if ($display == 'inline') style="margin: 0.25em 2em 1em 0.5em" @endif>
+                                    @if (isset($display) && $display == 'inline') style="margin: 0.25em 2em 1em 0.5em" @endif>
                                         {{ $value }}
                                     </label>
                                 </div>
                             @endforeach
-                            @if ($display == 'inline')</div> @endif
+                            @if (isset($display) && $display == 'inline')</div>@endif
                             <!--------- End button on a horizontal line -------->
 
                         @elseif ($type === 'file' && in_array($field, $this->getSupportedImageColumnNames()))
@@ -180,10 +183,24 @@
 
                                 </div>
                             </div>
+
+                        @elseif (str_contains($type, "date"))
+
+
+
+                            <!----------- DATE FIELD ------------->
+                            <input type="{{ $type }}" wire:model.defer="fields.{{ $field }}" id="{{ $field }}"
+                                class="form-control rounded-pill {{ (str_contains($type, "time")? 'datetimepicker': 'datepicker')   }}" value="{{ $fields[$field] ?? '' }}" name="{{ $field }}"
+                                    placeholder="Please provide the {{strtolower(str_replace('_', ' ', $field))}}..."
+                                >
+
+
                         @else
                             <!----------- ANY OTHER INPUT ------------->
                             <input type="{{ $type }}" wire:model.defer="fields.{{ $field }}" id="{{ $field }}"
-                                class="form-control rounded-pill" value="{{ $fields[$field] ?? '' }}" name="{{ $field }}">
+                                class="form-control rounded-pill" value="{{ $fields[$field] ?? '' }}" name="{{ $field }}"
+                                    placeholder="Please provide the {{strtolower(str_replace('_', ' ', $field))}}..."
+                                >
                         @endif
 
                         <!----------- Validation Error  ------------->

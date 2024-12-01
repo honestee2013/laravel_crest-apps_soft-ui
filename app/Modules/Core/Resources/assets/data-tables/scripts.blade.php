@@ -19,7 +19,7 @@
                 modalWrapper.classList.remove('is-open');
                 //modalWrapper.remove();
             });
-            
+
 
 
 
@@ -241,6 +241,23 @@
                 `
         });
     }
-
-
 </script>
+
+
+<script src="/assets/js/plugins/flatpickr.min.js"></script>
+<script>
+    // Date picker initialiser
+    if (document.querySelector('.datepicker')) {
+        flatpickr('.datepicker', {
+        });
+    }
+
+    // Datetime picker initialiser
+    if (document.querySelector('.datetimepicker')) {
+        flatpickr('.datetimepicker', {
+            enableTime: true,
+        });
+    }
+</script>
+
+

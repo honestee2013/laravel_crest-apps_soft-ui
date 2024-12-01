@@ -14,9 +14,12 @@ return new class extends Migration
         Schema::create('inventory_adjustments', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('inventory_id')->constrained('inventories')->cascadeOnDelete();
-            $table->integer('adjusted_quantity');
-            $table->text('reason');
+            //$table->foreignId('uuid')->nullable()->constrained("inventory_transactions")->cascadeOnDelete();
+            $table->string('uuid')->nullable();//->constrained("inventory_transactions")->cascadeOnDelete();
+            $table->foreignId('transaction_id')->nullable()->constrained("inventory_transactions")->cascadeOnDelete();
+            $table->string('adjustment_type')->nullable();
+            $table->integer('adjusted_quantity')->nullable();
+            $table->text('adjustment_reason')->nullable();
             $table->foreignId('adjusted_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamp('adjustment_date');
             $table->timestamps();

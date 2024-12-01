@@ -97,6 +97,7 @@ class DataTableForm extends Component
                 if(Schema::hasColumn($tableName, 'display_name')) // Try using display_name if it exist
                     $this->fieldDefinitions[$fieldName]['options'] = $model::pluck('display_name', 'id')->toArray();
                 else // name is always expected to exist
+                if(Schema::hasColumn($tableName, 'name')) // Try using display_name if it exist
                     $this->fieldDefinitions[$fieldName]['options'] = $model::pluck('name', 'id')->toArray();
             }
         }
@@ -161,10 +162,11 @@ class DataTableForm extends Component
 
 
         // Now create or update the model using the sanitized fields array
+        if ($this->getConfigFileField($this->moduleName, $this->modelName, "isTransaction")) {
+            DB::beginTransaction();
+        }
 
         try {
-            if ($this->getConfigFileField($this->moduleName, $this->modelName, "isTransaction"))
-                DB::beginTransaction();
 
             $record = null;
             if ($this->isEditMode) {
@@ -183,15 +185,18 @@ class DataTableForm extends Component
                 // Create a new record
                 $record = $this->model::create($sanitizedFields);
                 // Sending [After Create Event]
-                $this->dispatchAllEvents("AfterCreate", [], $sanitizedFields);
+                $this->dispatchAllEvents("AfterCreate", [], $record->toArray());
             }
 
-            if ($this->getConfigFileField($this->moduleName, $this->modelName, "isTransaction"))
+            if ($this->getConfigFileField($this->moduleName, $this->modelName, "isTransaction")) {
                 DB::commit(); // Commit the transaction
+            }
 
         } catch (\Exception $e) {
-            if ($this->getConfigFileField($this->moduleName, $this->modelName, "isTransaction"))
+            if ($this->getConfigFileField($this->moduleName, $this->modelName, "isTransaction")) {
                 DB::rollBack(); // Rollback the transaction
+            }
+            
             // Log the error or handle the exception as needed
             throw $e;
         }

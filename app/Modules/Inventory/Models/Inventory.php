@@ -3,6 +3,7 @@
 namespace App\Modules\Inventory\Models;
 
 use App\Modules\Item\Models\Item;
+use App\Modules\Storage\Models\Storage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -24,6 +25,18 @@ class Inventory extends Model
     public function storage()
     {
         return $this->belongsTo(Storage::class);
+    }
+
+
+    public function getStorageLocationAttribute($value) {
+
+        return $this->storage->location->name.", ".$this->storage->location->address;
+
+    }
+
+    public function inventory()
+    {
+        return $this->belongsTo(Inventory::class);
     }
 
     public function transactionType()

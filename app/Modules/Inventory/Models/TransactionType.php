@@ -27,7 +27,7 @@ class TransactionType extends Model
         return $this->hasMany(InventoryTransaction::class);
     }
 
-   
+
 
 
 }

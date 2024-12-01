@@ -7,25 +7,24 @@ return [
 
 
 
-
-
-
-
-
-
             'storage_id' => [
                 'field_type' => 'select',
-                'options' => App\Modules\Inventory\Models\Storage::pluck('name', 'id')->toArray(),
+                'options' => App\Modules\Storage\Models\Storage::pluck('name', 'id')->toArray(),
                 'relationship' => [
-                    'model' => 'App\Modules\Inventory\Models\Storage',
+                    'model' => 'App\Modules\Storage\Models\Storage',
                     'type' => 'belongsTo',
                     'display_field' => 'name',
                     'dynamic_property' => 'storage',
                     'foreign_key' => 'storage_id',
                     'inlineAdd' => true,
                 ],
-                'validation' => 'required'
+                'validation' => 'required',
+                'label' => 'Storage',
+
             ],
+
+            'storage_location' => [ 'field_type' => 'text'],
+
 
 
 
@@ -61,12 +60,17 @@ return [
             'onNewForm' => [
                 'id',
                 'uuid',
-                'readable_id',
+                'transaction_id',
             ],
             'onEditForm' => [
                 'id',
                 'uuid',
-                'readable_id',
+                'transaction_id',
+            ],
+
+            'onQuery' => [
+                'storage_location',
+                'available_quantity_unit'
             ],
         ],
 
@@ -81,6 +85,8 @@ return [
                 'export' => ['xls', 'csv', 'pdf'],
                 'print',
             ],
+            'perPage' => [5, 10, 25, 50, 100, 200, 500],
+
             'bulkActions' => [
                 'export' => ['xls', 'csv', 'pdf'],
             ],

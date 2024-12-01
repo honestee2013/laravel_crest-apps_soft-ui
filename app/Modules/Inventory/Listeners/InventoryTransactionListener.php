@@ -13,7 +13,7 @@ use App\Modules\Inventory\Events\InventoryTransactionEvent;
 use Illuminate\Contracts\Events\ShouldHandleEventsAfterCommit;
 
 
-class InventoryTransactionListener implements ShouldHandleEventsAfterCommit
+class InventoryTransactionListener
 {
     /**
      * Create the event listener.

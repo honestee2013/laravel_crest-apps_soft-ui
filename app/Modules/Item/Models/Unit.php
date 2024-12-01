@@ -18,8 +18,10 @@ class Unit extends Model
     ];
 
 
-    public function getXxxAttribute() {
-        return $this->name." ".$this->symbol;
+    public function setNameAttribute($value)
+    {
+        // Make sure that name is always small letters and has no white space
+        return strtolower(str_replace(" ", "_", $value));
     }
 
 

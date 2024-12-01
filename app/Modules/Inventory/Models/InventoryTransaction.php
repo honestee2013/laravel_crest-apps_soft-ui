@@ -6,9 +6,10 @@ use App\Models\User;
 use App\Modules\Item\Models\Item;
 use App\Modules\CRM\Models\Customer;
 
+use App\Modules\Storage\Models\Storage;
 use Illuminate\Database\Eloquent\Model;
-use App\Modules\Procurement\Models\Supplier;
 
+use App\Modules\Procurement\Models\Supplier;
 use App\Modules\Core\Services\ReadableIdGenerator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -39,7 +40,7 @@ class InventoryTransaction extends Model
 
         'customer_id',
         'supplier_id',
-        'readable_id',
+        'transaction_id',
         'uuid',
     ];
 
@@ -64,7 +65,7 @@ class InventoryTransaction extends Model
             $truncateLength = 3;// config('app.transaction_type_length', 3);
             $type = substr($type, 0, $truncateLength);
 
-            $transaction->readable_id = ReadableIdGenerator::generate(strtoupper($type), self::class);
+            $transaction->transaction_id = ReadableIdGenerator::generate(strtoupper($type), self::class);
         });
 
 
@@ -94,9 +95,24 @@ class InventoryTransaction extends Model
         return $this->belongsTo(Item::class);
     }
 
+
     public function storage()
     {
         return $this->belongsTo(Storage::class);
+    }
+
+
+    public function getStorageLocationAttribute($value) {
+//dd($this->storage->location->address);
+        return $this->storage->location->name.", ".$this->storage->location->address;
+
+    }
+
+
+
+    public function inventory()
+    {
+        return $this->belongsTo(Inventory::class);
     }
 
     public function transactionType()

@@ -6,6 +6,7 @@ namespace App\Modules\Core\Livewire\DataTables;
 use Livewire\Component;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
+use App\Modules\Inventory\Models\InventoryAdjustment;
 use App\Modules\Core\Traits\DataTable\DataTableControlsTrait;
 use App\Modules\Core\Traits\DataTable\DataTableFieldsConfigTrait;
 
@@ -34,7 +35,7 @@ class DataTableManager extends Component
 
     public $sortField = 'id'; // Default sort field
     public $sortDirection = 'asc'; // Default sort direction
-    public $perPage = 5;
+    public $perPage = 10;
 
     public $modalCount = 0;
     public $refreshModalCount = 20;
@@ -63,10 +64,9 @@ class DataTableManager extends Component
 
     public function mount() {
 
-
+//dd(InventoryAdjustment::first()->adjusted_by);
 Log::info("DataTableManager->mount(): ".$this->getId());
 //array_push($this->modalStack, $this->getId());
-
 
         $this->feedbackMessages = "";
 

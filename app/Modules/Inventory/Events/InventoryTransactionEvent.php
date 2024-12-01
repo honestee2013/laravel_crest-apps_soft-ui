@@ -12,7 +12,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 
-class InventoryTransactionEvent extends DataTableFormEvent implements ShouldDispatchAfterCommit
+class InventoryTransactionEvent extends DataTableFormEvent
 {
 
     public function __construct($eventName, $oldRecord, $newRecord)

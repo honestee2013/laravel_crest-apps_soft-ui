@@ -6,8 +6,11 @@
         </x-layouts.navbars.auth.sidebar>
     </x-slot>
     <livewire:core.livewire.data-tables.data-table-manager model="App\\Modules\\Item\\Models\\Item"
-        queryFilters=[] :hiddenFields="[
+
+    pageTitle="Manage Items"
+
+    queryFilters=[] :hiddenFields="[
             'onTable' => [],
-        ]" :queryFilters="[]" pageTitle=''
+        ]" :queryFilters="[]"
         />
 </x-core.views::layouts.app>

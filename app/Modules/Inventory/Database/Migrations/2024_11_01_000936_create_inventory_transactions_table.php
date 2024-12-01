@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('inventory_transactions', function (Blueprint $table) {
             $table->id();
 
-            $table->string('readable_id')->unique(); // Human-readable transaction number
+            $table->string('transaction_id')->unique(); // Human-readable transaction number
             $table->uuid('uuid')->unique();         // Globally unique ID
 
             // Transaction type linked to a new `transaction_types` table for extensibility
