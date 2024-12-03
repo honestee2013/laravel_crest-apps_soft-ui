@@ -1,103 +1,52 @@
 <?php
 
-namespace App\Modules\AccessControl\Livewire\AccessAssignments;
+namespace App\Modules\Access\Livewire\AccessControls;
 
 use App\Models\Role;
-use App\Models\Team;
 use App\Models\User;
 use Livewire\Component;
 use App\Models\Permission;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
 
-class AccessControlScope extends Component
+class AccessControl extends Component
 {
 
-    public $scope;
-    public $scopeType = '';
-    public $scopeList = [];
-    public $accessController;
-    public $scopeName = '';
+
+    public $allControls = [];
+    public $controlsCSSClasses = [];
+    public $resourceNames = [];
+    public $toggleAllPermissionSwitchInitColors = [];
+
+    public $scope = 'role';
 
 
-    public function mount() {
-
-        $this->dispatch('someEvent', 'Hello from Livewire!');
 
 
-    }
 
-
-    public function scopeSelection()
+    public function mount($scope='role', $id=1)
     {
-        // Reset the scope variable
-        $this->scope = '';
-        if ($this->scopeType == 'role') {
-            $this->scopeList = Role::all();
-        } else if ($this->scopeType == 'user') {
-            $this->scopeList = User::all();
-        }  else if ($this->scopeType == 'team') {
-            $this->scopeList = Team::all();
+        $this->allControls = $this->getAllControls();
+        $this->controlsCSSClasses = $this->getAllControlsCSSClasses();
+        $this->resourceNames = $this->getAllModelNames();
+
+        $this->checkPermissionsExistsOrCreate($this->allControls, $this->resourceNames);
+
+        if ($this->scope == 'role') {
+            //$data['scope'] = Role::with('team')->with('permissions')->findOrFail($id);
+            $this->scope = Role::with('permissions')->findOrFail($id);
+        } else if ($scope == 'user') {
+            //$data['scope'] = User::with('team')->with('permissions')->findOrFail($id);
+            $this->scope = User::with('permissions')->findOrFail($id);
         }
 
+        $this->toggleAllPermissionSwitchInitColors  = $this->getScopeToggleAllResourcePermissionsInitialCSSClasses($this->scope, $this->resourceNames );
+
+       //return view('access-control.manage', ['accessController' => $data]);//->with('records_per_page', $recordsPerPage);
     }
 
-
-
-
-
-    public function render()
-    {
-        return view('livewire.access-control-scope');
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public function manage()
-    {
-
-        $this->accessController['allControls'] = $this->getAllControls();
-        $this->accessController['controlsCSSClasses'] = $this->getAllControlsCSSClasses();
-
-        $this->accessController['resourceNames'] = $this->getAllModelNames();
-        $this->checkPermissionsExistsOrCreate($this->accessController['allControls'], $this->accessController['resourceNames']);
-        if ($this->scopeType == 'role') {
-            $this->accessController['scope'] = Role::with('team')->with('permissions')->findOrFail($this->scope);
-            //$this->accessController['scope'] = Role::findOrFail($this->scope);
-
-        } else if ($this->scopeType == 'user') {
-            $this->accessController['scope'] = User::with('team')->with('permissions')->findOrFail($this->scope);
-            //$this->accessController['scope'] = User::findOrFail($this->scope);
-        } else if ($this->scopeType == 'team') {
-            $this->accessController['scope'] = User::with('team')->with('permissions')->findOrFail($this->scope);
-            //$this->accessController['scope'] = Team::findOrFail($this->scope);
-        }
-
-        if (isset($this->accessController['scope']))
-            $this->scopeName = $this->accessController['scope']?->first()->name;
-
-
-
-
-        $this->accessController['toggleAllPermissionSwitchInitColors']  = $this->getScopeToggleAllResourcePermissionsInitialCSSClasses($this->accessController['scope'], $this->accessController['resourceNames'] );
-
-    }
 
 
 
@@ -222,10 +171,6 @@ class AccessControlScope extends Component
     }
 
 
-
-
-
-
     function getAllControls() {
         return  ['view', 'print', 'edit', 'delete', 'export'];
     }
@@ -246,20 +191,15 @@ class AccessControlScope extends Component
         $offColor = '#e8ebee';
         $onColor = '#98ec2d';
 
-
         // Get resource permission count
         foreach($scope->getPermissionNames() as $permissionName) {
             foreach($allResourceNames as $resourceName) {
-                if (!isset($permissionCount[$resourceName])) {
+                if (!isset($permissionCount[$resourceName]))
                     $permissionCount[$resourceName]["permissionCount"] = 0;
-                    $permissionCount[$resourceName]["controls"] = [];
-                }
 
                 $searchResourceName = strtolower(Str::plural($resourceName));
                 if (str_contains($permissionName, $searchResourceName)) {
                     $permissionCount[$resourceName]["permissionCount"]++;
-                    $permissionCount[$resourceName]["controls"][] = substr($permissionName, 0, strpos($permissionName, ' '));
-
                 }
             }
         }
@@ -274,11 +214,6 @@ class AccessControlScope extends Component
             else
                 $permissionCount[$resourceName]["bg"] = 'green';
         }
-
-
-        $permissionCount["offColor"] = $offColor;
-        $permissionCount["onColor"] = $onColor;
-dd($permissionCount);
 
         return $permissionCount;
     }
@@ -359,29 +294,10 @@ dd($permissionCount);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    public function render()
+    {
+        return view('access.views::access-controls.access-control');
+    }
 
 
 }
