@@ -7,7 +7,7 @@
         </x-layouts.navbars.auth.sidebar>
     </x-slot>
     <livewire:core.livewire.data-tables.data-table-manager
-        model="App\\Modules\\Inventory\\Models\\InventoryTransaction"
+        model="App\\Modules\\Storage\\Models\\IssueItem"
         queryFilters=[]
         pageTitle="Issued Items Overview"
         :hiddenFields="[

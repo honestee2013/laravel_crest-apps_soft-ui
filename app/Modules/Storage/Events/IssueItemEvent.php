@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Inventory\Events;
+namespace App\Modules\Storage\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
@@ -11,8 +11,9 @@ use App\Modules\Core\Events\DataTableFormEvent;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
+use App\Modules\Inventory\Events\InventoryTransactionEvent;
 
-class InventoryTransactionEvent extends DataTableFormEvent implements ShouldDispatchAfterCommit
+class IssueItemEvent  extends DataTableFormEvent
 {
 
     public function __construct($eventName, $oldRecord, $newRecord)

@@ -35,7 +35,7 @@ return [
                     'inlineAdd' => true,
                 ],
                 'label' => 'Item',
-                'validation' => 'required'
+                'validation' => 'required|unique,item.id'
             ],
 
 

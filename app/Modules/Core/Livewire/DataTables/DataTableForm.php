@@ -4,6 +4,7 @@ namespace App\Modules\Core\Livewire\DataTables;
 
 use Livewire\Form;
 use Livewire\Component;
+use Illuminate\Support\Str;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -92,13 +93,17 @@ class DataTableForm extends Component
                 && isset($this->fieldDefinitions[$fieldName]['relationship']["model"])
             ) {
 
-                $model = $this->fieldDefinitions[$fieldName]['relationship']["model"];
+                /*$model = $this->fieldDefinitions[$fieldName]['relationship']["model"];
                 $tableName = app($model)->getTable();
                 if(Schema::hasColumn($tableName, 'display_name')) // Try using display_name if it exist
                     $this->fieldDefinitions[$fieldName]['options'] = $model::pluck('display_name', 'id')->toArray();
                 else // name is always expected to exist
-                if(Schema::hasColumn($tableName, 'name')) // Try using display_name if it exist
-                    $this->fieldDefinitions[$fieldName]['options'] = $model::pluck('name', 'id')->toArray();
+                    if(Schema::hasColumn($tableName, 'name')) // Try using display_name if it exist
+                    $this->fieldDefinitions[$fieldName]['options'] = $model::pluck('name', 'id')->toArray();*/
+
+                $configPath = "$this->moduleName.".Str::snake($this->modelName);
+                $configPath = strtolower($configPath);
+                $this->fieldDefinitions[$fieldName]['options'] = config("$configPath.fieldDefinitions.$fieldName.options");
             }
         }
 
@@ -196,7 +201,7 @@ class DataTableForm extends Component
             if ($this->getConfigFileField($this->moduleName, $this->modelName, "isTransaction")) {
                 DB::rollBack(); // Rollback the transaction
             }
-            
+
             // Log the error or handle the exception as needed
             throw $e;
         }

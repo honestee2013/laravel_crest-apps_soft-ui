@@ -15,17 +15,18 @@ trait DataTableFieldsConfigTrait
         $fileName = Str::snake($modelName);
         $moduleName = strtolower($moduleName);
 
-
         $config = [
             "fieldDefinitions" => $this->initialiseFieldDefinitions(config( "$moduleName.$fileName.fieldDefinitions")) ?? [],
             "simpleActions" => config( "$moduleName.$fileName.simpleActions") ?? [],
             "moreActions" =>config( "$moduleName.$fileName.moreActions") ?? [],
             "hiddenFields" => $this->initialiseHiddenFields(config( "$moduleName.$fileName.hiddenFields")) ?? [],
             "controls" => config( "$moduleName.$fileName.controls") ?? [],
+            "overrides" => config( "$moduleName.$fileName.overrides") ?? [],
         ];
 
         $config = $this->setColumns($config);
         $config = $this->setMultiSelectFormFields($config);
+        $config = $this->overrideFields($config);
         return $config;
     }
 
@@ -110,6 +111,7 @@ trait DataTableFieldsConfigTrait
 
     //////////// INITIALISATION METHODS /////////////////
     private function initialiseFieldDefinitions($fieldDefinitions) {
+        // If is not defined in the config file, porpulate it from the database table column fields
         if (empty($fieldDefinitions)) {
             $tableName = (new $this->model)->getTable();
             $fieldDefinitions = $this->getTableFieldsWithTypes($tableName);
@@ -137,5 +139,23 @@ trait DataTableFieldsConfigTrait
 
     public function getSupportedImageColumnNames() {
         return ['image', 'photo', 'picture', 'logo', 'invoice'];
+    }
+
+
+    private function overrideFields($config) {
+
+       foreach($config as $configKey => $configValue) {
+            if (isset($config["overrides"][$configKey])) {
+                foreach($configValue as $key => $value) {
+                    if (isset($config["overrides"][$configKey][$key])) {
+                        $config[$configKey][$key] = $config["overrides"][$configKey][$key];
+                    }
+
+                }
+
+            }
+       }
+
+       return $config;
     }
 }

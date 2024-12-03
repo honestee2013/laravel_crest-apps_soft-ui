@@ -26,13 +26,13 @@ class InventoryService
                 ['item_id' => $itemId, 'storage_id' => $storageId],
                 ['available_quantity' => 0]
             );
-
+//dd($inventory);
             // Perform the operation
             if ($operation === 'add') {
                 $inventory->available_quantity += $quantityChange;
             } elseif ($operation === 'subtract') {
                 if ($inventory->available_quantity < $quantityChange) {
-                    throw new \Exception("Insufficient inventory for item $itemId at location $locationId.");
+                    throw new \Exception("Insufficient inventory ");//for item $itemId at location $locationId.");
                 }
                 $inventory->available_quantity -= $quantityChange;
             } else {
