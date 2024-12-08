@@ -96,5 +96,12 @@
         .childModal {
             max-width: 500px;
         }
+
+
+        .input_control {
+            max-height: 0.2em !important;
+        }
+
+
     </style>
 @endassets

@@ -1,15 +1,23 @@
 <?php
 
-namespace App\Models;
+namespace App\Modules\Production\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+use App\Models\User;
+use App\Modules\Item\Models\Item;
 use Illuminate\Database\Eloquent\Model;
+use App\Modules\Enterprise\Models\Department;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ProductionOrder extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'name',
+        'description',
+        'order_number',
+
         'batch_number',
         'item_id',
         'department_id',
@@ -17,9 +25,14 @@ class ProductionOrder extends Model
         'status',
         'planned_quantity',
         'actual_quantity',
+
+        'expected_start_time',
+        'expected_end_time',
+        'completed_at',
+
+
         'notes',
 
-        'order_time',
         'created_by',  // User who generated the order
         'supervisor_id' // Assigned supervisor or manager
     ];
@@ -48,7 +61,7 @@ class ProductionOrder extends Model
     }
 
 
-    public function expectedItems()
+    /*public function expectedItems()
     {
         return $this->hasMany(ProductionOrderItem::class)->where('type', 'expected');
     }
@@ -57,6 +70,13 @@ class ProductionOrder extends Model
     {
         return $this->hasMany(ProductionOrderItem::class)->where('type', 'actual');
     }
+
+
+
+    public function batches()
+    {
+        return $this->hasMany(Batch::class);
+    }*/
 
 
 

@@ -1,54 +1,105 @@
 <?php
 
-namespace App\Modules\Access\Livewire\AccessControls;
+namespace App\Modules\Access\Controllers;
 
-use App\Models\Role;
 use App\Models\User;
-use Livewire\Component;
-use App\Models\Permission;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Modules\Access\Models\Role;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
+use App\Modules\Access\Models\Permission;
 
-class AccessControl extends Component
+
+
+class AccessController extends Controller
 {
 
 
-    public $allControls = [];
-    public $controlsCSSClasses = [];
-    public $resourceNames = [];
-    public $toggleAllPermissionSwitchInitColors = [];
-
-    public $scope = 'role';
 
 
 
-
-
-    public function mount($scope='role', $id=1)
+    public function index()
     {
-        $this->allControls = $this->getAllControls();
-        $this->controlsCSSClasses = $this->getAllControlsCSSClasses();
-        $this->resourceNames = $this->getAllModelNames();
 
-        $this->checkPermissionsExistsOrCreate($this->allControls, $this->resourceNames);
-
-        if ($this->scope == 'role') {
-            //$data['scope'] = Role::with('team')->with('permissions')->findOrFail($id);
-            $this->scope = Role::with('permissions')->findOrFail($id);
-        } else if ($scope == 'user') {
-            //$data['scope'] = User::with('team')->with('permissions')->findOrFail($id);
-            $this->scope = User::with('permissions')->findOrFail($id);
+        $module  = request("module");
+        if (isset($module)) {
+            request()->validate([
+                'module' => 'required|string|max:255',
+            ]);
         }
+        // Module selector will collect the needed data and redirect to [ $this->manage($module, $scope, $id) ]
+        $data = [
+            "id" => null,
+            "scope" => null,
+            "module" => $module,
+        ];
+        return view('access.views::access-controls.manage',  ['accessController' => $data]);
+    }
 
-        $this->toggleAllPermissionSwitchInitColors  = $this->getScopeToggleAllResourcePermissionsInitialCSSClasses($this->scope, $this->resourceNames );
 
-       //return view('access-control.manage', ['accessController' => $data]);//->with('records_per_page', $recordsPerPage);
+    /*public function selectScopeAndRole($module)
+    {
+
+        // Module selector will collect the needed data and redirect to [ $this->manage($module, $scope, $id) ]
+        $data = [
+            "id" => null,
+            "scope" => null,
+            "module" => strtolower($module),
+        ];
+        return view('access.views::access-controls.manage',  ['accessController' => $data]);
     }
 
 
 
+    public function selectRole($module, $scope)
+    {
+        // Module selector will collect the needed data and redirect to [ $this->manage($module, $scope, $id) ]
+        $data = [
+            "id" => null,
+            "scope" => strtolower($scope),
+            "module" => strtolower($module),
+        ];
+        return view('access.views::access-controls.manage',  ['accessController' => $data]);
+    }*/
+
+
+
+    public function manage($module, $scope, $id)
+    {
+
+        $data["id"] = $id;
+        $data["scope"] = $scope;
+        $data["module"] = $module;
+
+        $data['allControls'] = $this->getAllControls();
+        $data['controlsCSSClasses'] = $this->getAllControlsCSSClasses();
+
+
+        $directory = app_path("Modules/".ucfirst($module)."/Models");
+        $namespace = addslashes("App\\Modules\\".ucfirst($module)."\\Models\\");
+
+        $data['resourceNames'] = $this->getAllModelNames($directory, $namespace);
+
+
+        $this->checkPermissionsExistsOrCreate($data['allControls'], $data['resourceNames']);
+        if ($scope == 'role') {
+            //$data['scope'] = Role::with('team')->with('permissions')->findOrFail($id);
+            $data['scope'] = Role::with('permissions')->findOrFail($id);
+        } else if ($scope == 'user') {
+            //$data['scope'] = User::with('team')->with('permissions')->findOrFail($id);
+            $data['scope'] = User::with('permissions')->findOrFail($id);
+        }
+
+        $data['toggleAllPermissionSwitchInitColors']  = $this->getScopeToggleAllResourcePermissionsInitialCSSClasses($data['scope'], $data['resourceNames'] );
+
+
+        //return view('access-control.manage', ['accessController' => $data]);//->with('records_per_page', $recordsPerPage);
+        return view('access.views::access-controls.manage',  ['accessController' => $data]);
+
+
+    }
 
 
 
@@ -235,7 +286,7 @@ class AccessControl extends Component
 
 
 
-    static function getAllModelNames($directory = null, $namespace = 'App\\Models\\')
+    /*static function getAllModelNames($directory = null, $namespace = 'App\\Models\\')
     {
         if (!$directory) {
             $directory = app_path('Models');
@@ -278,26 +329,39 @@ class AccessControl extends Component
         }
 
         return $models;
-    }
+    }*/
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public function render()
+    static function getAllModelNames($directory = null, $namespace = 'App\\Models\\')
     {
-        return view('access.views::access-controls.access-control');
+
+
+        if (!$directory) {
+            $directory = app_path('Models');
+        }
+
+        $models = [];
+        $files = File::allFiles($directory);
+
+        foreach ($files as $file) {
+            $relativePath = $file->getRelativePathname();
+            $fullClassName = $namespace . str_replace(['/', '.php'], ['\\', ''], $relativePath);
+
+
+            //if (class_exists($fullClassName)) {
+                // Take class name out of the path
+                $models[] = class_basename($fullClassName);
+            //}
+        }
+
+        return $models;
     }
+
+
+
+
+
+
 
 
 }

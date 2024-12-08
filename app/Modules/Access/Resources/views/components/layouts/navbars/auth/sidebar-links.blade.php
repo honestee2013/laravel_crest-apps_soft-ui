@@ -6,12 +6,21 @@
 
 
 <x-core.views::layouts.navbars.sidebar-link-item
-    iconClasses="fas fa-cubes sidebar-icon"
+    iconClasses="fas fa-users sidebar-icon"
     url="access/roles"
-    title="Manage Roles"
+    title="Manage User Roles"
 />
 
+
 <x-core.views::layouts.navbars.sidebar-link-item
+    iconClasses="fas fa-user-lock sidebar-icon"
+    url="access/"
+    title="Manage Role Access"
+/>
+
+
+
+{{--<x-core.views::layouts.navbars.sidebar-link-item
     iconClasses="fas fa-exchange-alt sidebar-icon"
     url="access/teams"
     title="Manage Teams"
@@ -22,7 +31,7 @@
     iconClasses="fas fa-sync-alt sidebar-icon"
     url="access/permissions"
     title="Manage Permissions"
-/>
+/>--}}
 
 
 

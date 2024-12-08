@@ -13,6 +13,9 @@ class CreateProductionOrdersTable extends Migration
         $table->string('name')->nullable();
         $table->text('description')->nullable();
 
+        $table->string('order_number')->unique();
+
+
         // 'order_time' can be removed if you use Laravel's 'created_at'
         $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('cascade'); // User who created the order
         $table->foreignId('supervisor_id')->nullable()->constrained('users')->onDelete('set null'); // Supervisor/manager
@@ -26,11 +29,16 @@ class CreateProductionOrdersTable extends Migration
 
         $table->enum('status', ['pending', 'in_progress', 'completed', 'canceled'])->default('pending'); // Order status
 
-        //$table->decimal('planned_quantity', 10, 2)->nullable(); // Planned production quantity
-        //$table->decimal('actual_quantity', 10, 2)->nullable(); // Actual produced quantity (optional)
+        $table->decimal('planned_quantity', 10, 2)->nullable(); // Planned production quantity
+        $table->decimal('actual_quantity', 10, 2)->nullable(); // Actual produced quantity (optional)
 
         $table->text('notes')->nullable(); // Optional notes
         $table->timestamps(); // Adds 'created_at' and 'updated_at'
+
+
+
+
+
     });
 }
 

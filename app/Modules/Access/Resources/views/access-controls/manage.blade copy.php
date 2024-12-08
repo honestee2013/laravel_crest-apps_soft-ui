@@ -1,6 +1,6 @@
+@extends('layouts.app')
 
-<div>
-
+@section('auth-soft-ui')
     <div>
         </span>
 
@@ -20,7 +20,7 @@
                     <div class="col-auto my-auto">
                         <div class="h-100">
                             <h5 class="mb-1">
-                                {{ $scope->name }}
+                                {{ $accessController['scope']->name }}
                             </h5>
                             <p class="mb-0 font-weight-bold text-sm">
                                 Access Control
@@ -161,7 +161,7 @@
 
 
                         <div class="row md-d-flex md-justify-content-between p-1 m-2 rounded-3 py-2 bg-gray-100">
-                            @foreach ($resourceNames as $resourceName)
+                            @foreach ($accessController['resourceNames'] as $resourceName)
                                 <div class="col-md-6 my-2">
                                     <div class="card">
                                         <div class="card-header pb-0 px-3">
@@ -173,7 +173,7 @@
                                                     <h6 class="mb-1">{{ ucfirst($resourceName) }} Management</h6>
                                                     <span class="mb-2 text-xs">
                                                         What <span
-                                                            class="text-dark font-weight-bold">{{ ucfirst($scope->name) }}</span>
+                                                            class="text-dark font-weight-bold">{{ ucfirst($accessController['scope']->name) }}</span>
                                                         can do
                                                         on <span
                                                             class="text-dark font-weight-bold">{{ ucfirst($resourceName) }}
@@ -186,11 +186,11 @@
                                                             <span class="badge rounded-pill bg-gradient-danger" style="font-size: 0.6em">Delete records</span>
                                                             <span class="badge rounded-pill bg-gradient-primary" style="font-size: 0.6em">Export records</span>-->
 
-                                                        @foreach ($scope->permissions as $permission)
-                                                            @foreach ($allControls as $control)
+                                                        @foreach ($accessController['scope']->permissions as $permission)
+                                                            @foreach ($accessController['allControls'] as $control)
                                                                 @if (str_contains($permission->name, strtolower($control . ' ' . $resourceName)))
                                                                     <span
-                                                                        class="badge rounded-pill bg-gradient-{{ $controlsCSSClasses[$control]['bg'] ?? 'primary' }}"
+                                                                        class="badge rounded-pill bg-gradient-{{ $accessController['controlsCSSClasses'][$control]['bg'] ?? 'primary' }}"
                                                                         style="font-size: 0.6em; margin: 0.3em 0.1em">{{ ucfirst($control) }}
                                                                     </span>
                                                                 @endif
@@ -205,15 +205,15 @@
                                                     <div class="form-check form-switch">
                                                         <input class="form-check-input"
                                                             id = "toggle-all-{{ $resourceName }}" type="checkbox"
-                                                            onchange="updatePermission(event, '{{ $scope->name }}', '{{ $scope->id }}', 'all', '{{ $resourceName }}')"
-                                                           @if( isset($toggleAllPermissionSwitchInitColors[$resourceName])
-                                                                && $toggleAllPermissionSwitchInitColors[$resourceName]['permissionCount'])
+                                                            onchange="updatePermission(event, '{{ $accessController['scope']->name }}', '{{ $accessController['scope']->id }}', 'all', '{{ $resourceName }}')"
+                                                           @if( isset($accessController["toggleAllPermissionSwitchInitColors"][$resourceName])
+                                                                && $accessController["toggleAllPermissionSwitchInitColors"][$resourceName]['permissionCount'])
                                                                 checked
                                                             @endif
 
-                                                            @if (isset($toggleAllPermissionSwitchInitColors[$resourceName]))
-                                                                    style="background-color: {{$toggleAllPermissionSwitchInitColors[$resourceName]['bg']}};
-                                                                    border: {{$toggleAllPermissionSwitchInitColors[$resourceName]['bg']}}
+                                                            @if (isset($accessController["toggleAllPermissionSwitchInitColors"][$resourceName]))
+                                                                    style="background-color: {{$accessController["toggleAllPermissionSwitchInitColors"][$resourceName]['bg']}};
+                                                                    border: {{$accessController["toggleAllPermissionSwitchInitColors"][$resourceName]['bg']}}
                                                                     "
 
                                                             @endif
@@ -229,14 +229,14 @@
 
                                         <div class="card-body pt-4 p-2 p-md-4 pt-md-4 mb-2">
                                             <ul class="list-group collapse p-3" id="{{ $resourceName }}">
-                                                @foreach ($allControls as $control)
+                                                @foreach ($accessController['allControls'] as $control)
                                                     <li
                                                         class="list-group-item  border-0  ps-3 pe-5 py-3 my-1 bg-gray-100 border-radius-lg ">
                                                         <div class="row d-flex justify-content-between px-3">
                                                             <div class="col-11">
                                                                 <p class="mb-3 text-sm">
                                                                     <span
-                                                                        class="text-dark font-weight-bold">{{ ucfirst($scope->name) }}</span>
+                                                                        class="text-dark font-weight-bold">{{ ucfirst($accessController['scope']->name) }}</span>
                                                                     should be able to <span
                                                                         class="font-weight-bold">{{ $control }}</span>
                                                                     {{ strtolower($resourceName) }} records
@@ -246,8 +246,8 @@
                                                                 <div class="form-check form-switch">
                                                                     <input class="form-check-input" type="checkbox"
                                                                         id = "toggle-{{ $control }}-{{ $resourceName }}"
-                                                                        onchange="updatePermission(event, '{{ $scope->name }}', '{{ $scope->id }}', '{{ $control }}', '{{ $resourceName }}')"
-                                                                        {{ $scope->hasPermissionTo($control . ' ' . strtolower(Str::plural($resourceName))) ? 'checked' : '' }}>
+                                                                        onchange="updatePermission(event, '{{ $accessController['scope']->name }}', '{{ $accessController['scope']->id }}', '{{ $control }}', '{{ $resourceName }}')"
+                                                                        {{ $accessController['scope']->hasPermissionTo($control . ' ' . strtolower(Str::plural($resourceName))) ? 'checked' : '' }}>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -271,174 +271,169 @@
             </div>
         </div>
 
+        <span id="accessControllerData" data-accesscontroller="{{ json_encode($accessController) }}"></span>
 
     </div>
+@endsection
 
 
-    <script>
-        const offColor = '#e8ebee'
-        const onColor = '#98ec2d';
-        const halfOnColor = 'green';
+<script>
+    const offColor = '#e8ebee'
+    const onColor = '#98ec2d';
+    const halfOnColor = 'green';
 
-        document.addEventListener('DOMContentLoaded', function() {
-            /*const accessControllerDataElement = document.getElementById("accessControllerData");
-            if (accessControllerDataElement) {
-                const accessControllerData = accessControllerDataElement.dataset.accesscontroller;
-                try {
-                    const accessController = JSON.parse(accessControllerData);
-                    console.log(accessController);
-                } catch (e) {
-                    console.error("Failed to parse JSON data:", e);
-                }
-            } else {
-                console.error("Element with ID 'accessControllerData' not found.");
-            }*/
+    document.addEventListener('DOMContentLoaded', function() {
+        /*const accessControllerDataElement = document.getElementById("accessControllerData");
+        if (accessControllerDataElement) {
+            const accessControllerData = accessControllerDataElement.dataset.accesscontroller;
+            try {
+                const accessController = JSON.parse(accessControllerData);
+                console.log(accessController);
+            } catch (e) {
+                console.error("Failed to parse JSON data:", e);
+            }
+        } else {
+            console.error("Element with ID 'accessControllerData' not found.");
+        }*/
 
 
-            // Use querySelectorAll to get all elements with the class "form-check-input"
-            const allCheckedBoxes = document.querySelectorAll(".form-check-input");
+        // Use querySelectorAll to get all elements with the class "form-check-input"
+        const allCheckedBoxes = document.querySelectorAll(".form-check-input");
 
-            for (let i = 0; i < allCheckedBoxes.length; i++) {
-                let checkBox = allCheckedBoxes[i]; // Declare the variable with let
+        for (let i = 0; i < allCheckedBoxes.length; i++) {
+            let checkBox = allCheckedBoxes[i]; // Declare the variable with let
 
-                if (checkBox.id.indexOf("-all-") == -1) {
-                    if (checkBox.checked) {
-                        checkBox.style.backgroundColor = onColor;
-                        checkBox.style.border = onColor;
-                    } else {
-                        checkBox.style.backgroundColor = offColor;
-                        checkBox.style.border = offColor;
-                    }
+            if (checkBox.id.indexOf("-all-") == -1) {
+                if (checkBox.checked) {
+                    checkBox.style.backgroundColor = onColor;
+                    checkBox.style.border = onColor;
+                } else {
+                    checkBox.style.backgroundColor = offColor;
+                    checkBox.style.border = offColor;
                 }
             }
-
-
-
-        });
-
-
-
-        function toggleCheckBoxColor(event, data) {
-
-            // Toggle one of the switch color
-            const switched = event.target;
-            if (switched.checked) {
-                switched.style.backgroundColor = onColor;
-                switched.style.border = onColor;
-            } else {
-                switched.style.backgroundColor = offColor;
-                switched.style.border = offColor;
-            }
-
-
-            // Handling the  TOGGLE ALL switch
-            toggleAllElementId = "toggle-all-" + data["resource_name"];
-            const toggleAllCheckBox = document.getElementById(toggleAllElementId);
-
-            if (event.target.id === toggleAllElementId) { // Toggle all switch color when directly clicked
-                for (var i = 0; i < data["allControls"].length; i++) {
-                    var switchId = "toggle-" + data["allControls"][i] + "-" + data["resource_name"];
-                    var switchElem = document.getElementById(switchId);
-                    if (data["controls"].length) {
-                        switchElem.checked = true;
-                        switchElem.style.backgroundColor = onColor;
-                        switchElem.style.border = onColor;
-                    } else {
-                        switchElem.checked = false;
-                        switchElem.style.backgroundColor = offColor;
-                        switchElem.style.border = offColor;
-                    }
-                }
-
-            } else { // Toggle all switch color when individual switches clicked
-
-                // GREEN YELLOW & GRAY Indicating toggle all button state
-
-                if (data["controls"].length === 0) { // OFF
-                    toggleAllCheckBox.style.backgroundColor = offColor; // No control color
-                    toggleAllCheckBox.style.border = offColor; // No control color
-                    toggleAllCheckBox.checked = false; // Uncheck the checkbox
-
-                } else if (data["controls"].length === data["allControls"].length) { // ON
-                    toggleAllCheckBox.style.backgroundColor = onColor; // Full control color
-                    toggleAllCheckBox.style.border = onColor; // Full control color
-                    toggleAllCheckBox.checked = true; // Check the checkbox
-
-                } else { // PARTIALLY ON
-                    toggleAllCheckBox.style.backgroundColor = halfOnColor; // Half control color
-                    toggleAllCheckBox.style.border = halfOnColor; // Half control color
-                    toggleAllCheckBox.checked = true; // Check the checkbox
-                }
-
-            }
-
         }
 
 
 
+    });
 
-        function updatePermission(event, scope, scopeId, control, resourceName) {
-            //alert(checkbox.checked+": "+scope+" "+scopeId+" "+control+" "+resourceName);
-            const isChecked = event.target.checked;
-            const url = '{{ route('access-control.update') }}'; // Define your route name for updating permissions
 
-            fetch(url, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify({
-                        scope_id: scopeId,
-                        scope: scope,
-                        control: control,
-                        resource_name: resourceName,
-                        checked: isChecked
-                    })
+
+    function toggleCheckBoxColor(event, data) {
+
+        // Toggle one of the switch color
+        const switched = event.target;
+        if (switched.checked) {
+            switched.style.backgroundColor = onColor;
+            switched.style.border = onColor;
+        } else {
+            switched.style.backgroundColor = offColor;
+            switched.style.border = offColor;
+        }
+
+
+        // Handling the  TOGGLE ALL switch
+        toggleAllElementId = "toggle-all-" + data["resource_name"];
+        const toggleAllCheckBox = document.getElementById(toggleAllElementId);
+
+        if (event.target.id === toggleAllElementId) { // Toggle all switch color when directly clicked
+            for (var i = 0; i < data["allControls"].length; i++) {
+                var switchId = "toggle-" + data["allControls"][i] + "-" + data["resource_name"];
+                var switchElem = document.getElementById(switchId);
+                if (data["controls"].length) {
+                    switchElem.checked = true;
+                    switchElem.style.backgroundColor = onColor;
+                    switchElem.style.border = onColor;
+                } else {
+                    switchElem.checked = false;
+                    switchElem.style.backgroundColor = offColor;
+                    switchElem.style.border = offColor;
+                }
+            }
+
+        } else { // Toggle all switch color when individual switches clicked
+
+            // GREEN YELLOW & GRAY Indicating toggle all button state
+
+            if (data["controls"].length === 0) { // OFF
+                toggleAllCheckBox.style.backgroundColor = offColor; // No control color
+                toggleAllCheckBox.style.border = offColor; // No control color
+                toggleAllCheckBox.checked = false; // Uncheck the checkbox
+
+            } else if (data["controls"].length === data["allControls"].length) { // ON
+                toggleAllCheckBox.style.backgroundColor = onColor; // Full control color
+                toggleAllCheckBox.style.border = onColor; // Full control color
+                toggleAllCheckBox.checked = true; // Check the checkbox
+
+            } else { // PARTIALLY ON
+                toggleAllCheckBox.style.backgroundColor = halfOnColor; // Half control color
+                toggleAllCheckBox.style.border = halfOnColor; // Half control color
+                toggleAllCheckBox.checked = true; // Check the checkbox
+            }
+
+        }
+
+    }
+
+
+
+
+    function updatePermission(event, scope, scopeId, control, resourceName) {
+        //alert(checkbox.checked+": "+scope+" "+scopeId+" "+control+" "+resourceName);
+        const isChecked = event.target.checked;
+        const url = '{{ route('access-control.update') }}'; // Define your route name for updating permissions
+
+        fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    scope_id: scopeId,
+                    scope: scope,
+                    control: control,
+                    resource_name: resourceName,
+                    checked: isChecked
                 })
-                .then(response => response.json())
-                .then(data => {
-                    // Handle success or update UI if needed
-                    if (data['success']) {
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Handle success or update UI if needed
+                if (data['success']) {
 
-                        // Change background color based on the checkbox state
-                        toggleCheckBoxColor(event, data);
+                    // Change background color based on the checkbox state
+                    toggleCheckBoxColor(event, data);
 
-                        // Update the list of what role can do
-                        const element = document.getElementById("what_scope_can_do_on_" + resourceName);
-                        element.innerHTML = "";
-                        for (var i = 0; i < data['controls'].length; i++) {
-                            //console.log(data['controls'][i]);
-                            control = data['controls'][i]; // eg view, edit
+                    // Update the list of what role can do
+                    const element = document.getElementById("what_scope_can_do_on_" + resourceName);
+                    element.innerHTML = "";
+                    for (var i = 0; i < data['controls'].length; i++) {
+                        //console.log(data['controls'][i]);
+                        control = data['controls'][i]; // eg view, edit
 
-                            // Create a new span element
-                            var span = document.createElement('span');
-                            var controlCSSClass = 'primary';
-                            if ((data['controlsCSSClasses'][control]).bg)
-                                controlCSSClass = (data['controlsCSSClasses'][control]).bg;
+                        // Create a new span element
+                        var span = document.createElement('span');
+                        var controlCSSClass = 'primary';
+                        if ((data['controlsCSSClasses'][control]).bg)
+                            controlCSSClass = (data['controlsCSSClasses'][control]).bg;
 
-                            span.className = 'badge rounded-pill bg-gradient-' + controlCSSClass;
-                            span.style.fontSize = '0.6em';
-                            span.style.margin = '0.5em 0.3em';
-                            span.textContent = control;
+                        span.className = 'badge rounded-pill bg-gradient-' + controlCSSClass;
+                        span.style.fontSize = '0.6em';
+                        span.style.margin = '0.5em 0.3em';
+                        span.textContent = control;
 
-                            // Append the new span element to the parent element
-                            element.appendChild(span);
-                        }
-
+                        // Append the new span element to the parent element
+                        element.appendChild(span);
                     }
 
-                })
-                .catch((error) => {
-                    // Handle error
-                    console.error('Error:', error);
-                });
-        }
-    </script>
+                }
 
-
-
-
-
-
-</div>
+            })
+            .catch((error) => {
+                // Handle error
+                console.error('Error:', error);
+            });
+    }
+</script>

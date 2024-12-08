@@ -5,7 +5,7 @@
         </x-layouts.navbars.auth.sidebar>
     </x-slot>
     <livewire:core.livewire.data-tables.data-table-manager model="App\\Modules\\Access\\Models\\Role"
-    pageTitle="Manage Roles"
+    pageTitle="Manage User Roles"
     queryFilters=[] :hiddenFields="[
             'onTable' => [],
         ]" :queryFilters="[]" />

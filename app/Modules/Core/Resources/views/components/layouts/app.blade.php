@@ -88,6 +88,11 @@
 
 
 
+            .module-control-input {
+                height: 2.6em;
+                padding: 0em 1em;
+                min-width: 10em;
+            }
 
 
 

@@ -34,7 +34,7 @@ class Role extends SpatieRole
     protected $fillable = [
                 'name',
                 'description',
-                
+
                 'guard_name',
                 'team_id'
               ];
@@ -53,11 +53,11 @@ class Role extends SpatieRole
      */
     protected $casts = [];
 
-    /**
+    /*
      * Get the team for this model.
      *
      * @return App\Models\Team
-     */
+     * /
     public function team()
     {
         return $this->belongsTo('App\Models\Team','team_id');
@@ -67,7 +67,7 @@ class Role extends SpatieRole
      * Get the modelHasRole for this model.
      *
      * @return App\Models\ModelHasRole
-     */
+     * /
     public function modelHasRole()
     {
         return $this->hasOne('App\Models\ModelHasRole','role_id','id');
@@ -77,7 +77,7 @@ class Role extends SpatieRole
      * Get the roleHasPermission for this model.
      *
      * @return App\Models\RoleHasPermission
-     */
+     * /
     public function roleHasPermission()
     {
         return $this->hasOne('App\Models\RoleHasPermission','role_id','id');
@@ -89,7 +89,7 @@ class Role extends SpatieRole
      *
      * @param  string  $value
      * @return array
-     */
+     * /
     public function getCreatedAtAttribute($value)
     {
             $date = \DateTime::createFromFormat($this->getDateFormat(), $value);
@@ -103,13 +103,13 @@ class Role extends SpatieRole
      *
      * @param  string  $value
      * @return array
-     */
+     * /
     public function getUpdatedAtAttribute($value)
     {
             $date = \DateTime::createFromFormat($this->getDateFormat(), $value);
     if ($date)
         return $date->format('j/n/Y G:i A');
 
-    }
+    }*/
 
 }
