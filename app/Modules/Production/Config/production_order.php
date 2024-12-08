@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'model' => ProductionOrder::class,
+    'model' => App\Modules\Production\Models\ProductionOrder::class,
     'table' => 'production_orders',
     'fields' => [
         'id' => [
