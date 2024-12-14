@@ -39,10 +39,13 @@ trait DataTableFieldsConfigTrait
 
 
     private function setColumns($config) {
-        // Populate te table fields
+        // Populate the table fields
+        $config["columns"] = [];
+
         foreach (array_keys($config["fieldDefinitions"]) as $fieldName) {
             $config["columns"][] = $fieldName;
         }
+       
         $config["visibleColumns"] = $config["columns"];
         return $config;
     }
@@ -112,7 +115,7 @@ trait DataTableFieldsConfigTrait
     //////////// INITIALISATION METHODS /////////////////
     private function initialiseFieldDefinitions($fieldDefinitions) {
         // If is not defined in the config file, porpulate it from the database table column fields
-        if (empty($fieldDefinitions)) {
+        if (!$fieldDefinitions) {
             $tableName = (new $this->model)->getTable();
             $fieldDefinitions = $this->getTableFieldsWithTypes($tableName);
         }

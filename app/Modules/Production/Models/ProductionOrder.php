@@ -1,102 +1,414 @@
 <?php
-
 namespace App\Modules\Production\Models;
-
 
 use App\Models\User;
 use App\Modules\Item\Models\Item;
+use App\Modules\Core\Models\Status;
 use Illuminate\Database\Eloquent\Model;
-use App\Modules\Enterprise\Models\Department;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Modules\Core\Traits\Database\DatabaseQueryTrait;
 
 class ProductionOrder extends Model
 {
-    use HasFactory;
+
+    use DatabaseQueryTrait;
+
 
     protected $fillable = [
-        'name',
-        'description',
         'order_number',
-
-        'batch_number',
         'item_id',
-        'department_id',
+        'quantity',
+        'status_id',
+        'due_date',
 
-        'status',
-        'planned_quantity',
-        'actual_quantity',
-
-        'expected_start_time',
-        'expected_end_time',
-        'completed_at',
+        'is_auto_generated',
 
 
-        'notes',
+        'approved_at',
+        'approved_by',
+        'is_approved',
+        'is_verified',
 
-        'created_by',  // User who generated the order
-        'supervisor_id' // Assigned supervisor or manager
+
+
+        'start_date',
+        'end_date',
+        'created_by',
+        'supervisor_id',
+
+
+        'remarks'
     ];
 
-    // Relationship to the item being produced
-    public function item()
-    {
-        return $this->belongsTo(Item::class);
-    }
 
-    // Relationship to the department responsible for production
-    public function department()
-    {
-        return $this->belongsTo(Department::class);
-    }
 
+
+
+
+
+
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
 
     public function supervisor()
     {
         return $this->belongsTo(User::class, 'supervisor_id');
     }
 
-    public function creator()
+
+    public function items()
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->hasMany(ProductionOrderItem::class);
     }
 
 
-    /*public function expectedItems()
-    {
-        return $this->hasMany(ProductionOrderItem::class)->where('type', 'expected');
-    }
 
-    public function actualItems()
-    {
-        return $this->hasMany(ProductionOrderItem::class)->where('type', 'actual');
-    }
+
+
 
 
 
     public function batches()
     {
         return $this->hasMany(Batch::class);
-    }*/
+    }
 
 
 
 
+    public function logs()
+    {
+        return $this->hasMany(ProductionLog::class);
+    }
+
+
+    public function item()
+    {
+        return $this->belongsTo(Item::class);
+    }
 
 
 
-    // Generates a unique batch number for the production order
+    public function status()
+    {
+        return $this->belongsTo(Status::class);
+    }
+
+
+
     public static function boot()
     {
         parent::boot();
 
         static::creating(function ($productionOrder) {
-            $productionOrder->batch_number = self::generateBatchNumber();
+            //if (!$productionOrder->order_number) {
+                // Generate Production Order Number
+                $latestOrder = ProductionOrder::latest('id')->first();
+                $nextOrderId = $latestOrder ? $latestOrder->id + 1 : 1;
+                $orderNumber = 'PO-' . now()->format('Ymd') . '-' . str_pad($nextOrderId, 3, '0', STR_PAD_LEFT);
+
+                // Assign the numbers
+                $productionOrder->order_number = $orderNumber;
+            //}
+
+            if (!$productionOrder->status_id) {
+                // to be adjusted by $this->setStatusIdAttribute()
+                $productionOrder->status_id = 1;
+
+            }
+            /*$batch = new Batch();
+            $batch->production_order_id = $productionOrder->id;
+            $batch->save();*/
+
+
         });
+
+
+
+
+
+
+
+
+
+
     }
 
-    // Function to generate a unique batch number
-    public static function generateBatchNumber()
+
+
+    public function setStatusIdAttribute($value)
     {
-        return 'BATCH-' . strtoupper(uniqid());
+        $this->attributes['status_id'] = $value;
+
+        if (!$this->attributes['status_id']) {
+            $status = Status::where('name', '=', 'pending')->first();
+
+            if ($status) {
+                $this->attributes['status_id'] =  $status->id;
+            } else {
+                $this->attributes['status_id'] = 1;
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+}
+
+/*
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class ProductionOrder extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'order_number',
+        'status_id',
+        'start_date',
+        'end_date',
+        'created_by',
+        'supervisor_id',
+    ];
+
+    public function status()
+    {
+        return $this->belongsTo(Status::class);
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function supervisor()
+    {
+        return $this->belongsTo(User::class, 'supervisor_id');
+    }
+
+    public function batches()
+    {
+        return $this->hasMany(Batch::class);
     }
 }
+
+class Batch extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'batch_number',
+        'status_id',
+        'output_quantity',
+        'production_order_id',
+    ];
+
+    public function status()
+    {
+        return $this->belongsTo(Status::class);
+    }
+
+    public function productionOrder()
+    {
+        return $this->belongsTo(ProductionOrder::class);
+    }
+
+    public function resourceItems()
+    {
+        return $this->hasMany(BatchResourceItem::class);
+    }
+
+    public function productItems()
+    {
+        return $this->hasMany(BatchProductItem::class);
+    }
+
+    public function processLogs()
+    {
+        return $this->hasMany(ProductionProcessLog::class);
+    }
+}
+
+class BatchResourceItem extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'batch_id',
+        'item_id',
+        'quantity_used',
+        'expected_quantity',
+        'unit_id',
+    ];
+
+    public function batch()
+    {
+        return $this->belongsTo(Batch::class);
+    }
+
+    public function item()
+    {
+        return $this->belongsTo(Item::class);
+    }
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
+    }
+}
+
+class BatchProductItem extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'batch_id',
+        'item_id',
+        'quantity_produced',
+        'expected_quantity',
+        'unit_id',
+    ];
+
+    public function batch()
+    {
+        return $this->belongsTo(Batch::class);
+    }
+
+    public function item()
+    {
+        return $this->belongsTo(Item::class);
+    }
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
+    }
+}
+
+class ProductionProcessLog extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'batch_id',
+        'process_id',
+        'operator_id',
+        'supervisor_id',
+        'start_time',
+        'end_time',
+        'notes',
+    ];
+
+    public function batch()
+    {
+        return $this->belongsTo(Batch::class);
+    }
+
+    public function process()
+    {
+        return $this->belongsTo(Process::class);
+    }
+
+    public function operator()
+    {
+        return $this->belongsTo(User::class, 'operator_id');
+    }
+
+    public function supervisor()
+    {
+        return $this->belongsTo(User::class, 'supervisor_id');
+    }
+
+    public function resources()
+    {
+        return $this->hasMany(ProcessResource::class, 'process_log_id');
+    }
+
+    public function outputs()
+    {
+        return $this->hasMany(ProcessOutput::class, 'process_log_id');
+    }
+}
+
+class Process extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'description',
+    ];
+
+    public function logs()
+    {
+        return $this->hasMany(ProductionProcessLog::class);
+    }
+}
+
+class ProcessResource extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'process_log_id',
+        'item_id',
+        'quantity_used',
+        'unit_id',
+    ];
+
+    public function processLog()
+    {
+        return $this->belongsTo(ProductionProcessLog::class, 'process_log_id');
+    }
+
+    public function item()
+    {
+        return $this->belongsTo(Item::class);
+    }
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
+    }
+}
+
+class ProcessOutput extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'process_log_id',
+        'item_id',
+        'quantity_produced',
+        'unit_id',
+    ];
+
+    public function processLog()
+    {
+        return $this->belongsTo(ProductionProcessLog::class, 'process_log_id');
+    }
+
+    public function item()
+    {
+        return $this->belongsTo(Item::class);
+    }
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
+    }
+}
+*/

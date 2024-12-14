@@ -6,10 +6,19 @@ return [
 
 
 
-        'order_number' => [
-            'field_type' => 'text',
-            'label' => 'Order Number',
-            'validation' => 'nullable|unique:production_orders,order_number',
+        'production_order_id' => [
+            'field_type' => 'select',
+            'options' => app('App\Modules\Production\Models\ProductionOrder')->pluck('order_number', 'id'),
+            'relationship' => [
+                'model' => 'App\Modules\Production\Models\ProductionOrder',
+                'type' => 'belongsTo',
+                'display_field' => 'order_number',
+                'dynamic_property' => 'productionOrder',
+                'foreign_key' => 'production_order_id',
+            ],
+            'label' => 'Production Order',
+            'display' => 'block',
+            'multiSelect' => false,
         ],
 
 
@@ -35,36 +44,6 @@ return [
             'field_type' => 'number',
         ],
 
-
-
-
-        'due_date' => [
-            'field_type' => 'datetime',
-        ],
-
-
-
-
-
-        'status_id' => [
-            'field_type' => 'select',
-            'options' => app('App\Modules\Core\Models\Status')->pluck('display_name', 'id'),
-            'relationship' => [
-                'model' => 'App\Modules\Core\Models\Status',
-                'type' => 'belongsTo',
-                'display_field' => 'display_name',
-                'dynamic_property' => 'status',
-                'foreign_key' => 'status_id',
-            ],
-            'label' => 'Status',
-            'display' => 'block',
-            'multiSelect' => false,
-        ],
-
-
-        'remarks' => [
-            'field_type' => 'textarea',
-        ],
 
 
 

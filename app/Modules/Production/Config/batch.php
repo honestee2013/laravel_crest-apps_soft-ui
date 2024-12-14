@@ -1,49 +1,32 @@
 <?php
 
 return [
-    'model' => App\Modules\Production\Models\ProductionOrder::class,
+    'model' => App\Modules\Production\Models\Batch::class,
     'fieldDefinitions' => [
 
 
-
-        'order_number' => [
+        'batch_number' => [
             'field_type' => 'text',
-            'label' => 'Order Number',
-            'validation' => 'nullable|unique:production_orders,order_number',
+            'label' => 'Batch Number',
         ],
 
 
-        'item_id' => [
+
+        'production_order_id' => [
             'field_type' => 'select',
-            'options' => app('App\Modules\Production\Models\Product')->pluck('name', 'id'),
+            'options' => \App\Modules\Production\Models\ProductionOrder::where('is_approved', false)->pluck('order_number', 'id')->toArray(),
+
             'relationship' => [
-                'model' => 'App\Modules\Production\Models\Product',
+                'model' => 'App\Modules\Production\Models\ProductionOrder',
                 'type' => 'belongsTo',
-                'display_field' => 'name',
-                'dynamic_property' => 'item',
-                'foreign_key' => 'item_id',
+                'display_field' => 'order_number',
+                'dynamic_property' => 'productionOrder',
+                'foreign_key' => 'production_order_id',
             ],
-            'label' => 'Product',
+            'label' => 'Production Order',
             'display' => 'block',
             'multiSelect' => false,
         ],
-
-
-
-
-        'quantity' => [
-            'field_type' => 'number',
-        ],
-
-
-
-
-        'due_date' => [
-            'field_type' => 'datetime',
-        ],
-
-
-
 
 
         'status_id' => [
@@ -62,9 +45,7 @@ return [
         ],
 
 
-        'remarks' => [
-            'field_type' => 'textarea',
-        ],
+
 
 
 
@@ -77,13 +58,11 @@ return [
     "hiddenFields" => [
         'onTable' => [],
         'onDetail' => [],
-        'onEditForm' => [
-            'order_number',
-
-        ],
+        'onEditForm' => [],
         'onNewForm' => [
-            'order_number',
+            'batch_number',
             'status_id',
+
         ],
         'onQuery' => [],
     ],
