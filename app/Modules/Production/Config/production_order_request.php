@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'model' => App\Modules\Production\Models\ProductionOrder::class,
+    'model' => App\Modules\Production\Models\ProductionOrderRequest::class,
     'fieldDefinitions' => [
 
 
@@ -23,9 +23,10 @@ return [
                 'dynamic_property' => 'item',
                 'foreign_key' => 'item_id',
             ],
-            'label' => 'Product',
+            'label' => 'Item (Product)',
             'display' => 'block',
             'multiSelect' => false,
+            'validation' => 'required|int'
         ],
 
 
@@ -33,6 +34,7 @@ return [
 
         'quantity' => [
             'field_type' => 'number',
+            'validation' => 'required|decimal:2|min:0.01'
         ],
 
 
@@ -40,6 +42,7 @@ return [
 
         'due_date' => [
             'field_type' => 'datetime',
+            'validation' => 'nullable|string',
         ],
 
 
@@ -59,11 +62,13 @@ return [
             'label' => 'Status',
             'display' => 'block',
             'multiSelect' => false,
+            'validation' => 'nullable|int'
         ],
 
 
         'remarks' => [
             'field_type' => 'textarea',
+            'validation' => 'nullable|string'
         ],
 
 
@@ -79,6 +84,7 @@ return [
         'onDetail' => [],
         'onEditForm' => [
             'order_number',
+            'status_id',
 
         ],
         'onNewForm' => [

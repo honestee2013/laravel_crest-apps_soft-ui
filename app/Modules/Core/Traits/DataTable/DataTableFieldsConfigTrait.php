@@ -45,7 +45,6 @@ trait DataTableFieldsConfigTrait
         foreach (array_keys($config["fieldDefinitions"]) as $fieldName) {
             $config["columns"][] = $fieldName;
         }
-       
         $config["visibleColumns"] = $config["columns"];
         return $config;
     }

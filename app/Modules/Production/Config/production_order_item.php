@@ -1,20 +1,20 @@
 <?php
 
 return [
-    'model' => App\Modules\Production\Models\ProductionOrder::class,
+    'model' => App\Modules\Production\Models\ProductionOrderRequest::class,
     'fieldDefinitions' => [
 
 
 
-        'production_order_id' => [
+        'production_order_request_id' => [
             'field_type' => 'select',
-            'options' => app('App\Modules\Production\Models\ProductionOrder')->pluck('order_number', 'id'),
+            'options' => app('App\Modules\Production\Models\ProductionOrderRequest')->pluck('order_number', 'id'),
             'relationship' => [
                 'model' => 'App\Modules\Production\Models\ProductionOrder',
                 'type' => 'belongsTo',
                 'display_field' => 'order_number',
                 'dynamic_property' => 'productionOrder',
-                'foreign_key' => 'production_order_id',
+                'foreign_key' => 'production_order_request_id',
             ],
             'label' => 'Production Order',
             'display' => 'block',

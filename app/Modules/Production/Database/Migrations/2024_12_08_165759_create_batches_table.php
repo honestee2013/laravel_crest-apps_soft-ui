@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('batches', function (Blueprint $table) {
             $table->id();
             $table->string('batch_number')->unique();
-            $table->foreignId('production_order_id')->nullable()->constrained('production_orders');
+            $table->foreignId('production_order_request_id')->nullable()->constrained('production_order_requests');
             //$table->string('status')->default('in-progress');
 
             $table->boolean('is_auto_generated')->default(true);

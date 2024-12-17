@@ -1,33 +1,135 @@
 
 
 <li class="nav-item mt-4">
-    <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Item Management</h6>
+    <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Production Management</h6>
+</li>
+
+<x-core.views::layouts.navbars.sidebar-link-item
+    iconClasses="fas fa-dolly-flatbed sidebar-icon"
+    url="production/production-order-requests"
+    title="Production Oders"
+/>
+
+
+
+<x-core.views::layouts.navbars.sidebar-link-item
+    iconClasses="fas fa-cube sidebar-icon"
+    url="item/items"
+    title="Production Batches"
+/>
+
+
+<x-core.views::layouts.navbars.sidebar-link-item
+    iconClasses="fas fa-cube sidebar-icon"
+    url="item/items"
+    title="Production Processes"
+/>
+
+
+<x-core.views::layouts.navbars.sidebar-link-item
+    iconClasses="fas fa-cube sidebar-icon"
+    url="item/items"
+    title="Production Tracking"
+/>
+
+
+{{--<x-core.views::layouts.navbars.sidebar-link-item
+    iconClasses="fas fa-cube sidebar-icon"
+    url="item/items"
+    title="Production  Resources"
+/>--}}
+
+
+
+<li class="nav-item mt-4">
+    <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Manage Production Batches</h6>
 </li>
 
 <x-core.views::layouts.navbars.sidebar-link-item
     iconClasses="fas fa-cube sidebar-icon"
     url="item/items"
-    title="Manage Items"
-/>
-
-<x-core.views::layouts.navbars.sidebar-link-item
-    iconClasses="fas fa-drafting-compass sidebar-icon"
-    url="item/units"
-    title="Manage Item Units"
-/>
-
-<x-core.views::layouts.navbars.sidebar-link-item
-    iconClasses="fas fa-shapes sidebar-icon"
-    url="item/categories"
-    title="Manage Item  Categories"
+    title="Manage Batches"
 />
 
 
 <x-core.views::layouts.navbars.sidebar-link-item
-    iconClasses="fas fa-tags sidebar-icon"
-    url="item/tags"
-    title="Manage Item Tags"
+    iconClasses="fas fa-cube sidebar-icon"
+    url="item/items"
+    title="Batches Input"
 />
+
+
+<x-core.views::layouts.navbars.sidebar-link-item
+    iconClasses="fas fa-cube sidebar-icon"
+    url="item/items"
+    title="Batches Outputs"
+/>
+
+
+
+<li class="nav-item mt-4">
+    <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Manage Production Processes </h6>
+</li>
+
+
+<x-core.views::layouts.navbars.sidebar-link-item
+    iconClasses="fas fa-cube sidebar-icon"
+    url="item/items"
+    title="Manage Process Logs"
+/>
+
+<hr class="horizontal dark mt-0" />
+
+
+
+<x-core.views::layouts.navbars.sidebar-link-item
+    iconClasses="fas fa-cube sidebar-icon"
+    url="item/items"
+    title="Manage Processes"
+/>
+
+
+<x-core.views::layouts.navbars.sidebar-link-item
+    iconClasses="fas fa-cube sidebar-icon"
+    url="item/items"
+    title="Process Input"
+/>
+
+
+<x-core.views::layouts.navbars.sidebar-link-item
+    iconClasses="fas fa-cube sidebar-icon"
+    url="item/items"
+    title="Process Output"
+/>
+
+
+
+<li class="nav-item mt-4">
+    <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Production Tracking </h6>
+</li>
+
+
+<x-core.views::layouts.navbars.sidebar-link-item
+    iconClasses="fas fa-cube sidebar-icon"
+    url="item/items"
+    title="Production Tracking"
+/>
+
+
+
+<x-core.views::layouts.navbars.sidebar-link-item
+    iconClasses="fas fa-cube sidebar-icon"
+    url="item/items"
+    title="Batches Tracking"
+/>
+
+
+<x-core.views::layouts.navbars.sidebar-link-item
+    iconClasses="fas fa-cube sidebar-icon"
+    url="item/items"
+    title="Process Tracking"
+/>
+
 
 
 

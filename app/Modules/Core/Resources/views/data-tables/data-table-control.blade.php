@@ -90,6 +90,17 @@
 
                             ">
                 <option value="" style="display: none"> Action... </option>
+                @if (array_key_exists('updateModelFields', $controls['bulkActions']) && is_array($controls['bulkActions']['updateModelFields']))
+
+                        @foreach ($controls['bulkActions']["updateModelFields"] as $command => $options)
+                            @if (isset($options['fieldName']) && isset($options['fieldValue']))
+                                <option value="{{$options['fieldName']}}:{{$options['fieldValue']}}">
+                                        {{ ucfirst($command) }}
+                                </option>
+                            @endif
+                        @endforeach
+                        <hr />
+                @endif
                 @if (in_array('xls', $controls['bulkActions']['export']))
                     <option value="exportXLSX">Export XLS</option>
                 @endif
@@ -100,6 +111,7 @@
                     <option value="exportPDF">Export PDF</option>
                 @endif
                 @if (in_array('delete', $controls['bulkActions']))
+                    <hr class="horizontal" />
                     <option value="delete">Delete</option>
                 @endif
             </select>

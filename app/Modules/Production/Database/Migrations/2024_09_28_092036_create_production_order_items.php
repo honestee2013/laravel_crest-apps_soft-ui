@@ -11,7 +11,7 @@ return new class  extends Migration
     {
         Schema::create('production_order_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('production_order_id')->constrained()->onDelete('cascade');
+            $table->foreignId('production_order_request_id')->constrained()->onDelete('cascade');
             $table->foreignId('item_id')->constrained('items')->onDelete('cascade'); // Linked to the items table
             $table->decimal('quantity', 10, 2); // Quantity of the resource/item
             $table->timestamps();

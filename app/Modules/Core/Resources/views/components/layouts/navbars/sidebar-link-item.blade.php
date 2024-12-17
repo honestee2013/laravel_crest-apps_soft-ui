@@ -5,7 +5,7 @@
 
 
 <li class="nav-item">
-    <a class="nav-link {{ (Request::is('dashboard') ? 'active' : '') }}" href="{{ url($url) }}">
+    <a class="nav-link {{ $anchorClasses?? '' }}" href="{{ url($url) }}" >
         <span width="12px" height="12px">
             <i  class="{{ $iconClasses }}"></i>
         </span>

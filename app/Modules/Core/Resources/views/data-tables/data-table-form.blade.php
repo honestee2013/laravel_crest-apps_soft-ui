@@ -127,8 +127,12 @@
                                 <div class="form-check"
                                     @if (isset($display) && $display == 'inline') style="display:inline-flex;" @endif>
 
-                                    <input class="form-check-input" type="{{ $type }}" id="{{ $key }}"
-                                        wire:model.defer="fields.{{ $field }}" value="{{ $value }}">
+                                    <input class="form-check-input" type="{{ $type }}"
+                                        id="{{ $key }}" wire:model.defer="fields.{{ $field }}"
+                                        value="{{ $key }}">
+
+
+
                                     <label class="custom-control-label" for="{{ $key }}"
                                     @if (isset($display) && $display == 'inline') style="margin: 0.25em 2em 1em 0.5em" @endif>
                                         {{ $value }}

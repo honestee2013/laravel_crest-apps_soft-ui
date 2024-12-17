@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('production_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('production_order_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('production_order_request_id')->constrained()->cascadeOnDelete();
             $table->foreignId('batch_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('activity'); // E.g., Batch created, Process started
             $table->text('details')->nullable();

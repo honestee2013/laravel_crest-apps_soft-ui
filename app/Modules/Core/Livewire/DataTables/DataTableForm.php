@@ -5,6 +5,7 @@ namespace App\Modules\Core\Livewire\DataTables;
 use Livewire\Form;
 use Livewire\Component;
 use Illuminate\Support\Str;
+use InvalidArgumentException;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -37,7 +38,9 @@ class DataTableForm extends Component
         'resetFormFieldsEvent' => 'resetFields',
         'submitDatatableFormEvent' => 'saveRecord',
 
-        'refreshFieldsEvent' => 'refreshFields'
+        'refreshFieldsEvent' => 'refreshFields',
+
+        'updateModelFieldEvent' => 'updateModelField',
     ];
 
 
@@ -109,6 +112,62 @@ class DataTableForm extends Component
 
         $this->dispatch('$refresh');
     }
+
+
+
+
+    public function updateModelField($modelIds, $fieldName, $fieldValue)
+    {
+
+        // Ensure $modelIds is an array of integers
+        $modelIds = is_array($modelIds) ? array_map('intval', $modelIds) : [intval($modelIds)];
+
+        // Validation
+        if (empty($modelIds) || !is_array($modelIds)) {
+            throw new InvalidArgumentException("Model IDs must be a non-empty array.");
+        }
+        // Validation: Ensure all IDs are integers
+        foreach ($modelIds as $id) {
+            if (!is_numeric($id)) {
+                throw new InvalidArgumentException("All Model IDs must be numeric.");
+            }
+        }
+
+        // Now create or update the model using the sanitized fields array
+        if ($this->getConfigFileField($this->moduleName, $this->modelName, "isTransaction")) {
+            DB::beginTransaction();
+        }
+
+        try {
+
+            // Fetch old records
+            $oldRecords = $this->model::whereIn('id', $modelIds)->get();
+
+            // Ensure $modelIds is an array of integers
+            $modelIds = is_array($modelIds) ? array_map('intval', $modelIds) : [intval($modelIds)];
+            // Sending [After Update Event]
+            $oldRecords = $this->model::whereIn('id', $modelIds)->get();
+            // Perform the update
+            $this->model::whereIn('id', $modelIds)->update([$fieldName => $fieldValue]);
+            // Sending [After Update Event]
+            $newRecords = $this->model::whereIn('id', $modelIds)->get();
+
+            // Dispatch events
+            $this->dispatchAllEvents("BeforeUpdate", $oldRecords, $newRecords);
+            $this->dispatchAllEvents("AfterUpdate", $oldRecords, $newRecords);
+            $this->dispatch('recordSavedEvent');
+
+        } catch (\Exception $e) {
+            if ($this->getConfigFileField($this->moduleName, $this->modelName, "isTransaction")) {
+                DB::rollBack(); // Rollback the transaction
+            }
+
+            // Log the error or handle the exception as needed
+            throw $e;
+        }
+    }
+
+
 
 
     // Save Record Method (Add or Edit)

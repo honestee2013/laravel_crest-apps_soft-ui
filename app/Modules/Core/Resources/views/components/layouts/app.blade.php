@@ -118,11 +118,17 @@
             <x-core.views::layouts.navbars.auth.nav />
 
             <div class="container-fluid py-4">
+                {{------ Header content. The <x-slot name="pageHeader" /> content goes here------}}
+                {{ $pageHeader?? "" }}
+
+
                 {{------ Page content. The default template [CONTENT] goes here------}}
                 {{ $slot }}
 
-                {{------ Footer content. The <x-slot name="footer" /> content goes here------}}
-                {{--{{ $pageFooter }}--}}
+
+                {{------ Footer content. The <x-slot name="pageFooter" /> content goes here------}}
+                {{ $pageFooter?? "" }}
+                
                 <x-core.views::layouts.footers.auth.footer />
             </div>
         </main>

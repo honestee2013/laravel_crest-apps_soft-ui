@@ -177,16 +177,19 @@
                                         <pan class="m-2 text-uppercase text-xs fw-bolder">{{ ucfirst($actionData['title']) }}</pan>
                                         <hr class="m-2 p-0 bg-gray-500" />
                                     @endif
+
                                     <li>
                                         @if(isset($actionData['route']))
                                             <a class="dropdown-item" href="javascript:void(0)" wire:click="openLink('{{ $actionData['route'] }}', {{ $row->id }})">
+                                        @elseif(isset($actionData['updateModelField']) && isset($actionData['fieldName']) && isset($actionData['fieldValue']))
+                                            <a class="dropdown-item" onclick="Livewire.dispatch('updateModelFieldEvent',['{{$row->id}}', '{{$actionData['fieldName']}}', '{{$actionData['fieldValue']}}'])">
                                         @else
                                             <a class="dropdown-item" href="javascript:void(0)">
                                         @endif
-                                            @if(isset($actionData['icon']))
-                                                <i class="fas fa-file-excel text-sm me-2 text-success"></i>
-                                            @endif
-                                            <span class="btn-inner--text">{{ ucfirst($actionName) }}</span>
+                                        @if(isset($actionData['icon']))
+                                                <i class="{{$actionData['icon']}}"></i>
+                                        @endif
+                                        <span class="btn-inner--text">{{ ucfirst($actionName) }}</span>
                                         </a>
                                     </li>
                                     @if(isset($actionData['hr']))
@@ -196,6 +199,7 @@
 
                             </ul>
                         </span>
+
 
                     @endif
 

@@ -88,6 +88,10 @@ class DataTableControl extends Component
     {
         if ($this->bulkAction == "delete") {
             return $this->dispatch('confirmDeleteEvent', $this->selectedRows);
+        } else if (str_contains($this->bulkAction, ":")) {
+            $data = explode(":", $this->bulkAction);
+            //public function updateModelField($modelIds, $fieldName, $fieldValue)
+            $this->dispatch('updateModelFieldEvent', $this->selectedRows, $data[0], $data[1]);
         } else { // Export
             return $this->exportSelectedRows();
         }

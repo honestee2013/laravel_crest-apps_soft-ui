@@ -1,4 +1,4 @@
-<section>
+<section class="m-0 m-md-4">
 
 
     {{-- ----------------- MAIN MODAL FOR ADD-EDIT ----------------- --}}
@@ -30,7 +30,7 @@
 
 
     {{-- ------------ CONTENT BEGINS ------------ --}}
-    <div class="card mb-4 mx-4 p-4">
+    <div class="card  p-4">
 
         {{-- ------------DATA TABLE MANAGER HEADER TEXT ------------ --}}
         <div class="card-header pb-0">

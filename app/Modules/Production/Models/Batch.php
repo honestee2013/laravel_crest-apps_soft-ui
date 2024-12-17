@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Batch extends Model
 {
-    protected $fillable = ['batch_number', 'production_order_id', 'status'];
+    protected $fillable = ['batch_number', 'production_order_request_id', 'status'];
 
 
 

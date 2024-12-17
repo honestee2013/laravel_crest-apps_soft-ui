@@ -7,7 +7,7 @@ use App\Modules\Core\Models\Status;
 use Illuminate\Database\Eloquent\Model;
 use App\Modules\Core\Traits\Database\DatabaseQueryTrait;
 
-class ProductionOrder extends Model
+class ProductionOrderRequest extends Model
 {
 
     use DatabaseQueryTrait;
@@ -105,7 +105,7 @@ class ProductionOrder extends Model
         static::creating(function ($productionOrder) {
             //if (!$productionOrder->order_number) {
                 // Generate Production Order Number
-                $latestOrder = ProductionOrder::latest('id')->first();
+                $latestOrder = ProductionOrderRequest::latest('id')->first();
                 $nextOrderId = $latestOrder ? $latestOrder->id + 1 : 1;
                 $orderNumber = 'PO-' . now()->format('Ymd') . '-' . str_pad($nextOrderId, 3, '0', STR_PAD_LEFT);
 

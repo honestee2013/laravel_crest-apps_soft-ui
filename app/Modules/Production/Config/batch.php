@@ -12,9 +12,9 @@ return [
 
 
 
-        'production_order_id' => [
+        'production_order_request_id' => [
             'field_type' => 'select',
-            'options' => \App\Modules\Production\Models\ProductionOrder::where('is_approved', false)->pluck('order_number', 'id')->toArray(),
+            'options' => \App\Modules\Production\Models\ProductionOrderRequest::where('is_approved', false)->pluck('order_number', 'id')->toArray(),
 
             'relationship' => [
                 'model' => 'App\Modules\Production\Models\ProductionOrder',
