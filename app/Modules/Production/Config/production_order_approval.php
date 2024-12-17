@@ -136,11 +136,11 @@ return [
             'updateModelFields' => [
                 'approve' => [
                     'fieldName' => "status_id",
-                    'fieldValue' => app('App\Modules\Core\Models\Status')->where("name", "approved")->first()->id,
+                    'fieldValue' => app('App\Modules\Core\Models\Status')->where("name", "approved")->first()?->id,
                 ],
                 'reject' => [
                     'fieldName' => "status_id",
-                    'fieldValue' => app('App\Modules\Core\Models\Status')->where("name", "rejected")->first()->id,
+                    'fieldValue' => app('App\Modules\Core\Models\Status')->where("name", "rejected")->first()?->id,
                 ]
             ],
 

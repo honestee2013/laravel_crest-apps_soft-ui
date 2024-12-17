@@ -5,15 +5,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductionLog extends Model
 {
-    protected $fillable = ['production_order_id', 'batch_id', 'activity', 'details', 'timestamp'];
+    protected $fillable = ['production_order_request_id', 'production_batch_id', 'activity', 'details', 'timestamp'];
 
     public function productionOrder()
     {
-        return $this->belongsTo(ProductionOrder::class);
+        return $this->belongsTo(ProductionOrderRequest::class);
     }
 
     public function batch()
     {
-        return $this->belongsTo(Batch::class);
+        return $this->belongsTo(ProductionBatch::class);
     }
 }

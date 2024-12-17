@@ -46,7 +46,38 @@ return [
         ],
 
 
+        'supervisor_id' => [
+            'field_type' => 'select',
+            'options' => App\Models\User::pluck('name', 'id')->toArray(),
+            'relationship' => [
+                'model' => 'App\Models\User',
+                'type' => 'belongsTo',
+                'display_field' => 'name',
+                'dynamic_property' => 'supervisor',
+                'foreign_key' => 'supervisor_id',
+                'inlineAdd' => false,
+            ],
+            'label' => 'Supervisor',
+            'validation' => 'nullable|int'
+        ],
 
+
+
+        'items' => [
+            'field_type' => 'select',
+            'options' => App\Modules\Item\Models\Item::pluck('name', 'id')->toArray(),
+            'relationship' => [
+                'model' => 'App\Modules\Item\Models\Item',
+                'type' => 'belongsToMany',
+                'display_field' => 'name',
+                'dynamic_property' => 'allocatedResources',
+                'foreign_key' => 'item_id',
+                'inlineAdd' => false,
+            ],
+            'display' => 'inline',
+            'label' => 'Allocated Resources',
+            'multiSelect' => true,
+        ],
 
 
         'status_id' => [
@@ -80,16 +111,20 @@ return [
 
 
     "hiddenFields" => [
-        'onTable' => [],
+        'onTable' => [
+            'supervisor_id',
+        ],
         'onDetail' => [],
         'onEditForm' => [
             'order_number',
             'status_id',
+            'items',
 
         ],
         'onNewForm' => [
             'order_number',
             'status_id',
+            'items',
         ],
         'onQuery' => [],
     ],

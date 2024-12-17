@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'model' => App\Modules\Production\Models\ProductionOrderRequest::class,
+    'model' => App\Modules\Production\Models\ProductionOrderItem::class,
     'fieldDefinitions' => [
 
 
@@ -19,7 +19,10 @@ return [
             'label' => 'Production Order',
             'display' => 'block',
             'multiSelect' => false,
+            'validation' => 'required|int'
+
         ],
+
 
 
         'item_id' => [
@@ -32,9 +35,10 @@ return [
                 'dynamic_property' => 'item',
                 'foreign_key' => 'item_id',
             ],
-            'label' => 'Product',
+            'label' => 'Allocated Resource',
             'display' => 'block',
             'multiSelect' => false,
+            'validation' => 'required|int'
         ],
 
 
@@ -42,11 +46,15 @@ return [
 
         'quantity' => [
             'field_type' => 'number',
+            'validation' => 'required|decimal:2'
         ],
 
 
 
-
+        'note' => [
+            'field_type' => 'textarea',
+            'validation' => 'nullable|string'
+        ],
 
 
     ],

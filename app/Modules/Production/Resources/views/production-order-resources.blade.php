@@ -7,7 +7,7 @@
     </x-slot>
 
     <x-slot name="pageHeader">
-        @include('core.views::components.layouts.navbars.auth.content-header', [ "pageTitile" => "Manage Production Orders"])
+        @include('core.views::components.layouts.navbars.auth.content-header', [ "pageTitile" => "Production Order Management"])
     </x-slot>
 
     <x-core.views::tab-bar>
@@ -15,7 +15,7 @@
     </x-core.views::tab-bar>
 
     <livewire:core.livewire.data-tables.data-table-manager model="App\\Modules\\Production\\Models\\ProductionOrderItem"
-        pageTitle="Manage Item  Categories"
+        pageTitle="Production Order Resource Allocations"
         queryFilters=[]
         :hiddenFields="[
             'onTable' => [],

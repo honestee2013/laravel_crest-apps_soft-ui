@@ -5,7 +5,7 @@ namespace App\Modules\Production\Models;
 use App\Modules\Core\Models\Status;
 use Illuminate\Database\Eloquent\Model;
 
-class Batch extends Model
+class ProductionBatch extends Model
 {
     protected $fillable = ['batch_number', 'production_order_request_id', 'status'];
 
@@ -19,7 +19,7 @@ class Batch extends Model
 
     static::creating(function ($batch) {
         // Generate Batch Number
-        $latestBatch = Batch::latest('id')->first();
+        $latestBatch = ProductionBatch::latest('id')->first();
         $nextBatchId = $latestBatch ? $latestBatch->id + 1 : 1;
         $batchNumber = 'BATCH-' . now()->format('Ymd') . '-' . str_pad($nextBatchId, 3, '0', STR_PAD_LEFT);
 
@@ -52,7 +52,7 @@ public function status()
 
 public function productionOrder()
 {
-    return $this->belongsTo(ProductionOrder::class);
+    return $this->belongsTo(ProductionOrderRequest::class, "production_order_request_id");
 }
 
 /*public function resourceItems()

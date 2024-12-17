@@ -4,9 +4,8 @@
             <x-production.views::layouts.navbars.auth.sidebar-links />
         </x-layouts.navbars.auth.sidebar>
     </x-slot>
-    <livewire:core.livewire.data-tables.data-table-manager model="App\\Modules\\Production\\Models\\ProductionProcess"
-
-        pageTitle="Production Process Management"
+    <livewire:core.livewire.data-tables.data-table-manager model="App\\Modules\\Production\\Models\\ProductionBatch"
+        pageTitle="Production Batch Management"
         queryFilters=[]
         :hiddenFields="[
             'onTable' => [],
@@ -14,7 +13,6 @@
         :queryFilters="[
 
         ]"
-
     />
 
 </x-core.views::layouts.app>

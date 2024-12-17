@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('batch_product_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('batch_id')->constrained('batches')->onDelete('cascade');
+            $table->foreignId('production_batch_id')->nullable()->constrained('production_batches');
             $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
             $table->unsignedInteger('quantity_produced');
             $table->unsignedInteger('expected_quantity')->nullable();

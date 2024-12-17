@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('production_processes', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // E.g., Pre-cleaning, Milling
+            $table->string('name')->nullable(); // E.g., Pre-cleaning, Milling
             $table->string('description')->nullable();
             $table->timestamps();
         });

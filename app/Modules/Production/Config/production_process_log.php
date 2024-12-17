@@ -7,7 +7,7 @@ return [
 
         'batch_id' => [
             'field_type' => 'select',
-            'options' => \App\Modules\Production\Models\Batch::pluck('batch_number', 'id')->toArray(),
+            'options' => \App\Modules\Production\Models\ProductionBatch::pluck('batch_number', 'id')->toArray(),
 
             'relationship' => [
                 'model' => 'App\Modules\Production\Models\BatchResourceItem',

@@ -1,14 +1,14 @@
 <?php
 
 return [
-    'model' => App\Modules\Production\Models\Batch::class,
+    'model' => App\Modules\Production\Models\ProductionBatch::class,
     'fieldDefinitions' => [
 
 
 
         'batch_id' => [
             'field_type' => 'select',
-            'options' => \App\Modules\Production\Models\Batch::pluck('batch_number', 'id')->toArray(),
+            'options' => \App\Modules\Production\Models\ProductionBatch::pluck('batch_number', 'id')->toArray(),
 
             'relationship' => [
                 'model' => 'App\Modules\Production\Models\BatchResourceItem',

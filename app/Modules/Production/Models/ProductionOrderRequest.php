@@ -58,10 +58,6 @@ class ProductionOrderRequest extends Model
     }
 
 
-    public function items()
-    {
-        return $this->hasMany(ProductionOrderItem::class);
-    }
 
 
 
@@ -72,7 +68,7 @@ class ProductionOrderRequest extends Model
 
     public function batches()
     {
-        return $this->hasMany(Batch::class);
+        return $this->hasMany(ProductionBatch::class);
     }
 
 
@@ -84,6 +80,7 @@ class ProductionOrderRequest extends Model
     }
 
 
+    // Allocated resource items
     public function item()
     {
         return $this->belongsTo(Item::class);
@@ -94,6 +91,12 @@ class ProductionOrderRequest extends Model
     public function status()
     {
         return $this->belongsTo(Status::class);
+    }
+
+
+    public function allocatedResources()
+    {
+        return $this->belongsToMany(Item::class, "production_order_items", "production_order_request_id", "item_id")->using(ProductionOrderItem::class);
     }
 
 

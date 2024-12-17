@@ -15,7 +15,7 @@
     </x-core.views::tab-bar>
 
     <livewire:core.livewire.data-tables.data-table-manager model="App\\Modules\\Production\\Models\\ProductionOrderRequest"
-        pageTitle="Manage Production Order Requests"
+        pageTitle="Production Order Requests"
         queryFilters=[]
         :hiddenFields="[
             'onTable' => [],

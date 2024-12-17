@@ -12,18 +12,22 @@
 
 
 
+
 <x-core.views::layouts.navbars.sidebar-link-item
-    iconClasses="fas fa-cube sidebar-icon"
-    url="item/items"
+    iconClasses="fas fa-project-diagram sidebar-icon"
+    url="production/production-processes"
+    title="Production Processes"
+/>
+
+
+<x-core.views::layouts.navbars.sidebar-link-item
+    iconClasses="fas fa-boxes sidebar-icon"
+    url="production/production-batches"
     title="Production Batches"
 />
 
 
-<x-core.views::layouts.navbars.sidebar-link-item
-    iconClasses="fas fa-cube sidebar-icon"
-    url="item/items"
-    title="Production Processes"
-/>
+
 
 
 <x-core.views::layouts.navbars.sidebar-link-item

@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'model' => App\Modules\Production\Models\Batch::class,
+    'model' => App\Modules\Production\Models\ProductionBatch::class,
     'fieldDefinitions' => [
 
 
@@ -17,11 +17,11 @@ return [
             'options' => \App\Modules\Production\Models\ProductionOrderRequest::where('is_approved', false)->pluck('order_number', 'id')->toArray(),
 
             'relationship' => [
-                'model' => 'App\Modules\Production\Models\ProductionOrder',
+                'model' => 'App\Modules\Production\Models\ProductionOrderRequest',
                 'type' => 'belongsTo',
                 'display_field' => 'order_number',
                 'dynamic_property' => 'productionOrder',
-                'foreign_key' => 'production_order_id',
+                'foreign_key' => 'production_order_request_id',
             ],
             'label' => 'Production Order',
             'display' => 'block',

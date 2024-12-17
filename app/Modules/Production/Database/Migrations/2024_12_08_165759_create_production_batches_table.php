@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('batches', function (Blueprint $table) {
+        Schema::create('production_batches', function (Blueprint $table) {
             $table->id();
             $table->string('batch_number')->unique();
             $table->foreignId('production_order_request_id')->nullable()->constrained('production_order_requests');
@@ -40,6 +40,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('batches');
+        Schema::dropIfExists('production_batches');
     }
 };

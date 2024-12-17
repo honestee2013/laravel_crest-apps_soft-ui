@@ -10,20 +10,22 @@ class CreateProductionStepsTable extends Migration
     {
         Schema::create('production_steps', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('batch_id'); // Links to Batch
-            $table->unsignedBigInteger('production_process_id'); // Links to Process
+
+            $table->foreignId('production_batch_id')->nullable()->constrained('production_batches');
+            $table->foreignId('production_process_id')->nullable()->constrained('production_processes');
+
             $table->string('step_name'); // Optional override of process name
             $table->timestamp('started_at')->nullable(); // Step start time
             $table->timestamp('ended_at')->nullable(); // Step end time
             $table->enum('status', ['Pending', 'In Progress', 'Completed', 'Paused', 'Canceled'])->default('Pending'); // Current status
             $table->text('notes')->nullable(); // Notes or issues during the step
             $table->json('resources_consumed')->nullable(); // e.g., {"water": 100, "electricity": 50}
-            $table->unsignedBigInteger('updated_by')->nullable(); // User responsible for last update
+
+            $table->foreignId('updated_by')->nullable()->constrained('users');
+
             $table->timestamps();
 
-            $table->foreign('batch_id')->references('id')->on('batches')->onDelete('cascade');
-            $table->foreign('production_process_id')->references('id')->on('production_processes')->onDelete('cascade');
-        });
+         });
     }
 
     public function down()

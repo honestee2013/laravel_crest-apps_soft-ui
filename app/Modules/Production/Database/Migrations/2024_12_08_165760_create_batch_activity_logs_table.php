@@ -10,14 +10,13 @@ class CreateBatchActivityLogsTable extends Migration
     {
         Schema::create('batch_activity_logs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('batch_id'); // Links to Batch
+            $table->foreignId('production_batch_id')->nullable()->constrained('production_batches');
             $table->timestamp('activity_time'); // When the activity occurred
             $table->string('activity_type'); // e.g., 'Status Change', 'Pause', 'Resume'
             $table->text('description')->nullable(); // Detailed description of the activity
             $table->unsignedBigInteger('performed_by')->nullable(); // User who performed the action
             $table->timestamps();
 
-            $table->foreign('batch_id')->references('id')->on('batches')->onDelete('cascade');
         });
     }
 

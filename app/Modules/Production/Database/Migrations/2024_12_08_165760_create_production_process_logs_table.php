@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('display_name')->nullable();
 
-            $table->foreignId('batch_id')->constrained('batches')->onDelete('cascade');
+            $table->foreignId('production_batch_id')->nullable()->constrained('production_batches');
             $table->foreignId('production_process_id')->constrained();
             $table->foreignId('operator_id')->nullable()->constrained('users');
             $table->foreignId('supervisor_id')->nullable()->constrained('users');

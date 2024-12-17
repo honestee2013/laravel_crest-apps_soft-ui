@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('batch_trackers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('batch_id')->constrained('batches')->onDelete('cascade'); // Links to batches
+            $table->foreignId('production_batch_id')->nullable()->constrained('production_batches');
             $table->string('status')->nullable(); // e.g., Pending, In Progress, Completed
             $table->timestamp('last_updated_at')->nullable(); // Tracks the last activity time
             $table->text('remarks')->nullable(); // Notes or summary about the batch
