@@ -13,30 +13,38 @@ return [
         ],
 
 
-        'item_id' => [
+        'items' => [
             'field_type' => 'select',
-            'options' => app('App\Modules\Production\Models\Product')->pluck('name', 'id'),
+            'options' => App\Modules\Item\Models\Item::pluck('name', 'id')->toArray(),
             'relationship' => [
-                'model' => 'App\Modules\Production\Models\Product',
-                'type' => 'belongsTo',
+                'model' => 'App\Modules\Item\Models\Item',
+                'type' => 'belongsToMany',
                 'display_field' => 'name',
-                'dynamic_property' => 'item',
+                'dynamic_property' => 'requestedItems',
                 'foreign_key' => 'item_id',
+                'inlineAdd' => false,
             ],
-            'label' => 'Item (Product)',
-            'display' => 'block',
-            'multiSelect' => false,
-            'validation' => 'required|int'
+            'display' => 'inline',
+            'label' => 'Requested Items (Products)',
+            'multiSelect' => true,
         ],
 
 
-
-
-        'quantity' => [
-            'field_type' => 'number',
-            'validation' => 'required|decimal:2|min:0.01'
+        'resources' => [
+            'field_type' => 'select',
+            'options' => App\Modules\Item\Models\Item::pluck('name', 'id')->toArray(),
+            'relationship' => [
+                'model' => 'App\Modules\Item\Models\Item',
+                'type' => 'belongsToMany',
+                'display_field' => 'name',
+                'dynamic_property' => 'allocatedResources',
+                'foreign_key' => 'item_id',
+                'inlineAdd' => false,
+            ],
+            'display' => 'inline',
+            'label' => 'Allocated Resources',
+            'multiSelect' => true,
         ],
-
 
 
 
@@ -63,21 +71,7 @@ return [
 
 
 
-        'items' => [
-            'field_type' => 'select',
-            'options' => App\Modules\Item\Models\Item::pluck('name', 'id')->toArray(),
-            'relationship' => [
-                'model' => 'App\Modules\Item\Models\Item',
-                'type' => 'belongsToMany',
-                'display_field' => 'name',
-                'dynamic_property' => 'allocatedResources',
-                'foreign_key' => 'item_id',
-                'inlineAdd' => false,
-            ],
-            'display' => 'inline',
-            'label' => 'Allocated Resources',
-            'multiSelect' => true,
-        ],
+
 
 
         'status_id' => [
@@ -119,12 +113,15 @@ return [
             'order_number',
             'status_id',
             'items',
+            'item_id',
+            'resources',
 
         ],
         'onNewForm' => [
             'order_number',
             'status_id',
             'items',
+            'resources',
         ],
         'onQuery' => [],
     ],

@@ -2,6 +2,7 @@
 
 namespace App\Modules\Production\Models;
 
+use App\Modules\Item\Models\Item;
 use App\Modules\Core\Models\Status;
 use Illuminate\Database\Eloquent\Model;
 
@@ -55,17 +56,18 @@ public function productionOrder()
     return $this->belongsTo(ProductionOrderRequest::class, "production_order_request_id");
 }
 
-/*public function resourceItems()
+public function inputItems()
 {
-    return $this->hasMany(BatchResourceItem::class);
+    return $this->belongsToMany(Item::class, "production_batch_inputs", "production_batch_id", "item_id")->using(ProductionBatchInput::class);
 }
 
-public function productItems()
+public function outputItems()
 {
-    return $this->hasMany(BatchProductItem::class);
+    return $this->belongsToMany(Item::class, "production_batch_outputs", "production_batch_id", "item_id")->using(ProductionBatchOutput::class);
 }
 
-public function processLogs()
+
+/*public function processLogs()
 {
     return $this->hasMany(ProductionProcessLog::class);
 }*/

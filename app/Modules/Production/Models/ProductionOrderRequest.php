@@ -87,6 +87,12 @@ class ProductionOrderRequest extends Model
     }
 
 
+    // Required  items
+    public function requestedItems()
+    {
+        return $this->belongsToMany(Item::class, "production_order_items", "production_order_request_id", "item_id")->using(ProductionOrderItem::class);
+    }
+
 
     public function status()
     {
@@ -96,7 +102,7 @@ class ProductionOrderRequest extends Model
 
     public function allocatedResources()
     {
-        return $this->belongsToMany(Item::class, "production_order_items", "production_order_request_id", "item_id")->using(ProductionOrderItem::class);
+        return $this->belongsToMany(Item::class, "production_order_items", "production_order_request_id", "item_id")->using(ProductionOrderResource::class);
     }
 
 

@@ -7,22 +7,20 @@
     </x-slot>
 
     <x-slot name="pageHeader">
-        @include('core.views::components.layouts.navbars.auth.content-header', [ "pageTitile" => "Production Batch Management"])
+        @include('core.views::components.layouts.navbars.auth.content-header', [ "pageTitile" => "Production Order Management"])
     </x-slot>
 
     <x-core.views::tab-bar>
-        <x-production.views::layouts.navbars.auth.production-order-batches-tab-bar-links active='batches'  />
+        <x-production.views::layouts.navbars.auth.production-order-batches-tab-bar-links active='outputs'  />
     </x-core.views::tab-bar>
 
-    <livewire:core.livewire.data-tables.data-table-manager model="App\\Modules\\Production\\Models\\ProductionBatch"
-        pageTitle="Manage Production Batches"
+    <livewire:core.livewire.data-tables.data-table-manager model="App\\Modules\\Production\\Models\\ProductionBatchOutput"
+        pageTitle="Production Batch Resource Allocations"
         queryFilters=[]
         :hiddenFields="[
             'onTable' => [],
         ]"
-        :queryFilters="[
-
-        ]"
+        :queryFilters="[]"
     />
 
     <x-slot name="pageFooter">

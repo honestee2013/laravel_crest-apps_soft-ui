@@ -10,11 +10,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
 
-class ProductionOrderItem extends Pivot
+class ProductionOrderResource extends Pivot
 {
     use HasFactory;
 
-    protected $table = "production_order_items";
+
     protected $fillable = [
         'production_order_request_id',
         'item_id',

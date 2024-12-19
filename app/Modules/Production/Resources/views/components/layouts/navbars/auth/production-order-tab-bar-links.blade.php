@@ -8,6 +8,21 @@
 />
 
 
+<x-core.views::layouts.navbars.sidebar-link-item
+    iconClasses="fas fa-box "
+    url="production/production-order-items"
+    title="Request Items"
+    anchorClasses="{{ ($active == 'items')? 'active': ''}}"
+/>
+
+<x-core.views::layouts.navbars.sidebar-link-item
+    iconClasses="fas fa-cube "
+    url="production/production-order-resources"
+    title="Resource Allocations"
+    anchorClasses="{{ ($active == 'resource')? 'active': ''}}"
+/>
+
+
 
 <x-core.views::layouts.navbars.sidebar-link-item
     iconClasses="fas fa-check"
@@ -17,12 +32,7 @@
 />
 
 
-<x-core.views::layouts.navbars.sidebar-link-item
-    iconClasses="fas fa-cube "
-    url="production/production-order-resources"
-    title="Resource Allocations"
-    anchorClasses="{{ ($active == 'resource')? 'active': ''}}"
-/>
+
 
 
 

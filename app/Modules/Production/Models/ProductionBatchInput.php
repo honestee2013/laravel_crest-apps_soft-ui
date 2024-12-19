@@ -9,26 +9,30 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
 
-class BatchResourceItem extends Model
+class ProductionBatchInput extends Model
 {
     use HasFactory;
 
+    protected $table = "production_batch_inputs";
     protected $fillable = [
-        'batch_id',
+        'production_batch_id',
         'item_id',
-        'quantity_used',
-        'expected_quantity',
+        'actual_quantity',
+        'planned_quantity',
     ];
 
     public function batch()
     {
-        return $this->belongsTo(Batch::class);
+        return $this->belongsTo(ProductionBatch::class, 'production_batch_id');
     }
+
 
     public function item()
     {
-        return $this->belongsTo(Item::class);
+        return $this->belongsTo(Item::class, "item_id");
     }
+
+
 
 
 }

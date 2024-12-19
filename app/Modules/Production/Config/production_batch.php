@@ -26,6 +26,8 @@ return [
             'label' => 'Production Order',
             'display' => 'block',
             'multiSelect' => false,
+            'validation' => 'required|int'
+
         ],
 
 
@@ -46,6 +48,42 @@ return [
 
 
 
+        'inputs' => [
+            'field_type' => 'select',
+            'options' => App\Modules\Item\Models\Item::pluck('name', 'id')->toArray(),
+            'relationship' => [
+                'model' => 'App\Modules\Item\Models\Item',
+                'type' => 'belongsToMany',
+                'display_field' => 'name',
+                'dynamic_property' => 'inputItems',
+                'foreign_key' => 'item_id',
+                'inlineAdd' => false,
+            ],
+            'display' => 'inline',
+            'label' => 'Input Items (Resources)',
+            'multiSelect' => true,
+        ],
+
+
+
+        'outputs' => [
+            'field_type' => 'select',
+            'options' => App\Modules\Item\Models\Item::pluck('name', 'id')->toArray(),
+            'relationship' => [
+                'model' => 'App\Modules\Item\Models\Item',
+                'type' => 'belongsToMany',
+                'display_field' => 'name',
+                'dynamic_property' => 'outputItems',
+                'foreign_key' => 'item_id',
+                'inlineAdd' => false,
+            ],
+            'display' => 'inline',
+            'label' => 'Output Items (Products)',
+            'multiSelect' => true,
+        ],
+
+
+
 
 
 
@@ -58,10 +96,17 @@ return [
     "hiddenFields" => [
         'onTable' => [],
         'onDetail' => [],
-        'onEditForm' => [],
+        'onEditForm' => [
+            'batch_number',
+            'status_id',
+            'inputs',
+            'outputs',
+        ],
         'onNewForm' => [
             'batch_number',
             'status_id',
+            'inputs',
+            'outputs',
 
         ],
         'onQuery' => [],

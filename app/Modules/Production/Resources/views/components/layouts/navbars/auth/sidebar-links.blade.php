@@ -4,19 +4,23 @@
     <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Production Management</h6>
 </li>
 
+
+
 <x-core.views::layouts.navbars.sidebar-link-item
     iconClasses="fas fa-dolly-flatbed sidebar-icon"
     url="production/production-order-requests"
-    title="Production Oders"
+    title="Production Logs"
 />
 
 
 
+<hr class="horizontal dark" />
+
 
 <x-core.views::layouts.navbars.sidebar-link-item
-    iconClasses="fas fa-project-diagram sidebar-icon"
-    url="production/production-processes"
-    title="Production Processes"
+    iconClasses="fas fa-dolly-flatbed sidebar-icon"
+    url="production/production-order-requests"
+    title="Production Oders"
 />
 
 
@@ -26,6 +30,15 @@
     title="Production Batches"
 />
 
+<hr class="horizontal dark" />
+
+
+
+<x-core.views::layouts.navbars.sidebar-link-item
+    iconClasses="fas fa-project-diagram sidebar-icon"
+    url="production/production-processes"
+    title="Production Processes"
+/>
 
 
 
