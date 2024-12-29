@@ -10,22 +10,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
 
-class ProductionBatchOutput extends Pivot
+class ProductionProcessOutput extends Pivot
 {
     use HasFactory;
 
-    protected $table = "production_batch_outputs";
-
+    protected $table = "production_process_outputs";
     protected $fillable = [
-        'production_batch_id',
+        'production_process_log_id',
         'item_id',
         'actual_quantity',
         'planned_quantity',
     ];
 
-    public function batch()
+
+    public function productionProcessLog()
     {
-        return $this->belongsTo(ProductionBatch::class, 'production_batch_id');
+        return $this->belongsTo(ProductionProcessLog::class, 'production_process_log_id');
     }
 
 

@@ -11,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('batch_product_items', function (Blueprint $table) {
+        Schema::create('production_process_inputs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('production_batch_id')->nullable()->constrained('production_batches');
+            $table->foreignId('production_process_log_id')->constrained('production_process_logs')->onDelete('cascade');
             $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
-            $table->unsignedInteger('quantity_produced');
-            $table->unsignedInteger('expected_quantity')->nullable();
+            $table->decimal('actual_quantity', 10, 2)->default(0.00); // Quantity of the resource/item
+            $table->decimal('planned_quantity', 10, 2)->default(0.00); // Quantity of the resource/item
             $table->timestamps();
         });
+
+
 
 
     }
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('batch_product_items');
+        Schema::dropIfExists('production_process_inputs');
     }
 };

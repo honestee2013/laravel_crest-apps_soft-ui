@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('production_batch_id')->nullable()->constrained('production_batches');
             $table->foreignId('item_id')->nullable()->constrained('items')->onDelete('cascade');
-            $table->unsignedInteger('actual_quantity')->nullable();
-            $table->unsignedInteger('planned_quantity')->nullable();
+            $table->decimal('actual_quantity', 10, 2)->default(0.00); // Quantity of the resource/item
+            $table->decimal('planned_quantity', 10, 2)->default(0.00); // Quantity of the resource/item
+
             $table->timestamps();
         });
 

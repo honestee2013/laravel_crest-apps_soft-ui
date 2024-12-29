@@ -26,6 +26,8 @@
     <x-slot name="pageFooter">
         @include('core.views::components.layouts.navbars.auth.content-footer', [ ])
     </x-slot>
+
+    
 </x-core.views::layouts.app>
 
 

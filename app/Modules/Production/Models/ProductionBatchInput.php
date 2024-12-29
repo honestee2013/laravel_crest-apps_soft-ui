@@ -5,11 +5,12 @@ namespace App\Modules\Production\Models;
 use App\Modules\Item\Models\Item;
 use App\Modules\Core\Models\Status;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
 
-class ProductionBatchInput extends Model
+class ProductionBatchInput extends  Pivot
 {
     use HasFactory;
 

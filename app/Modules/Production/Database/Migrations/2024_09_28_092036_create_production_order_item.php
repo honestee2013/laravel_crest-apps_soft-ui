@@ -13,7 +13,7 @@ return new class  extends Migration
             $table->id();
             $table->foreignId('production_order_request_id')->constrained()->onDelete('cascade');
             $table->foreignId('item_id')->constrained('items')->onDelete('cascade'); // Linked to the items table
-            $table->decimal('quantity', 10, 2)->default(1.00); // Quantity of the resource/item
+            $table->decimal('quantity', 10, 2)->default(0.00); // Quantity of the resource/item
             $table->text('note')->nullable();
             $table->timestamps();
         });

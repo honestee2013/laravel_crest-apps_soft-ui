@@ -4,6 +4,7 @@ namespace App\Modules\Production\Models;
 
 
 use App\Models\User;
+use App\Modules\Item\Models\Item;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -16,7 +17,7 @@ class ProductionProcessLog extends Model
     use HasFactory;
 
     protected $fillable = [
-        'batch_id',
+        'production_batch_id',
         'production_process_id',
         'operator_id',
         'supervisor_id',
@@ -25,9 +26,10 @@ class ProductionProcessLog extends Model
         'notes',
     ];
 
+
     public function batch()
     {
-        return $this->belongsTo(Batch::class);
+        return $this->belongsTo(ProductionBatch::class, 'production_batch_id');
     }
 
     public function productionProcess()
@@ -45,15 +47,18 @@ class ProductionProcessLog extends Model
         return $this->belongsTo(User::class, 'supervisor_id');
     }
 
-    public function resources()
+
+    public function inputItems()
     {
-        return $this->hasMany(ProcessResource::class, 'process_log_id');
+        return $this->belongsToMany(Item::class, "production_process_inputs", "production_process_log_id", "item_id")->using(ProductionProcessInput::class);
     }
 
-    public function outputs()
+    public function outputItems()
     {
-        //return $this->hasMany(ProcessOutput::class, 'process_log_id');
+        return $this->belongsToMany(Item::class, "production_process_outputs", "production_process_log_id", "item_id")->using(ProductionProcessOutput::class);
     }
+
+
 
 
 

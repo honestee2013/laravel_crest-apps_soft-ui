@@ -128,7 +128,7 @@
 
                 {{------ Footer content. The <x-slot name="pageFooter" /> content goes here------}}
                 {{ $pageFooter?? "" }}
-                
+
                 <x-core.views::layouts.footers.auth.footer />
             </div>
         </main>

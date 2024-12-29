@@ -8,7 +8,7 @@
 
 <x-core.views::layouts.navbars.sidebar-link-item
     iconClasses="fas fa-dolly-flatbed sidebar-icon"
-    url="production/production-order-requests"
+    url="production/production-logs"
     title="Production Logs"
 />
 

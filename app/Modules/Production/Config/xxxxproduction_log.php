@@ -41,6 +41,39 @@ return [
 
 
 
+        'inputs' => [
+            'field_type' => 'select',
+            'options' => App\Modules\Item\Models\Item::pluck('name', 'id')->toArray(),
+            'relationship' => [
+                'model' => 'App\Modules\Item\Models\Item',
+                'type' => 'belongsToMany',
+                'display_field' => 'name',
+                'dynamic_property' => 'inputItems',
+                'foreign_key' => 'item_id',
+                'inlineAdd' => false,
+            ],
+            'display' => 'inline',
+            'label' => 'Input Items (Resources)',
+            'multiSelect' => true,
+        ],
+
+
+
+        'outputs' => [
+            'field_type' => 'select',
+            'options' => App\Modules\Item\Models\Item::pluck('name', 'id')->toArray(),
+            'relationship' => [
+                'model' => 'App\Modules\Item\Models\Item',
+                'type' => 'belongsToMany',
+                'display_field' => 'name',
+                'dynamic_property' => 'outputItems',
+                'foreign_key' => 'item_id',
+                'inlineAdd' => false,
+            ],
+            'display' => 'inline',
+            'label' => 'Output Items (Products)',
+            'multiSelect' => true,
+        ],
 
 
 

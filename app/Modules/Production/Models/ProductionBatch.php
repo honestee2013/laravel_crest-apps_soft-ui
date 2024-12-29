@@ -56,6 +56,15 @@ public function productionOrder()
     return $this->belongsTo(ProductionOrderRequest::class, "production_order_request_id");
 }
 
+
+
+
+
+
+
+
+
+
 public function inputItems()
 {
     return $this->belongsToMany(Item::class, "production_batch_inputs", "production_batch_id", "item_id")->using(ProductionBatchInput::class);

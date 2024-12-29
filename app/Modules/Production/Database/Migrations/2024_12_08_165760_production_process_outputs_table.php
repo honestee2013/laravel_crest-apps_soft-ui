@@ -15,9 +15,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('production_process_log_id')->constrained('production_process_logs')->onDelete('cascade');
             $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
-            $table->unsignedInteger('quantity_produced');
+            $table->decimal('actual_quantity', 10, 2)->default(0.00); // Quantity of the resource/item
+            $table->decimal('planned_quantity', 10, 2)->default(0.00); // Quantity of the resource/item
             $table->timestamps();
         });
+
+
 
 
     }

@@ -12,11 +12,11 @@
     </x-slot>
 
     <x-core.views::tab-bar>
-        <x-production.views::layouts.navbars.auth.production-logs-tab-bar-links active='production-logs'  />
+        <x-production.views::layouts.navbars.auth.production-logs-tab-bar-links active='production-log-outputs'  />
     </x-core.views::tab-bar>
 
-    <livewire:core.livewire.data-tables.data-table-manager model="App\\Modules\\Production\\Models\\ProductionProcessLog"
-        pageTitle="Manage Production Logs"
+    <livewire:core.livewire.data-tables.data-table-manager model="App\\Modules\\Production\\Models\\ProductionProcessOutput"
+        pageTitle="Manage Production Log Outputs"
         queryFilters=[]
         :hiddenFields="[
             'onTable' => [],
