@@ -14,8 +14,14 @@ use App\Modules\Core\Traits\DataTable\DataTableFieldsConfigTrait;
 class DashboardManager extends Component
 {
 
+
+
+    public $timeDuration = "this_month";
+
+
+
     protected $listeners = [
-        'recordSavedEvent' => '$refresh',
+        //'configChangedEvent' => '$refresh',
     ];
 
 
@@ -24,6 +30,22 @@ class DashboardManager extends Component
     {
 
     }
+
+
+
+
+    public function updatedTimeDuration()
+    {
+        $this->dispatch("configChangedEvent", ["timeDuration" => $this->timeDuration]);
+
+    }
+
+
+
+
+
+
+
 
 
     public function render()
