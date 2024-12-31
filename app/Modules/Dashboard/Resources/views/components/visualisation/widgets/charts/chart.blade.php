@@ -108,19 +108,19 @@
             @if (isset($chartData['labels']) && !empty($chartData['labels']))
                 <div class="ms-2 mb-3 text-center">
 
-                    @if ($total)
-                        <span class="ms-3 text-xs badge bg-gradient-success rounded-pill pt-1" style="height: 2em">Total: {{ $total }}</span>
+                    @if ($showSum)
+                        <span class="ms-3 text-xs badge bg-gradient-success rounded-pill pt-1" style="height: 2em">Total: {{ $sum }}</span>
                     @endif
-                    @if ($count)
+                    @if ($showCount)
                         <span class="ms-3 text-xs badge bg-gradient-info rounded-pill pt-1" style="height: 2em">Count: {{ $count }}</span>
                     @endif
-                    @if ($ave)
+                    @if ($showAve)
                         <span class="ms-3 text-xs badge bg-gradient-secondary rounded-pill pt-1" style="height: 2em">Ave: {{ $ave }}</span>
                     @endif
-                    @if ($max)
+                    @if ($showMax)
                         <span class="ms-3 text-xs badge bg-gradient-primary rounded-pill pt-1" style="height: 2em">Max: {{ $max }}</span>
                     @endif
-                    @if ($min)
+                    @if ($showMin)
                         <span class="ms-3 text-xs badge bg-gradient-danger rounded-pill pt-1" style="height: 2em">Min: {{ $min }}</span>
                     @endif
 

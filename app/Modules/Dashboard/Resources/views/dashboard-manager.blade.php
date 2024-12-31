@@ -55,12 +55,29 @@
 
 
 
+        <livewire:dashboard.livewire.visualisation.widgets.cards.icon-card
+            recordModel="App\Modules\Production\Models\ProductionProcessLog"
+            recordName="Completed"
+            :filters="[['production_process_id', '=', $selectedProcessId ?? 0]]"
+            showRecordNameOnly="true"
+            column="id"
+            groupBy="id"
+            aggregationMethod="count"
+            :timeDuration="$timeDuration"
+            iconCSSClass="ni ni-money-coins text-lg opacity-10"
+        />
+
+
+
+
             <livewire:dashboard.livewire.visualisation.widgets.cards.icon-card
-                recordTable='sales'
-                recordName='Sales'
-                column='amount'
+                recordModel='App\Modules\Production\Models\ProductionProcessDowntime'
+                recordName='Downtime'
+                showRecordNameOnly='true'
+                column='duration'
+                aggregationMethod='sum'
+                suffix='Min'
                 :timeDuration='$timeDuration'
-                prefix='$'
                 iconCSSClass='ni ni-money-coins text-lg opacity-10'
             />
 

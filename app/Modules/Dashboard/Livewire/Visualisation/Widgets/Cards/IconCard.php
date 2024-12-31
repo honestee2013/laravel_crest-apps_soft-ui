@@ -17,7 +17,8 @@ class IconCard extends Chart
     public $prefix = '';
     public $suffix = '';
     public $iconCSSClass = '';
-    public $aggregationType = 'total';
+    public $aggregationMethodTitle = 'total';
+    public $showRecordNameOnly = false;
 
 
     protected $listeners = [
@@ -35,9 +36,11 @@ class IconCard extends Chart
 
 
     public function setupData() {
+        // Chart fetch() creates Aggregator, set it up & call the Aggregator's fetch()
         $aggregationData = $this->fetchChartData();
         $this->setUpAggregationValues($aggregationData["data"]);
         $this->setUpChangedValue($aggregationData["data"]);
+        
     }
 
 

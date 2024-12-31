@@ -25,6 +25,15 @@
 
 
 
+<x-core.views::layouts.navbars.sidebar-link-item
+    iconClasses="fas fa-box "
+    url="production/production-log-downtimes"
+    title="Production Log Downtimes"
+    anchorClasses="{{ ($active == 'production-log-downtimes')? 'active': ''}}"
+/>
+
+
+
 
 
 

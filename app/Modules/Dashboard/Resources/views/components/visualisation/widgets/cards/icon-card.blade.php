@@ -4,22 +4,25 @@
         <div class="col-8">
           <div class="numbers">
             <p class="text-sm mb-0 text-capitalize font-weight-bold">
-                {{ str_replace("_", " ", ucfirst($this->timeDuration)) }}'s
-                {{str_replace("_", " ", ucfirst($aggregationType))}} {{$recordName}}
+                @if (!$showRecordNameOnly)
+                    {{ str_replace("_", " ", ucfirst($this->timeDuration)) }}'s
+                    {{ $aggregationMethodTitle?? ucfirst($aggregationMethod) }}
+                @endif
+                {{$recordName}}
             </p>
 
             <h5 class="font-weight-bolder mb-0">
                 {{--- Aggregation value ---}}
-                @if ($aggregationType == "average")
+                @if ($aggregationMethod == "average")
                     {{$prefix}}{{$ave}}{{$suffix}}
-                @elseif ($aggregationType == "maximum")
+                @elseif ($aggregationMethod == "max")
                     {{$prefix}}{{$max}}{{$suffix}}
-                @elseif ($aggregationType == "minimum")
+                @elseif ($aggregationMethod == "min")
                     {{$prefix}}{{$min}}{{$suffix}}
-                @elseif ($aggregationType == "number_of")
+                @elseif ($aggregationMethod == "count")
                     {{$prefix}}{{$count}}{{$suffix}}
-                @else
-                    {{$prefix}}{{$total}}{{$suffix}}
+                @else {{--- SUM = TOTAL ---}}
+                    {{$prefix}}{{$sum}}{{$suffix}}
                 @endif
 
                 {{--- Increase/Decrease Indcator for current duration ---}}
@@ -33,7 +36,7 @@
                     @endif
                     {{-- @elseif($this->valueChange < 0 && $timeDuration == 'custom') --}}
                 @endif
-                
+
             </h5>
 
           </div>

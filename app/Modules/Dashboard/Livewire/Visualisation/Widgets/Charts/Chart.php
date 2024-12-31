@@ -32,10 +32,13 @@ class Chart extends Component
     public $chartOptions = []; // Chart options
     //public $model;
     public $recordTable;
+    public $recordModel;
     public $recordName;
     public $column;
     public $groupBy = 'daily'; // Default grouping
     public $aggregationMethod = "sum";
+
+    public $filters = [];
 
 
     public $timeDuration = 'this_month'; // Default predefined duration
@@ -43,11 +46,16 @@ class Chart extends Component
     public $toTime;   // Custom range end
 
     // Aggregation values
-    public $min = true;
-    public $ave = true;
-    public $max = true;
-    public $total = true;
-    public $count = true;
+    public $min = 0;
+    public $showMin = true;
+    public $ave = 0;
+    public $showAve = true;
+    public $max = 0;
+    public $showMax = true;
+    public $sum = 0;
+    public $showSum = true;
+    public $count = 0;
+    public $showCount = true;
 
     public $valueChange = 0;
     public $valueChangePercent = 0;
@@ -115,23 +123,30 @@ class Chart extends Component
     }
 
 
-    private function setUpAggregatorParameters($aggregator) {
+    private function setUpAggregatorParameters($aggregator)
+    {
         if ($aggregator) {
-            $aggregator->setTable($this->recordTable)
-                ->setColumn($this->column)
+
+            if (isset($this->recordModel))
+                $aggregator->setModel($this->recordModel);
+            else
+                $aggregator->setTable($this->recordTable);
+
+
+            $aggregator->setColumn($this->column)
                 ->groupBy($this->groupBy)
-                ->setAggregationMethod($this->aggregationMethod);
-                // ->setFilters(['status' => 'completed'])
+                ->setAggregationMethod($this->aggregationMethod)
+                ->setFilters($this->filters);
 
             if ($this->timeDuration === 'custom' && $this->fromTime && $this->toTime) {
                 $aggregator->setTimeRange($this->fromTime, $this->toTime);
             } /*else {
 
-                $timeRange = $this->getTimeRange($this->timeDuration);
-                if ($timeRange) {
-                    $aggregator->setTimeRange($timeRange['from'], $timeRange['to']);
-                }
-            }*/
+               $timeRange = $this->getTimeRange($this->timeDuration);
+               if ($timeRange) {
+                   $aggregator->setTimeRange($timeRange['from'], $timeRange['to']);
+               }
+           }*/
 
             $aggregator;
         }
@@ -149,29 +164,38 @@ class Chart extends Component
                     'to' => now()->endOfDay()->toDateTimeString(),
                 ];
             case 'yesterday':
+                $yesterday = now()->copy()->subDay();
                 return [
-                    'from' => now()->subDay()->startOfDay()->toDateTimeString(),
-                    'to' => now()->subDay()->endOfDay()->toDateTimeString(),
+                    'from' => $yesterday->startOfDay()->toDateTimeString(),
+                    'to' => $yesterday->endOfDay()->toDateTimeString(),
                 ];
             case 'this_week':
+                $startOfWeek = now()->startOfWeek();
+                $endOfWeek = now()->endOfWeek();
                 return [
-                    'from' => now()->startOfWeek()->toDateTimeString(),
-                    'to' => now()->endOfWeek()->toDateTimeString(),
+                    'from' => $startOfWeek->toDateTimeString(),
+                    'to' => $endOfWeek->toDateTimeString(),
                 ];
             case 'last_week':
+                $lastWeekStart = now()->subWeekNoOverflow()->startOfWeek();
+                $lastWeekEnd = now()->subWeekNoOverflow()->endOfWeek();
                 return [
-                    'from' => now()->subWeek()->startOfWeek()->toDateTimeString(),
-                    'to' => now()->subWeek()->endOfWeek()->toDateTimeString(),
+                    'from' => $lastWeekStart->toDateTimeString(),
+                    'to' => $lastWeekEnd->toDateTimeString(),
                 ];
             case 'this_month':
+                $startOfMonth = now()->startOfMonth();
+                $endOfMonth = now()->endOfMonth();
                 return [
-                    'from' => now()->startOfMonth()->toDateTimeString(),
-                    'to' => now()->endOfMonth()->toDateTimeString(),
+                    'from' => $startOfMonth->toDateTimeString(),
+                    'to' => $endOfMonth->toDateTimeString(),
                 ];
             case 'last_month':
+                $lastMonthStart = now()->subMonthNoOverflow()->startOfMonth();
+                $lastMonthEnd = now()->subMonthNoOverflow()->endOfMonth();
                 return [
-                    'from' => now()->subMonth()->startOfMonth()->toDateTimeString(),
-                    'to' => now()->subMonth()->endOfMonth()->toDateTimeString(),
+                    'from' => $lastMonthStart->toDateTimeString(),
+                    'to' => $lastMonthEnd->toDateTimeString(),
                 ];
             case 'this_year':
                 return [
@@ -179,14 +203,17 @@ class Chart extends Component
                     'to' => now()->endOfYear()->toDateTimeString(),
                 ];
             case 'last_year':
+                $lastYear = now()->subYear()->startOfYear();
                 return [
-                    'from' => now()->subYear()->startOfYear()->toDateTimeString(),
-                    'to' => now()->subYear()->endOfYear()->toDateTimeString(),
+                    'from' => $lastYear->toDateTimeString(),
+                    'to' => $lastYear->endOfYear()->toDateTimeString(),
                 ];
             default:
                 return null;
         }
     }
+
+
 
 
 
@@ -249,7 +276,8 @@ class Chart extends Component
 
 
 
-    private function setUpChartData($aggregationData) {
+    private function setUpChartData($aggregationData)
+    {
 
         $data = [];
         $labels = [];
@@ -290,64 +318,69 @@ class Chart extends Component
 
     }
 
-    protected function setUpAggregationValues($data) {
+    protected function setUpAggregationValues($data)
+    {
         if ($data) {
-            if ($this->total)
-                $this->total = array_sum($data);
-            if ($this->count)
+            if ($this->showSum)
+                $this->sum = array_sum($data);
+            if ($this->showCount)
                 $this->count = count($data);
-            if ($this->max)
+            if ($this->showMax)
                 $this->max = max($data);
-            if ($this->min)
+            if ($this->showMin)
                 $this->min = min($data);
-            if ($this->ave)
-                $this->ave = round(array_sum($data)/count($data), 2);
+            if ($this->showAve && count($data) != 0) // Avoid devision by 0
+                $this->ave = round(array_sum($data) / count($data), 2);
+        } else {
+            $this->sum = $this->count = $this->max = $this->min = $this->ave = 0;
         }
     }
 
 
-    protected function setUpChangedValue($data) {
+    protected function setUpChangedValue($data)
+    {
+
         if ($data) {
             // Assuming the $this->timeDuration = "today"
             $otherTimeDuration = "yesterday";
-            if($this->timeDuration == "yesterday")
+            if ($this->timeDuration == "yesterday")
                 $otherTimeDuration = "today";
-            else if($this->timeDuration == "this_week")
+            else if ($this->timeDuration == "this_week")
                 $otherTimeDuration = "last_week";
-            else if($this->timeDuration == "last_week")
+            else if ($this->timeDuration == "last_week")
                 $otherTimeDuration = "this_week";
-            else if($this->timeDuration == "this_month")
+            else if ($this->timeDuration == "this_month")
                 $otherTimeDuration = "last_month";
-            else if($this->timeDuration == "last_month")
+            else if ($this->timeDuration == "last_month")
                 $otherTimeDuration = "this_month";
-            else if($this->timeDuration == "this_year")
+            else if ($this->timeDuration == "this_year")
                 $otherTimeDuration = "last_year";
-            else if($this->timeDuration == "last_year")
+            else if ($this->timeDuration == "last_year")
                 $otherTimeDuration = "this_year";
 
 
-            $aggregator = new Aggregator();
-            $aggregator = $this->setUpAggregatorParameters($aggregator);
+            $otherAggregator = new Aggregator();
+            $otherAggregator = $this->setUpAggregatorParameters($otherAggregator);
 
             $timeRange = $this->getTimeRange($otherTimeDuration);
             if ($timeRange) {
-                $aggregator->setTimeRange($timeRange['from'], $timeRange['to']);
+                $otherAggregator->setTimeRange($timeRange['from'], $timeRange['to']);
             }
-            $otherAggregationData = $aggregator->fetch();
+            $otherAggregationData = $otherAggregator->fetch();
 
             // Defference should be between current time and the previous tmie eg. (this_week - last_week)
             if (str_contains($this->timeDuration, "this") || str_contains($this->timeDuration, "today") && array_sum($data)) {
-                $this->valueChange = array_sum($data) -  array_sum($otherAggregationData["data"]);
+                $this->valueChange = array_sum($data) - array_sum($otherAggregationData["data"]);
 
                 $sum = array_sum($data);
                 if ($sum != 0 && $this->valueChange)
-                    $this->valueChangePercent = $this->valueChange/$sum*100;
+                    $this->valueChangePercent = $this->valueChange / $sum * 100;
             } else if (array_sum($data)) {
                 $this->valueChange = array_sum($otherAggregationData["data"]) - array_sum($data);
 
                 $sum = array_sum($otherAggregationData["data"]);
                 if ($sum != 0 && $this->valueChange)
-                    $this->valueChangePercent = $this->valueChange/$sum*100;
+                    $this->valueChangePercent = $this->valueChange / $sum * 100;
             }
 
 
@@ -361,17 +394,18 @@ class Chart extends Component
 
         // To be used for label
         $this->valueChangeTimeDuration = "today";
-        if(str_contains($this->timeDuration, "week"))
+        if (str_contains($this->timeDuration, "week"))
             $this->valueChangeTimeDuration = "this week";
-        if(str_contains($this->timeDuration, "month"))
+        if (str_contains($this->timeDuration, "month"))
             $this->valueChangeTimeDuration = "this month";
-        if(str_contains($this->timeDuration, "year"))
+        if (str_contains($this->timeDuration, "year"))
             $this->valueChangeTimeDuration = "this year";
 
     }
 
 
-    private function setUpchartOptions() {
+    private function setUpchartOptions()
+    {
         return $this->chartOptions = [
             'responsive' => true,
             'maintainAspectRatio' => true,
@@ -408,7 +442,8 @@ class Chart extends Component
     }
 
 
-    public function updateChart() {
+    public function updateChart()
+    {
 
         $aggregationData = $this->fetchChartData();
         $this->setUpChartData($aggregationData);
@@ -418,7 +453,7 @@ class Chart extends Component
         $colors = 'rgba(54, 162, 235, 0.5)';
 
         // Generate dynamic colors for pie chart datasets
-        if ($this->chartType == "pie" || $this->chartType == "doughnut" ) {
+        if ($this->chartType == "pie" || $this->chartType == "doughnut") {
             $colors = $this->generateColors(count($this->chartData["datasets"][0]["data"]));
         }
 
@@ -439,11 +474,15 @@ class Chart extends Component
     public function updatedGroupBy($value)
     {
         $aggregator = new Aggregator();
-        $aggregator->setTable($this->recordTable)
-            ->setColumn($this->column)
+        if (isset($$this->recordModel))
+            $aggregator->setModel($this->recordModel);
+        else
+            $aggregator->setTable($this->recordTable);
+
+        $aggregator->setColumn($this->column)
             ->groupBy($this->groupBy)
-            ->setAggregationMethod($this->aggregationMethod);
-            // ->setFilters(['status' => 'completed'])
+            ->setAggregationMethod($this->aggregationMethod)
+            ->setFilters($this->filters);
 
         $aggregationData = $aggregator->fetch();
         $this->setUpChartData($aggregationData);

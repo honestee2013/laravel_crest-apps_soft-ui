@@ -3,6 +3,7 @@
 namespace App\Modules\Production\Models;
 
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Modules\Item\Models\Item;
 use Illuminate\Database\Eloquent\Model;
@@ -25,6 +26,8 @@ class ProductionProcessLog extends Model
         'end_time',
         'notes',
     ];
+
+    protected $appends = ['total_downtime'];
 
 
     public function batch()
@@ -57,6 +60,27 @@ class ProductionProcessLog extends Model
     {
         return $this->belongsToMany(Item::class, "production_process_outputs", "production_process_log_id", "item_id")->using(ProductionProcessOutput::class);
     }
+
+    public function downtimes()
+    {
+        return $this->hasMany(ProductionProcessDowntime::class);
+    }
+
+    public function getTotalDowntimeAttribute()
+    {
+        $total = $this->downtimes->sum(function ($downtime) {
+            $startTime = Carbon::parse($downtime->start_time);
+            $endTime = $downtime->end_time ? Carbon::parse($downtime->end_time) : now();
+
+            return $endTime->diffInMinutes($startTime);
+        });
+
+        return abs($total);
+    }
+
+
+
+
 
 
 

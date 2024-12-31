@@ -94,6 +94,11 @@ return [
             'field_type' => 'datetime',
         ],
 
+        'total_downtime' => [
+            'field_type' => 'datetime',
+            'label' => 'Total Downtime (Min)',
+        ],
+
 
 
         'operator_id' => [
